@@ -16,8 +16,9 @@ class Report:
 			os.makedirs(full_path_folder)
 
 		for doc in self.documents:
+			print(f"Обработка документа '{doc.get_name()}'...")
 			doc.render()
 			full_path = os.path.join(full_path_folder, doc.get_name_for_file())
 			doc.word_document.save(full_path)
-			print(f"Создан документ {full_path}")
+			print(f"Создан документ {full_path}.")
 
