@@ -65,7 +65,7 @@ class DocOfficialProceeding(DocumentInReport):
 
 		self.add_empty_paragraphs(1)
 		# TODO fix left and right
-		self.add_paragraph_left_right("Опись составил:              ", "ВРИО ЗКБ по ВПР 2 СБ")
+		self.add_paragraph_left_right("Опись составил:", "ВРИО ЗКБ по ВПР 2 СБ")
 		self.add_paragraph("гвардии лейтенант", self.align_center_settings)
 		self.add_paragraph("С.Белич", self.align_right_settings)
 

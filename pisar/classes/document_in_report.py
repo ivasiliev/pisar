@@ -2,6 +2,7 @@ from docx import Document
 from docx.shared import Mm
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.enum.table import WD_TABLE_ALIGNMENT
 
 from classes.paragraph_settings import ParagraphSettings
 
@@ -131,7 +132,10 @@ class DocumentInReport:
 			num_row = num_row + 1
 
 	def add_paragraph_left_right(self, left_text, right_text):
-		# TODO use invisible grid?
-		p_left = self.word_document.add_paragraph(left_text)
-		runner = p_left.add_run(right_text)
-		runner.align = WD_PARAGRAPH_ALIGNMENT.RIGHT
+		table = self.word_document.add_table(rows=1, cols=2)
+		table.alignment = WD_TABLE_ALIGNMENT.CENTER
+		cells = table.rows[0].cells
+		p0 = cells[0].add_paragraph(left_text)
+		p0.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+		p1 = cells[1].add_paragraph(right_text)
+		p1.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
