@@ -16,6 +16,22 @@ class DocumentInReport:
 		font = style.font
 		font.name = 'Times New Roman'
 		font.size = Pt(14)
+		# predefined styles
+		self.bold_center_settings = ParagraphSettings()
+		self.bold_center_settings.is_bold = True
+		self.bold_center_settings.align_center = True
+
+		self.align_left_settings = ParagraphSettings()
+		self.align_left_settings.align_left = True
+
+		self.align_right_settings = ParagraphSettings()
+		self.align_right_settings.align_right = True
+
+		self.align_center_settings = ParagraphSettings()
+		self.align_center_settings.align_center = True
+
+		self.align_justify_settings = ParagraphSettings()
+		self.align_justify_settings.align_justify = True
 
 	def get_name(self):
 		return ""
@@ -55,13 +71,14 @@ class DocumentInReport:
 		pf.space_before = Pt(0)
 		pf.space_after = Pt(0)
 
-		# TODO figure out how to use it properly
 		if paragraph_settings.align_left:
-			p.alignment = 0
+			p.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 		if paragraph_settings.align_center:
-			p.alignment = 1
+			p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 		if paragraph_settings.align_right:
-			p.alignment = 2
+			p.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+		if paragraph_settings.align_justify:
+			p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
 
 		# p.style = self.word_document.styles['Normal']
 		# run = p.add_run()
@@ -90,3 +107,31 @@ class DocumentInReport:
 			section.page_width = Mm(210)
 			section.header_distance = Mm(12.7)
 			section.footer_distance = Mm(12.7)
+
+	def add_table(self, row_count, captions, rows_data):
+		table = self.word_document.add_table(rows=row_count, cols=len(captions))
+		table.style = 'Table Grid'
+		table.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+		# TODO set columns width
+		# TODO put table in the center and set margins 0;0
+		# process header
+		hdr_cells = table.rows[0].cells
+		num_column = 0
+		for caption in captions:
+			hdr_cells[num_column].text = caption
+			num_column = num_column + 1
+
+		# process rows
+		num_row = 1
+		for row in rows_data:
+			cells = table.rows[num_row].cells
+			cells[0].text = str(num_row)
+			cells[1].text = row
+			cells[2].text = ""
+			num_row = num_row + 1
+
+	def add_paragraph_left_right(self, left_text, right_text):
+		# TODO use invisible grid?
+		p_left = self.word_document.add_paragraph(left_text)
+		runner = p_left.add_run(right_text)
+		runner.align = WD_PARAGRAPH_ALIGNMENT.RIGHT
