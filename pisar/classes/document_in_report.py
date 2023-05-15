@@ -34,6 +34,10 @@ class DocumentInReport:
 		self.align_justify_settings = ParagraphSettings()
 		self.align_justify_settings.align_justify = True
 
+		self.ident_align_justify_settings = ParagraphSettings()
+		self.ident_align_justify_settings.align_justify = True
+		self.ident_align_justify_settings.first_line_indent = Mm(12.5)
+
 	def get_name(self):
 		return ""
 
@@ -81,12 +85,14 @@ class DocumentInReport:
 		if paragraph_settings.align_justify:
 			p.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
 
-		# p.style = self.word_document.styles['Normal']
-		# run = p.add_run()
-		# fnt = run.font
-		# fnt.bold = True
-		# fnt.name = 'Calibri'  #'Times New Roman'
-		# fnt.size = Pt(14)
+		if paragraph_settings.first_line_indent > 0:
+			pf.first_line_indent = paragraph_settings.first_line_indent
+
+		if paragraph_settings.left_indent > 0:
+			pf.left_indent = paragraph_settings.left_indent
+
+		if paragraph_settings.right_indent > 0:
+			pf.right_indent = paragraph_settings.right_indent
 
 		return p
 
@@ -100,7 +106,7 @@ class DocumentInReport:
 		sections = self.word_document.sections
 		for section in sections:
 			section.top_margin = Mm(20)
-			section.bottom_margin = Mm(20)  # TODO: 15 mm in original document
+			section.bottom_margin = Mm(20)  # 15 mm in original document
 			section.left_margin = Mm(30)
 			section.right_margin = Mm(10)
 			# settings for page as A4
@@ -109,9 +115,14 @@ class DocumentInReport:
 			section.header_distance = Mm(12.7)
 			section.footer_distance = Mm(12.7)
 
+	def set_column_width(self, table, index, size):
+		for cell in table.columns[index].cells:
+			cell.width = Mm(size)
+
 	def add_table(self, row_count, captions, rows_data):
 		table = self.word_document.add_table(rows=row_count, cols=len(captions))
 		table.style = 'Table Grid'
+		table.allow_autofit = False
 		table.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 		# TODO set columns width
 		# TODO put table in the center and set margins 0;0
@@ -121,6 +132,11 @@ class DocumentInReport:
 		for caption in captions:
 			hdr_cells[num_column].text = caption
 			num_column = num_column + 1
+
+		# set column width
+		self.set_column_width(table, 0, 10)
+		self.set_column_width(table, 1, 140)
+		self.set_column_width(table, 2, 20)
 
 		# process rows
 		num_row = 1

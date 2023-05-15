@@ -2,8 +2,10 @@ import os
 
 
 class Report:
-	def __init__(self):
+	def __init__(self, personnel_storage, settings):
 		self.documents = []
+		self.personnel_storage = personnel_storage
+		self.settings = settings
 
 	def initialize(self):
 		for doc in self.documents:
