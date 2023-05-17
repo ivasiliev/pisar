@@ -1,3 +1,5 @@
+import os
+
 from docx import Document
 from docx.shared import Mm
 from docx.shared import Pt
@@ -5,6 +7,12 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.enum.table import WD_TABLE_ALIGNMENT
 
 from classes.paragraph_settings import ParagraphSettings
+from classes.personnel_storage import PersonnelStorage
+
+MODEL_PERSONNEL_PATH = "personnel_path"
+MODEL_OUTPUT_FOLDER = "output_folder"
+MODEL_PERSONS = "persons"
+MODEL_MORPHOLOGY = "morphology"
 
 
 class DocumentInReport:
@@ -38,6 +46,10 @@ class DocumentInReport:
 		self.ident_align_justify_settings.align_justify = True
 		self.ident_align_justify_settings.first_line_indent = Mm(12.5)
 
+		self.personnel_info = None
+		if self.data_model is not None and self.data_model[MODEL_PERSONNEL_PATH] is not None:
+			self.personnel_info = PersonnelStorage(self.data_model[MODEL_PERSONNEL_PATH])
+
 	def get_name(self):
 		return ""
 
@@ -46,9 +58,14 @@ class DocumentInReport:
 
 	# creates MS Word document
 	def render(self):
-		# for page in self.pages:
-		# 	page.render(self.word_document)
 		self.apply_default_settings()
+		if self.data_model is not None and self.data_model[MODEL_OUTPUT_FOLDER]:
+			full_path_folder = self.data_model[MODEL_OUTPUT_FOLDER]
+			if not os.path.exists(full_path_folder):
+				os.makedirs(full_path_folder)
+			full_path = os.path.join(full_path_folder, self.get_name_for_file())
+			self.word_document.save(full_path)
+			print(f"Создан документ {full_path}.")
 
 	# performs mapping of a document structure and data
 	def prepare(self):
