@@ -13,6 +13,11 @@ MODEL_PERSONNEL_PATH = "personnel_path"
 MODEL_OUTPUT_FOLDER = "output_folder"
 MODEL_PERSONS = "persons"
 MODEL_MORPHOLOGY = "morphology"
+MODEL_JSON_OBJECT = "json_settings"
+# TODO set a better name
+MODEL_NAME_MORPHOLOGY = "petrovich"
+MODEL_IS_VALID = "is_valid"
+MODEL_CURRENT_SOLDIER = "current_soldier"
 
 
 class DocumentInReport:

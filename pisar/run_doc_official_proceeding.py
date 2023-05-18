@@ -1,9 +1,11 @@
+import json
 import os
-
-from classes.document_in_report import MODEL_PERSONNEL_PATH, MODEL_OUTPUT_FOLDER, MODEL_PERSONS, MODEL_MORPHOLOGY
-from documents.doc_official_proceeding import DocOfficialProceeding
-import pymorphy2
 import sys
+
+from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_PERSONNEL_PATH, MODEL_IS_VALID, MODEL_CURRENT_SOLDIER
+from classes.personnel_storage import PersonnelStorage
+from documents.doc_official_proceeding import DocOfficialProceeding
+from helpers.data_model_helper import create_from_json
 
 if __name__ == '__main__':
 	print("Писарь начинает работу")
@@ -11,14 +13,29 @@ if __name__ == '__main__':
 	print(f"Файл настроек={settings_full_path}")
 	if not os.path.exists(settings_full_path):
 		print(f"Файл настроек не обнаружен либо недоступен. Выполнение программы прервано.")
+	else:
+		print("Файл настроек обнаружен")
 
-	morph = pymorphy2.MorphAnalyzer()
-	data_model = {
-		MODEL_PERSONNEL_PATH: "data\\personnel-demo.xlsx"
-		, MODEL_OUTPUT_FOLDER: "c:\\temp\\report1\\"
-		, MODEL_PERSONS: "2"
-		, MODEL_MORPHOLOGY: morph
-	}
+	js_settings = json.load(open(settings_full_path, encoding='UTF8'))
+	data_model = create_from_json(js_settings)
+	if not data_model[MODEL_IS_VALID]:
+		print("Файл настроек содержит неверную информацию. Выполнение программы прервано.")
+		sys.exit()
 
-	doc = DocOfficialProceeding(data_model)
-	doc.render()
+	soldiers = data_model[MODEL_JSON_OBJECT]["soldier_ids"].split(",")
+	if len(soldiers) == 0:
+		print(f"Не заданы номера военнослужащих. В настроечном файле в поле 'soldier_ids' внесите их номера из "
+		      f"штатного расписания (первый столбец). Выполнение программы прервано.")
+	else:
+		pers_storage = PersonnelStorage(data_model[MODEL_PERSONNEL_PATH])
+		for sld in soldiers:
+			current_soldier = pers_storage.find_person_by_id(int(sld))
+			if current_soldier is None:
+				print(f"Не удалось найти военнослужащего под номером '{str(sld)}'")
+				continue
+
+			data_model[MODEL_CURRENT_SOLDIER] = current_soldier
+			print(f"Документ для военнослужащего: {current_soldier.full_name}")
+			doc = DocOfficialProceeding(data_model)
+			doc.render()
+	print("Писарь завершил работу")
