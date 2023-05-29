@@ -8,12 +8,15 @@ if __name__ == '__main__':
 	pers_storage = PersonnelStorage(full_path)
 	person = pers_storage.find_person_by_id(1)
 	assert person is not None
+	print(person.company_commander)
 
 	morph = pymorphy2.MorphAnalyzer()
 	print(f"position = {person.position}")
 	parsed = morph.parse(person.position)[0]
 	gent_text = parsed.inflect({'gent'})
 	print(f"gent_text={gent_text.word}")
+	datv_text = parsed.inflect({'datv'})
+	print(f"datv_text={datv_text.word}")
 
 
 	maker = PetrovichDeclinationMaker()

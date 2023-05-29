@@ -1,16 +1,10 @@
 {
-	"soldier_ids": "1",
-	"military unit": "42600",
+	"personnel_path": "data\\personnel-demo.xlsx",
+	"output_path": "c:\\temp\\report_official_proceeding\\",
+	"soldier_ids": "5",
+	"military_unit": "42600",
 	"is_guard": true,
-	"date_started": "22-01-2023",
-	"date_finished": "14-05-2023",
 	"date_of_event": "16-04-2023",
-	"date_conclusion": "17-04-2023",
-	"commander_1_level": {
-		"name" : "Семченко Борис Анатольевич",
-		"rank" : "рядовой",
-		"position": "ВРИО командира 5 СР 2 СБ"
-	},
 	"commander_2_level": {
 		"name" : "Козырев Артем Васильевич",
 		"rank" : "лейтенант",
@@ -20,7 +14,5 @@
 		"name" : "Рудаков Илья Сергеевич",
 		"rank" : "подполковник",
 		"position": "ВРИО командира 2 стрелкового батальона"
-	},
-	"personnel_path": "data\\personnel-demo.xlsx",
-	"output_path": "c:\\temp\\report_official_proceeding\\"
+	}
 }

@@ -5,6 +5,7 @@ from docx.shared import Mm
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.enum.table import WD_TABLE_ALIGNMENT
+from pytrovich.enums import NamePart, Gender, Case
 
 from classes.paragraph_settings import ParagraphSettings
 from classes.personnel_storage import PersonnelStorage
@@ -177,3 +178,106 @@ class DocumentInReport:
 		p0.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 		p1 = cells[1].add_paragraph(right_text)
 		p1.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+	def get_soldier_info(self):
+		return self.data_model[MODEL_CURRENT_SOLDIER]
+
+	def get_report_settings(self):
+		return self.data_model[MODEL_JSON_OBJECT]
+
+	def get_person_name_routines(self, full_name, cs):
+		maker = self.data_model[MODEL_NAME_MORPHOLOGY]
+		if maker is None:
+			print("Внутренняя ошибка. Морфоанализатор для имён не создан.")
+			return ""
+
+		name_tokens = full_name.split(" ")
+		surname = name_tokens[0]
+		first_name = name_tokens[1]
+		middle_name = ""
+		if len(name_tokens) > 2:
+			middle_name = name_tokens[2]
+
+		sn = maker.make(NamePart.FIRSTNAME, Gender.MALE, cs, surname)
+		fn = maker.make(NamePart.FIRSTNAME, Gender.MALE, cs, first_name)
+		mn = maker.make(NamePart.MIDDLENAME, Gender.MALE, cs, middle_name)
+
+		return f"{sn} {fn} {mn}".strip()
+
+	def get_person_name_gent(self, full_name):
+		return self.get_person_name_routines(full_name, Case.GENITIVE)
+
+	def get_person_name_instr(self, full_name):
+		return self.get_person_name_routines(full_name, Case.INSTRUMENTAL)
+
+	def get_person_name_datv(self, full_name):
+		return self.get_person_name_routines(full_name, Case.DATIVE)
+
+	def get_person_name_declension(self, full_name, declension_type):
+		if declension_type == 1:
+			result = self.get_person_name_gent(full_name)
+		else:
+			if declension_type == 2:
+				result = self.get_person_name_instr(full_name)
+			else:
+				if declension_type == 3:
+					result = self.get_person_name_datv(full_name)
+				else:
+					result = full_name
+
+		return result
+
+	def get_word_gent(self, wrd):
+		return self.get_word_routines(wrd, "gent")
+
+	def get_word_ablt(self, wrd):
+		return self.get_word_routines(wrd, "ablt")
+
+	def get_word_datv(self, wrd):
+		return self.get_word_routines(wrd, "datv")
+
+	def get_word_declension(self, wrd, declension_type):
+		if declension_type == 1:
+			result = self.get_word_gent(wrd)
+		else:
+			if declension_type == 2:
+				result = self.get_word_ablt(wrd)
+			else:
+				if declension_type == 3:
+					result = self.get_word_datv(wrd)
+				else:
+					result = wrd
+
+		return result
+
+	def get_word_routines(self, wrd, grm):
+		morph = self.data_model[MODEL_MORPHOLOGY]
+		if morph is None:
+			print("Внутренняя ошибка. Морфоанализатор не создан.")
+			return ""
+		parsed = morph.parse(wrd)[0]
+		gent_text = parsed.inflect({grm})
+		return gent_text.word
+
+	# format = Петров Алексей Сергеевич -> А. Петров
+	def get_person_name_short_format_1(self, full_name):
+		name_tokens = full_name.split(" ")
+		if len(name_tokens) < 2:
+			print(f"Не удалось преобразовать в нужный формат: {full_name}")
+		surname = name_tokens[0]
+		first_name = name_tokens[1]
+		return f"{first_name[0]}. {surname}"
+
+	# format = 16-04-2023/16.04.2023 -> 16 апреля 2023 года
+	def get_date_format_1(self, date_str):
+		tokens = date_str.split("-")
+		if len(tokens) < 3:
+			tokens = date_str.split(".")
+		if len(tokens) != 3:
+			print(f"Не удалось определить формат даты {date_str}")
+		months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
+		d = int(tokens[0])
+		m = int(tokens[1])
+		y = int(tokens[2])
+		return f"{d} {months[m-1]} {y} года"
+
