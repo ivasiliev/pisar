@@ -1,10 +1,10 @@
 {
 	"personnel_path": "data\\personnel-demo.xlsx",
 	"output_path": "c:\\temp\\report_official_proceeding\\",
-	"soldier_ids": "5",
+	"soldier_ids": "1",
 	"military_unit": "42600",
 	"is_guard": true,
-	"date_of_event": "16-04-2023",
+	"date_of_event": "16.04.2023",
 	"commander_2_level": {
 		"name" : "Козырев Артем Васильевич",
 		"rank" : "лейтенант",
