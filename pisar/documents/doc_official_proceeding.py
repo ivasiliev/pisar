@@ -1,7 +1,7 @@
 # ДОКУМЕНТ
 # СЛУЖЕБНОЕ РАЗБИРАТЕЛЬСТВО по факту грубого дисциплинарного проступка
 from classes.document_in_report import DocumentInReport
-from classes.paragraph_settings import ParagraphSettings
+# from classes.paragraph_settings import ParagraphSettings
 
 
 class DocOfficialProceeding(DocumentInReport):
@@ -74,16 +74,12 @@ class DocOfficialProceeding(DocumentInReport):
 			, "Объяснение сослуживца"
 			, "Протокол о грубом дисциплинарном проступке"
 			, "Акт о невозможности получения копии протокола о грубом дисциплинарном проступке"
-			,
-			         "Акт о невозможности взять объяснение по факту действий совершенных военнослужащим, в которых усматривается преступление против военной службы"
+			, "Акт о невозможности взять объяснение по факту действий совершенных военнослужащим, в которых усматривается преступление против военной службы"
 			, "Служебная характеристика"
 			, "Заключение служебного разбирательства"]
 
-		self.add_table(27, captions, rows_data)
-
+		self.add_table(28, captions, rows_data)
 		self.add_empty_paragraphs(1)
-		# TODO fix left and right
-
 		self.add_paragraph_left_right("Опись составил:", commander["position"])
 		pst = ""
 		if rep_settings["is_guard"]:
@@ -97,6 +93,7 @@ class DocOfficialProceeding(DocumentInReport):
 		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 		commander = rep_settings["commander_3_level"]
+		date_of_event = rep_settings["date_of_event"]
 
 		self.add_paragraph("Командиру войсковой части " + rep_settings["military_unit"], self.align_right_settings)
 		self.add_empty_paragraphs(5)
@@ -121,14 +118,14 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_paragraph(rnk, self.align_center_settings)
 		self.add_paragraph(self.get_person_name_short_format_1(commander["name"]), self.align_right_settings)
 
-		# TODO what date should be here?
-		self.add_paragraph("16.04.2023 г.", self.align_left_settings)
+		self.add_paragraph(date_of_event, self.align_left_settings)
 
 	# Рапорт 2 (стр 4)
 	def report2_page(self):
 		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 		commander = rep_settings["commander_2_level"]
+		date_of_event = rep_settings["date_of_event"]
 
 		self.add_paragraph("Командиру 2 СБ", self.align_right_settings)
 		self.add_empty_paragraphs(5)
@@ -153,14 +150,14 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_paragraph(rnk, self.align_center_settings)
 		self.add_paragraph(self.get_person_name_short_format_1(commander["name"]), self.align_right_settings)
 
-		# TODO what date should be here?
-		self.add_paragraph("16.04.2023 г.", self.align_left_settings)
+		self.add_paragraph(date_of_event, self.align_left_settings)
 
 	# Рапорт 3 (стр 5)
 	def report3_page(self):
 		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 		commander = s_info.company_commander
+		date_of_event = rep_settings["date_of_event"]
 
 		self.add_paragraph("Командиру 2 СБ", self.align_right_settings)
 		self.add_empty_paragraphs(5)
@@ -193,8 +190,7 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_paragraph(c_rank, self.align_center_settings)
 		self.add_paragraph(c_name, self.align_right_settings)
 
-		# TODO what date should be here?
-		self.add_paragraph("16.04.2023 г.", self.align_left_settings)
+		self.add_paragraph(date_of_event, self.align_left_settings)
 
 	# Заключение (стр 6 и 7)
 	def conclusion_page(self):
@@ -202,6 +198,7 @@ class DocOfficialProceeding(DocumentInReport):
 		commander_company_info = s_info.company_commander
 		rep_settings = self.get_report_settings()
 		commander = rep_settings["commander_3_level"]
+		date_of_event = rep_settings["date_of_event"]
 
 		self.add_paragraph(f"Командиру войсковой части {rep_settings['military_unit']}", self.align_right_settings)
 		self.add_empty_paragraphs(3)
@@ -278,7 +275,6 @@ class DocOfficialProceeding(DocumentInReport):
 			"на основании вышеизложенного ", self.ident_align_justify_settings)
 		runner = p1.add_run("ПРЕДЛАГАЮ:")
 		runner.bold = True
-		# TODO add COMMANDER!
 
 		commander_company_text2 = self.get_commander_company_full_str(commander_company_info, rep_settings, 3)
 
@@ -304,8 +300,8 @@ class DocOfficialProceeding(DocumentInReport):
 
 		self.add_paragraph(rnk, self.align_center_settings)
 		self.add_empty_paragraphs(2)
-		# TODO set proper date
-		self.add_paragraph_left_right("17.04.2023 г.", self.get_person_name_short_format_1(commander["name"]))
+
+		self.add_paragraph_left_right(date_of_event, self.get_person_name_short_format_1(commander["name"]))
 
 	# declension_type. 0 (without), 1 (gent), 2 (ablt), 3 (datv)
 	def get_person_full_str(self, s_info, rep_settings, declension_type, battalion_only, militaryman_required,

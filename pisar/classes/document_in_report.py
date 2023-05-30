@@ -5,6 +5,7 @@ from docx.shared import Mm
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 from pytrovich.enums import NamePart, Gender, Case
 
 from classes.paragraph_settings import ParagraphSettings
@@ -147,19 +148,22 @@ class DocumentInReport:
 		table.style = 'Table Grid'
 		table.allow_autofit = False
 		table.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-		# TODO set columns width
 		# TODO put table in the center and set margins 0;0
 		# process header
 		hdr_cells = table.rows[0].cells
 		num_column = 0
 		for caption in captions:
-			hdr_cells[num_column].text = caption
+			cell = hdr_cells[num_column]
+			p = cell.paragraphs[0]
+			p.text = caption
+			p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+			cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
 			num_column = num_column + 1
 
 		# set column width
 		self.set_column_width(table, 0, 10)
-		self.set_column_width(table, 1, 140)
-		self.set_column_width(table, 2, 20)
+		self.set_column_width(table, 1, 120)
+		self.set_column_width(table, 2, 35)
 
 		# process rows
 		num_row = 1
@@ -270,14 +274,12 @@ class DocumentInReport:
 
 	# format = 16-04-2023/16.04.2023 -> 16 апреля 2023 года
 	def get_date_format_1(self, date_str):
-		tokens = date_str.split("-")
-		if len(tokens) < 3:
-			tokens = date_str.split(".")
+		tokens = date_str.split(".")
 		if len(tokens) != 3:
 			print(f"Не удалось определить формат даты {date_str}")
-		months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
+		months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября",
+		          "ноября", "декабря"]
 		d = int(tokens[0])
 		m = int(tokens[1])
 		y = int(tokens[2])
-		return f"{d} {months[m-1]} {y} года"
-
+		return f"{d} {months[m - 1]} {y} года"
