@@ -30,15 +30,12 @@ class DocOfficialProceeding(DocumentInReport):
 
 	# Титульный лист (стр 1)
 	def render_page_title(self):
-		s_info = self.get_soldier_info()
-		rep_settings = self.get_report_settings()
-
 		self.add_empty_paragraphs(13)
 		self.add_paragraph("СЛУЖЕБНОЕ РАЗБИРАТЕЛЬСТВО", self.bold_center_settings)
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("по факту грубого дисциплинарного проступка", self.bold_center_settings)
 
-		sold_str = self.get_person_full_str(s_info, rep_settings, 2, True, True, False, False)
+		sold_str = self.get_person_full_str(2, True, True, False, False)
 
 		self.add_paragraph(
 			sold_str,
@@ -102,7 +99,7 @@ class DocOfficialProceeding(DocumentInReport):
 		ps = "Настоящим докладываю, что"
 		ps = f"{ps} {self.get_date_format_1(rep_settings['date_of_event'])} "
 
-		sold_str = self.get_person_full_str(s_info, rep_settings, 0, False, False, True, True)
+		sold_str = self.get_person_full_str(0, False, False, True, True)
 
 		ps = ps + sold_str + ", самовольно покинул расположение воинской части, не уведомив вышестоящее командование."
 		self.add_paragraph(ps, self.ident_align_justify_settings)
@@ -135,7 +132,7 @@ class DocOfficialProceeding(DocumentInReport):
 		ps = "Настоящим докладываю, что в ходе проведения розыскных мероприятий розыскной группой из числа " \
 		     "военнослужащих 2 стрелкового батальона под моим руководством место нахождения "
 
-		sold_str = self.get_person_full_str(s_info, rep_settings, 1, False, False, True, False)
+		sold_str = self.get_person_full_str(1, False, False, True, False)
 
 		ps = ps + sold_str + " установить не удалось."
 
@@ -167,7 +164,7 @@ class DocOfficialProceeding(DocumentInReport):
 		ps = f"Настоящим докладываю, что {self.get_date_format_1(rep_settings['date_of_event'])} был выявлен факт " \
 		     f"отсутствия на месте несения службы"
 
-		sold_str = self.get_person_full_str(s_info, rep_settings, 1, False, False, True, False)
+		sold_str = self.get_person_full_str(1, False, False, True, False)
 
 		ps = f"{ps} {sold_str}."
 		ps = ps + " На телефонные звонки не отвечает, настоящее местонахождение не известно."
@@ -228,11 +225,11 @@ class DocOfficialProceeding(DocumentInReport):
 
 		txt1 = txt1 + f"{rnk} {self.get_person_name_instr(commander['name'])},"
 		txt1 = txt1 + " проведено служебное разбирательство по факту самовольного оставления части"
-		sold_str = self.get_person_full_str(s_info, rep_settings, 2, False, False, True, True)
+		sold_str = self.get_person_full_str(2, False, False, True, True)
 		self.add_paragraph(f"{txt1} {sold_str}.", self.ident_align_justify_settings)
 
 		txt2 = f"В ходе проведения служебного разбирательства было установлено, что {self.get_date_format_1(rep_settings['date_of_event'])}"
-		sold_str = self.get_person_full_str(s_info, rep_settings, 0, False, False, True, False)
+		sold_str = self.get_person_full_str(0, False, False, True, False)
 		txt2 = f"{txt2} {sold_str} самовольно покинул расположение части не уведомив вышестоящее командование."
 		self.add_paragraph(txt2, self.ident_align_justify_settings)
 
@@ -258,7 +255,7 @@ class DocOfficialProceeding(DocumentInReport):
 
 		self.add_paragraph(f"{txt4} {commander_company_text1};", self.ident_align_justify_settings)
 
-		sold_str = self.get_person_full_str(s_info, rep_settings, 1, False, False, True, False)
+		sold_str = self.get_person_full_str(1, False, False, True, False)
 		self.add_paragraph("невыполнение требований статьи 160, 161 Устава Внутренней Службы Вооруженных Сил "
 		                   "Российской Федерации в части, касающейся точного и своевременного исполнения возложенных "
 		                   f"на него обязанностей, поставленных задач и личная недисциплинированность {sold_str}.",
@@ -286,7 +283,7 @@ class DocOfficialProceeding(DocumentInReport):
 
 		self.add_paragraph(f"{commander_company_text2} {txt5}", self.ident_align_justify_settings)
 
-		sold_str = self.get_person_full_str(s_info, rep_settings, 3, False, False, True, False)
+		sold_str = self.get_person_full_str(3, False, False, True, False)
 		# TODO use just one variable txt
 		txt4 = f"2. {sold_str} за грубый дисциплинарный проступок самовольное оставление части более 4 (четырех) часов, объявить СТРОГИЙ ВЫГОВОР."
 
@@ -302,36 +299,6 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_empty_paragraphs(2)
 
 		self.add_paragraph_left_right(date_of_event, self.get_person_name_short_format_1(commander["name"]))
-
-	# declension_type. 0 (without), 1 (gent), 2 (ablt), 3 (datv)
-	def get_person_full_str(self, s_info, rep_settings, declension_type, battalion_only, militaryman_required,
-	                        position_required, dob_required):
-		sld_position = ""  # if not required
-		if militaryman_required:
-			sld_position = self.get_word_declension("военнослужащий", declension_type)
-		else:
-			if position_required:
-				sld_position = self.get_word_declension(s_info.position, declension_type)
-
-		sld_rank = self.get_word_declension(s_info.rank, declension_type)
-		if rep_settings["is_guard"]:
-			sld_rank = "гвардии " + sld_rank
-
-		# TODO battalion must be a variable
-		address = "2 стрелкового батальона войсковой части " + rep_settings["military_unit"]
-		if not battalion_only:
-			address = f"{s_info.squad} стрелкового отделения {s_info.platoon} стрелкового взвода {s_info.company} стрелковой роты " + address
-
-		full_name = self.get_person_name_declension(s_info.full_name, declension_type)
-
-		dob_str = ""
-		if dob_required:
-			dob_str = self.get_date_format_1(s_info.dob_string) + " рождения"
-
-		result = f"{sld_position} {address} {sld_rank} {full_name}"
-		if len(dob_str) > 0:
-			result = result + " " + dob_str
-		return result
 
 	def get_commander_company_full_str(self, commander_company_info, rep_settings, declension_type):
 		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ РОТЫ]"
