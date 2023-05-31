@@ -16,12 +16,14 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		return f"Служебная характеристика ({self.get_soldier_info().full_name}).docx"
 
 	def render(self):
+		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 		line_spacing = 0.96
 
-		# TODO font 16
-		paragraph_settings = self.bold_center_settings
-		paragraph_settings.font_size = 16
+		paragraph_settings = ParagraphSettings()
+		paragraph_settings.font_size = Pt(16)
+		paragraph_settings.is_bold = True
+		paragraph_settings.align_center = True
 
 		p_title = self.add_paragraph("СЛУЖЕБНАЯ ХАРАКТЕРИСТИКА", paragraph_settings)
 		p_title.paragraph_format.space_after = Pt(10)
@@ -37,10 +39,11 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		txt = f"на {sold_str}, {nationality}, образование {education}, в ВС ДНР с {yss} года."
 		self.add_paragraph(txt, paragraph_settings)
 
-		self.add_empty_paragraphs_spacing(2, line_spacing)
+		self.add_empty_paragraphs_spacing(1, line_spacing)  #2
 
-		sold_str = self.get_person_full_str(1, False, False, True, False)
-		txt = f"За время прохождения службы в должности {sold_str}, проявил себя неоднозначно, как военнослужащий, требующий контроля со стороны командования при исполнении поставленных задач."
+		position_str = self.get_word_gent(s_info.position)
+		sold_str = self.get_person_full_str(0, False, False, False, False).strip()
+		txt = f"За время прохождения службы в должности {position_str} {sold_str}, проявил себя неоднозначно, как военнослужащий, требующий контроля со стороны командования при исполнении поставленных задач."
 		paragraph_settings = self.ident_align_justify_settings
 		paragraph_settings.line_spacing = line_spacing
 		self.add_paragraph(txt, self.ident_align_justify_settings)
@@ -63,7 +66,6 @@ class DocPerformanceCharacteristics(DocumentInReport):
 
 		self.add_empty_paragraphs_spacing(1, line_spacing)
 
-		s_info = self.get_soldier_info()
 		commander_company_info = s_info.company_commander
 		c_name = "[ФИО РОТНОГО КОМАНДИРА]"
 		c_rank = "[ЗВАНИЕ РОТНОГО КОМАНДИРА]"
@@ -73,7 +75,8 @@ class DocPerformanceCharacteristics(DocumentInReport):
 			c_rank = commander_company_info["rank"]
 			if rep_settings["is_guard"]:
 				c_rank = "гвардии " + c_rank
-			c_position = commander_company_info["position"]
+			# TODO battalion to variables
+			c_position = f"{commander_company_info['position']} {s_info.company} стрелковой роты 2 стрелкового батальона"
 
 		par_set_bold = self.bold_center_settings
 		par_set_bold.line_spacing = line_spacing

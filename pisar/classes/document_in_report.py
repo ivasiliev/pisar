@@ -98,7 +98,7 @@ class DocumentInReport:
 			if paragraph_settings.is_bold:
 				runner.bold = True
 			if paragraph_settings.font_size > 0:
-				runner.font.size = Pt(paragraph_settings.font_size)
+				runner.font.size = paragraph_settings.font_size
 
 		else:
 			p = self.word_document.add_paragraph(text)
