@@ -317,9 +317,7 @@ class DocumentInReport:
 			if position_required:
 				sld_position = self.get_word_declension(s_info.position, declension_type)
 
-		sld_rank = self.get_word_declension(s_info.rank, declension_type)
-		if rep_settings["is_guard"]:
-			sld_rank = "гвардии " + sld_rank
+		sld_rank = self.get_person_rank(s_info.rank, declension_type)
 
 		# TODO battalion must be a variable
 		address = "2 стрелкового батальона войсковой части " + rep_settings["military_unit"]
@@ -336,3 +334,23 @@ class DocumentInReport:
 		if len(dob_str) > 0:
 			result = result + " " + dob_str
 		return result
+
+	def get_person_rank(self, rnk, declension_type):
+		if declension_type != 0:
+			rnk = self.get_word_declension(rnk, declension_type)
+		if self.get_report_settings()["is_guard"]:
+			rnk = "гвардии " + rnk
+		return rnk
+
+	def get_commander_company(self):
+		s_info = self.get_soldier_info()
+		commander = s_info.company_commander
+		c_name = "[ФИО РОТНОГО КОМАНДИРА]"
+		c_rank = "[ЗВАНИЕ РОТНОГО КОМАНДИРА]"
+		c_position = "[ДОЛЖНОСТЬ РОТНОГО КОМАНДИРА]"
+		found = len(commander) > 0
+		if found:
+			c_name = self.get_person_name_short_format_1(commander["name"])
+			c_rank = self.get_person_rank(commander["rank"], 0)
+			c_position = commander["position"]
+		return {"name": c_name, "rank": c_rank, "position": c_position, "found": found}

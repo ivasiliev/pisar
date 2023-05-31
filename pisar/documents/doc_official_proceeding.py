@@ -1,6 +1,8 @@
 # ДОКУМЕНТ
 # СЛУЖЕБНОЕ РАЗБИРАТЕЛЬСТВО по факту грубого дисциплинарного проступка
 from classes.document_in_report import DocumentInReport
+
+
 # from classes.paragraph_settings import ParagraphSettings
 
 
@@ -71,23 +73,19 @@ class DocOfficialProceeding(DocumentInReport):
 			, "Объяснение сослуживца"
 			, "Протокол о грубом дисциплинарном проступке"
 			, "Акт о невозможности получения копии протокола о грубом дисциплинарном проступке"
-			, "Акт о невозможности взять объяснение по факту действий совершенных военнослужащим, в которых усматривается преступление против военной службы"
+			,
+			         "Акт о невозможности взять объяснение по факту действий совершенных военнослужащим, в которых усматривается преступление против военной службы"
 			, "Служебная характеристика"
 			, "Заключение служебного разбирательства"]
 
 		self.add_table(28, captions, rows_data)
 		self.add_empty_paragraphs(1)
 		self.add_paragraph_left_right("Опись составил:", commander["position"])
-		pst = ""
-		if rep_settings["is_guard"]:
-			pst = "гвардии "
-		pst = pst + commander["rank"]
-		self.add_paragraph(pst, self.align_center_settings)
+		self.add_paragraph(self.get_person_rank(commander["rank"], 0), self.align_center_settings)
 		self.add_paragraph(self.get_person_name_short_format_1(commander["name"]), self.align_right_settings)
 
 	# Рапорт 1 (стр 3)
 	def report1_page(self):
-		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 		commander = rep_settings["commander_3_level"]
 		date_of_event = rep_settings["date_of_event"]
@@ -106,20 +104,15 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_paragraph("Прошу Вашего указания на проведение административного расследования по данному факту.",
 		                   self.ident_align_justify_settings)
 		self.add_empty_paragraphs(2)
+
 		self.add_paragraph(commander["position"], self.align_right_settings)
-
-		rnk = commander["rank"]
-		if rep_settings["is_guard"]:
-			rnk = "гвардии " + rnk
-
-		self.add_paragraph(rnk, self.align_center_settings)
+		self.add_paragraph(self.get_person_rank(commander["rank"], 0), self.align_center_settings)
 		self.add_paragraph(self.get_person_name_short_format_1(commander["name"]), self.align_right_settings)
 
 		self.add_paragraph(date_of_event, self.align_left_settings)
 
 	# Рапорт 2 (стр 4)
 	def report2_page(self):
-		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 		commander = rep_settings["commander_2_level"]
 		date_of_event = rep_settings["date_of_event"]
@@ -130,21 +123,17 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_empty_paragraphs(1)
 
 		ps = "Настоящим докладываю, что в ходе проведения розыскных мероприятий розыскной группой из числа " \
-		     "военнослужащих 2 стрелкового батальона под моим руководством место нахождения "
+		     "военнослужащих 2 стрелкового батальона под моим руководством место нахождения"
 
 		sold_str = self.get_person_full_str(1, False, False, True, False)
 
-		ps = ps + sold_str + " установить не удалось."
+		ps = f"{ps} {sold_str} установить не удалось."
 
 		self.add_paragraph(ps, self.ident_align_justify_settings)
 		self.add_empty_paragraphs(2)
 		self.add_paragraph(commander["position"], self.align_right_settings)
 
-		rnk = commander["rank"]
-		if rep_settings["is_guard"]:
-			rnk = "гвардии " + rnk
-
-		self.add_paragraph(rnk, self.align_center_settings)
+		self.add_paragraph(self.get_person_rank(commander["rank"], 0), self.align_center_settings)
 		self.add_paragraph(self.get_person_name_short_format_1(commander["name"]), self.align_right_settings)
 
 		self.add_paragraph(date_of_event, self.align_left_settings)
@@ -172,20 +161,10 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_paragraph(ps, self.ident_align_justify_settings)
 		self.add_empty_paragraphs(2)
 
-		c_name = "[ФИО РОТНОГО КОМАНДИРА]"
-		c_rank = "[ЗВАНИЕ РОТНОГО КОМАНДИРА]"
-		c_position = "[ДОЛЖНОСТЬ РОТНОГО КОМАНДИРА]"
-
-		if len(commander) > 0:
-			c_name = self.get_person_name_short_format_1(commander["name"])
-			c_rank = commander["rank"]
-			if rep_settings["is_guard"]:
-				c_rank = "гвардии " + c_rank
-			c_position = commander["position"]
-
-		self.add_paragraph(c_position, self.align_right_settings)
-		self.add_paragraph(c_rank, self.align_center_settings)
-		self.add_paragraph(c_name, self.align_right_settings)
+		cc_info = self.get_commander_company()
+		self.add_paragraph(cc_info["position"], self.align_right_settings)
+		self.add_paragraph(cc_info["rank"], self.align_center_settings)
+		self.add_paragraph(cc_info["name"], self.align_right_settings)
 
 		self.add_paragraph(date_of_event, self.align_left_settings)
 
@@ -205,25 +184,17 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_paragraph(f"военнослужащим 2 стрелкового батальона войсковой части {rep_settings['military_unit']}",
 		                   self.bold_center_settings)
 
-		rnk = s_info.rank
-		if rep_settings["is_guard"]:
-			rnk = "гвардии " + self.get_word_ablt(rnk)
-
-		self.add_paragraph(f"{rnk} {self.get_person_name_instr(s_info.full_name)}", self.bold_center_settings)
+		self.add_paragraph(f"{self.get_person_rank(s_info.rank, 2)} {self.get_person_name_instr(s_info.full_name)}",
+		                   self.bold_center_settings)
 		self.add_empty_paragraphs(1)
 
-		# TODO what the date?
-		self.add_paragraph_left_right("16.04.2023 г.", "г. Донецк")
+		self.add_paragraph_left_right(date_of_event, "г. Донецк")
 		self.add_empty_paragraphs(2)
 
 		# TODO ВРИО -> временно исполняющим обязанности. long_position?
 		txt1 = f"Мной, временно исполняющим обязанности командира 2 стрелкового батальона войсковой части {rep_settings['military_unit']} "
 
-		rnk = commander["rank"]
-		if rep_settings["is_guard"]:
-			rnk = "гвардии " + self.get_word_ablt(rnk)
-
-		txt1 = txt1 + f"{rnk} {self.get_person_name_instr(commander['name'])},"
+		txt1 = txt1 + f"{self.get_person_rank(commander['rank'], 2)} {self.get_person_name_instr(commander['name'])},"
 		txt1 = txt1 + " проведено служебное разбирательство по факту самовольного оставления части"
 		sold_str = self.get_person_full_str(2, False, False, True, True)
 		self.add_paragraph(f"{txt1} {sold_str}.", self.ident_align_justify_settings)
@@ -233,13 +204,9 @@ class DocOfficialProceeding(DocumentInReport):
 		txt2 = f"{txt2} {sold_str} самовольно покинул расположение части не уведомив вышестоящее командование."
 		self.add_paragraph(txt2, self.ident_align_justify_settings)
 
-		rnk = s_info.rank
-		if rep_settings["is_guard"]:
-			rnk = "гвардии " + self.get_word_gent(rnk)
-
 		txt3 = "Проведенные розыскные мероприятия, опрос сослуживцев, поиск в лечебных учреждениях, " \
 		       "военных комендатурах, а также отделениях полиции"
-		txt3 = f"{txt3} {rnk} {self.get_person_name_gent(s_info.full_name)} результата не дали, установить причины " \
+		txt3 = f"{txt3} {self.get_person_rank(s_info.rank, 1)} {self.get_person_name_gent(s_info.full_name)} результата не дали, установить причины " \
 		       f"отсутствия военнослужащего, а также его местонахождение не удалось."
 
 		self.add_paragraph(txt3, self.ident_align_justify_settings)
@@ -261,12 +228,8 @@ class DocOfficialProceeding(DocumentInReport):
 		                   f"на него обязанностей, поставленных задач и личная недисциплинированность {sold_str}.",
 		                   self.ident_align_justify_settings)
 
-		rnk = s_info.rank
-		if rep_settings["is_guard"]:
-			rnk = "гвардии " + rnk
-
 		p1 = self.add_paragraph(
-			f"Исходя из материала служебного разбирательства следует, что {rnk} {s_info.full_name} "
+			f"Исходя из материала служебного разбирательства следует, что {self.get_person_rank(s_info.rank, 0)} {s_info.full_name} "
 			"самовольно покинул расположение части, за что в соответствии со статьей «337» "
 			"Уголовного кодекса Российской Федерации предусматривается уголовная ответственность, "
 			"на основании вышеизложенного ", self.ident_align_justify_settings)
@@ -291,16 +254,14 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_empty_paragraphs(2)
 		self.add_paragraph(commander["position"], self.align_center_settings)
 
-		rnk = commander["rank"]
-		if rep_settings["is_guard"]:
-			rnk = "гвардии " + rnk
-
-		self.add_paragraph(rnk, self.align_center_settings)
+		self.add_paragraph(self.get_person_rank(commander['rank'], 0), self.align_center_settings)
 		self.add_empty_paragraphs(2)
 
 		self.add_paragraph_left_right(date_of_event, self.get_person_name_short_format_1(commander["name"]))
 
 	def get_commander_company_full_str(self, commander_company_info, rep_settings, declension_type):
+		# TODO refactoring?
+
 		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ РОТЫ]"
 		if len(commander_company_info) > 0:
 			c_name = commander_company_info["name"]
@@ -310,7 +271,6 @@ class DocOfficialProceeding(DocumentInReport):
 			c_position = commander_company_info["position"]
 
 			# TODO more intelligent algorithm for position declension
-
 
 			m_unit = rep_settings["military_unit"]
 			c_company = commander_company_info["company"]
