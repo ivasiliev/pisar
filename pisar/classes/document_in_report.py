@@ -43,11 +43,19 @@ class DocumentInReport:
 		self.align_right_settings = ParagraphSettings()
 		self.align_right_settings.align_right = True
 
+		self.bold_right_settings = ParagraphSettings()
+		self.bold_right_settings.align_right = True
+		self.bold_right_settings.is_bold = True
+
 		self.align_center_settings = ParagraphSettings()
 		self.align_center_settings.align_center = True
 
 		self.align_justify_settings = ParagraphSettings()
 		self.align_justify_settings.align_justify = True
+
+		self.bold_justify_settings = ParagraphSettings()
+		self.bold_justify_settings.align_justify = True
+		self.bold_justify_settings.is_bold = True
 
 		self.ident_align_justify_settings = ParagraphSettings()
 		self.ident_align_justify_settings.align_justify = True
@@ -89,6 +97,8 @@ class DocumentInReport:
 			runner = p.add_run(text)
 			if paragraph_settings.is_bold:
 				runner.bold = True
+			if paragraph_settings.font_size > 0:
+				runner.font.size = paragraph_settings.font_size
 
 		else:
 			p = self.word_document.add_paragraph(text)
@@ -118,7 +128,18 @@ class DocumentInReport:
 		if paragraph_settings.right_indent > 0:
 			pf.right_indent = paragraph_settings.right_indent
 
+		if paragraph_settings.line_spacing > 0:
+			pf.line_spacing = paragraph_settings.line_spacing
+
 		return p
+
+	def add_empty_paragraphs_spacing(self, how_many_rows, line_spacing):
+		num_row = 1
+		paragraph_settings = ParagraphSettings()
+		paragraph_settings.line_spacing = line_spacing
+		while num_row <= how_many_rows:
+			self.add_paragraph("", paragraph_settings)
+			num_row = num_row + 1
 
 	def add_empty_paragraphs(self, how_many_rows):
 		num_row = 1
@@ -283,3 +304,35 @@ class DocumentInReport:
 		m = int(tokens[1])
 		y = int(tokens[2])
 		return f"{d} {months[m - 1]} {y} года"
+
+	# declension_type. 0 (without), 1 (gent), 2 (ablt), 3 (datv)
+	def get_person_full_str(self, declension_type, battalion_only, militaryman_required,
+	                        position_required, dob_required):
+		s_info = self.get_soldier_info()
+		rep_settings = self.get_report_settings()
+		sld_position = ""  # if not required
+		if militaryman_required:
+			sld_position = self.get_word_declension("военнослужащий", declension_type)
+		else:
+			if position_required:
+				sld_position = self.get_word_declension(s_info.position, declension_type)
+
+		sld_rank = self.get_word_declension(s_info.rank, declension_type)
+		if rep_settings["is_guard"]:
+			sld_rank = "гвардии " + sld_rank
+
+		# TODO battalion must be a variable
+		address = "2 стрелкового батальона войсковой части " + rep_settings["military_unit"]
+		if not battalion_only:
+			address = f"{s_info.squad} стрелкового отделения {s_info.platoon} стрелкового взвода {s_info.company} стрелковой роты " + address
+
+		full_name = self.get_person_name_declension(s_info.full_name, declension_type)
+
+		dob_str = ""
+		if dob_required:
+			dob_str = self.get_date_format_1(s_info.dob_string) + " рождения"
+
+		result = f"{sld_position} {address} {sld_rank} {full_name}"
+		if len(dob_str) > 0:
+			result = result + " " + dob_str
+		return result

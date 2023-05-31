@@ -116,7 +116,8 @@ class PersonnelStorage:
 						company_found = True
 						continue
 					if company_found and cell.col_idx == self.COLUMN_POSITION:
-						if "командир" in cvl and "рот" in cvl:
+						# if "командир" in cvl and "рот" in cvl:
+						if "командир" in cvl:
 							commander_row_found = True
 					if commander_row_found:
 						if cell.col_idx == self.COLUMN_RANK:

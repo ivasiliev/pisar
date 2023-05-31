@@ -18,6 +18,10 @@ if __name__ == '__main__':
 	datv_text = parsed.inflect({'datv'})
 	print(f"datv_text={datv_text.word}")
 
+	nationality = "русский"
+	parsed = morph.parse(nationality)[0]
+	print(f"datv_text={parsed.inflect({'datv'}).word}")
+
 
 	maker = PetrovichDeclinationMaker()
 
