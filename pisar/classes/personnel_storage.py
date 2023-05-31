@@ -124,7 +124,7 @@ class PersonnelStorage:
 							commander_rank = cvl
 						else:
 							if cell.col_idx == self.COLUMN_POSITION:
-								commander_position = cvl
+								commander_position = cv
 							else:
 								if cell.col_idx == self.COLUMN_FULL_NAME:
 									commander_name = cv
