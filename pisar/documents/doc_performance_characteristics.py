@@ -1,6 +1,5 @@
 # ДОКУМЕНТ
 # СЛУЖЕБНАЯ ХАРАКТЕРИСТИКА
-from docx.enum.style import WD_STYLE_TYPE
 from docx.shared import Mm
 from docx.shared import Pt
 
@@ -13,7 +12,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		return "Служебная характеристика"
 
 	def get_name_for_file(self):
-		return f"Служебная характеристика ({self.get_soldier_info().full_name}).docx"
+		return f"{self.get_name()} ({self.get_soldier_info().full_name}).docx"
 
 	def render(self):
 		s_info = self.get_soldier_info()
@@ -39,7 +38,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		txt = f"на {sold_str}, {nationality}, образование {education}, в ВС ДНР с {yss} года."
 		self.add_paragraph(txt, paragraph_settings)
 
-		self.add_empty_paragraphs_spacing(1, line_spacing)  #2
+		self.add_empty_paragraphs_spacing(1, line_spacing)  # 2
 
 		position_str = self.get_word_gent(s_info.position)
 		sold_str = self.get_person_full_str(0, False, False, False, False).strip()
@@ -66,28 +65,30 @@ class DocPerformanceCharacteristics(DocumentInReport):
 
 		self.add_empty_paragraphs_spacing(1, line_spacing)
 
-		commander_company_info = s_info.company_commander
-		c_name = "[ФИО РОТНОГО КОМАНДИРА]"
-		c_rank = "[ЗВАНИЕ РОТНОГО КОМАНДИРА]"
-		c_position = "[ДОЛЖНОСТЬ РОТНОГО КОМАНДИРА]"
-		if len(commander_company_info) > 0:
-			c_name = self.get_person_name_short_format_1(commander_company_info["name"])
-			c_rank = commander_company_info["rank"]
-			if rep_settings["is_guard"]:
-				c_rank = "гвардии " + c_rank
+		cc_info = self.get_commander_company()
+		c_name = cc_info["name"]
+		c_rank = cc_info["rank"]
+		c_position = cc_info["position"]
+		if cc_info["found"]:
 			# TODO battalion to variables
-			c_position = f"{commander_company_info['position']} {s_info.company} стрелковой роты 2 стрелкового батальона"
+			c_position = f"{c_position} {s_info.company} стрелковой роты 2 стрелкового батальона"
 
-		par_set_bold = self.bold_center_settings
-		par_set_bold.line_spacing = line_spacing
-		par_set_right = self.bold_right_settings
+		par_set_center = ParagraphSettings()
+		par_set_center.is_bold = True
+		par_set_center.align_center = True
+		par_set_center.line_spacing = line_spacing
+
+		par_set_right = ParagraphSettings()
+		par_set_right.align_right = True
+		par_set_right.is_bold = True
 		par_set_right.line_spacing = line_spacing
-		self.add_paragraph(c_position.upper(), par_set_bold)
-		self.add_paragraph(c_rank, par_set_bold)
+
+		self.add_paragraph(c_position.upper(), par_set_center)
+		self.add_paragraph(c_rank, par_set_center)
 		self.add_paragraph(c_name, par_set_right)
 		self.add_empty_paragraphs_spacing(1, line_spacing)
 
-		self.add_commander(rep_settings["commander_2_level"], par_set_bold, par_set_right)
+		self.add_commander(rep_settings["commander_2_level"], par_set_center, par_set_right)
 		self.add_empty_paragraphs_spacing(1, line_spacing)
 
 		self.add_paragraph("С характеристикой ознакомлен, согласен:", self.align_justify_settings)
@@ -97,19 +98,19 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		comm3_pos = comm3["position"]
 		comm3_pos = comm3_pos + " " + rep_settings["military_unit"]
 		comm3["position"] = comm3_pos
-		self.add_commander(comm3, par_set_bold, par_set_right)
+		self.add_commander(comm3, par_set_center, par_set_right)
 		self.add_empty_paragraphs_spacing(1, line_spacing)
 
 		self.add_paragraph("«___» _________ 2023 г.", self.bold_justify_settings)
 
 		super().render()
 
-	def add_commander(self, commander_info, par_set_bold, par_set_right):
+	def add_commander(self, commander_info, par_set_center, par_set_right):
 		c_name = self.get_person_name_short_format_1(commander_info["name"])
 		c_rank = commander_info["rank"]
 		if self.get_report_settings()["is_guard"]:
 			c_rank = "гвардии " + c_rank
 		c_position = commander_info["position"]
 		self.add_paragraph(c_position.upper(), self.bold_center_settings)
-		self.add_paragraph(c_rank, self.bold_center_settings)
-		self.add_paragraph(c_name, self.bold_right_settings)
+		self.add_paragraph(c_rank, par_set_center)
+		self.add_paragraph(c_name, par_set_right)
