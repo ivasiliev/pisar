@@ -4,6 +4,7 @@ import sys
 
 from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_PERSONNEL_PATH, MODEL_IS_VALID, MODEL_CURRENT_SOLDIER
 from classes.personnel_storage import PersonnelStorage
+from documents.doc_act_copy_impossible import DocActCopyImpossible
 from documents.doc_act_explanation_impossible import DocActExplanationImpossible
 from documents.doc_official_proceeding import DocOfficialProceeding
 from documents.doc_performance_characteristics import DocPerformanceCharacteristics
@@ -40,6 +41,9 @@ if __name__ == '__main__':
 			else:
 				if "explanation_impossible" in settings_filename:
 					doc = DocActExplanationImpossible(data_model)
+				else:
+					if "copy_impossible" in settings_filename:
+						doc = DocActCopyImpossible(data_model)
 
 		if doc is None:
 			print(f"Не удалось определить тип документа. Выполнение программы прервано.")
