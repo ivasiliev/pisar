@@ -61,6 +61,11 @@ class DocumentInReport:
 		self.ident_align_justify_settings.align_justify = True
 		self.ident_align_justify_settings.first_line_indent = Mm(12.5)
 
+		self.bold_title = ParagraphSettings()
+		self.bold_title.font_size = Pt(16)
+		self.bold_title.is_bold = True
+		self.bold_title.align_center = True
+
 		self.personnel_info = None
 		if self.data_model is not None and self.data_model[MODEL_PERSONNEL_PATH] is not None:
 			self.personnel_info = PersonnelStorage(self.data_model[MODEL_PERSONNEL_PATH])
@@ -97,6 +102,8 @@ class DocumentInReport:
 			runner = p.add_run(text)
 			if paragraph_settings.is_bold:
 				runner.bold = True
+			if paragraph_settings.is_underline:
+				runner.underline = True
 			if paragraph_settings.font_size > 0:
 				runner.font.size = paragraph_settings.font_size
 
@@ -354,3 +361,24 @@ class DocumentInReport:
 			c_rank = self.get_person_rank(commander["rank"], 0)
 			c_position = commander["position"]
 		return {"name": c_name, "rank": c_rank, "position": c_position, "found": found}
+
+	def get_commander_company_full_str(self, declension_type):
+		rep_settings = self.get_report_settings()
+		commander_company_info = self.get_soldier_info().company_commander
+
+		# TODO refactoring?
+
+		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ РОТЫ]"
+		if len(commander_company_info) > 0:
+			c_name = commander_company_info["name"]
+			c_rank = commander_company_info["rank"]
+			if rep_settings["is_guard"]:
+				c_rank = "гвардии " + self.get_word_declension(c_rank, declension_type)
+			c_position = commander_company_info["position"]
+
+			# TODO more intelligent algorithm for position declension
+
+			m_unit = rep_settings["military_unit"]
+			c_company = commander_company_info["company"]
+			text = f"{self.get_word_declension(c_position, declension_type)} {c_company} стрелковой роты 2 стрелкового батальона войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
+		return text

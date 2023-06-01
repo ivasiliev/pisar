@@ -1,5 +1,6 @@
-pip install --upgrade pip
+rem pip install --upgrade pip
 
+pip install pysimplegui
 pip install openpyxl
 pip install python-docx
 pip install pymorphy2

@@ -1,0 +1,18 @@
+{
+	"personnel_path": "data\\personnel-demo.xlsx",
+	"output_path": "c:\\temp\\reports_output\\",
+	"soldier_ids": "1",
+	"military_unit": "42600",
+	"is_guard": true,
+	"date_of_event": "16.04.2023",
+	"commander_2_level": {
+		"name" : "Артемьев Станислав Львович",
+		"rank" : "полковник",
+		"position": "КОМАНДИР ВОЙСКОВОЙ ЧАСТИ"
+	},
+	"commander_3_level": {
+		"name" : "Кесаренко Максим Алексеевич",
+		"rank" : "полковник",
+		"position": "НАЧАЛЬНИК ШТАБА ВОЙСКОВОЙ ЧАСТИ"
+	}
+}
