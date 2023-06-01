@@ -218,7 +218,7 @@ class DocOfficialProceeding(DocumentInReport):
 		       "особенностей всех военнослужащих роты, постоянного проведения с ними индивидуальной работы по воинскому " \
 		       "воспитанию"
 
-		commander_company_text1 = self.get_commander_company_full_str(commander_company_info, rep_settings, 2)
+		commander_company_text1 = self.get_commander_company_full_str(2)
 
 		self.add_paragraph(f"{txt4} {commander_company_text1};", self.ident_align_justify_settings)
 
@@ -236,7 +236,7 @@ class DocOfficialProceeding(DocumentInReport):
 		runner = p1.add_run("ПРЕДЛАГАЮ:")
 		runner.bold = True
 
-		commander_company_text2 = self.get_commander_company_full_str(commander_company_info, rep_settings, 3)
+		commander_company_text2 = self.get_commander_company_full_str(3)
 
 		txt5 = "за невыполнение требований статьи 144, 145 Устава Внутренней Службы Вооруженных Сил Российской " \
 		       "Федерации в части, касающейся воспитания, поддержания воинской дисциплины, морально–психологического " \
@@ -244,7 +244,7 @@ class DocOfficialProceeding(DocumentInReport):
 		       "качеств и особенностей всех военнослужащих роты, постоянного проведения с ними индивидуальной работы " \
 		       "по воинскому воспитанию, строго указать на УПУЩЕНИЕ ПО СЛУЖБЕ."
 
-		self.add_paragraph(f"{commander_company_text2} {txt5}", self.ident_align_justify_settings)
+		self.add_paragraph(f"1. {commander_company_text2} {txt5}", self.ident_align_justify_settings)
 
 		sold_str = self.get_person_full_str(3, False, False, True, False)
 		# TODO use just one variable txt
@@ -259,20 +259,3 @@ class DocOfficialProceeding(DocumentInReport):
 
 		self.add_paragraph_left_right(date_of_event, self.get_person_name_short_format_1(commander["name"]))
 
-	def get_commander_company_full_str(self, commander_company_info, rep_settings, declension_type):
-		# TODO refactoring?
-
-		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ РОТЫ]"
-		if len(commander_company_info) > 0:
-			c_name = commander_company_info["name"]
-			c_rank = commander_company_info["rank"]
-			if rep_settings["is_guard"]:
-				c_rank = "гвардии " + self.get_word_declension(c_rank, declension_type)
-			c_position = commander_company_info["position"]
-
-			# TODO more intelligent algorithm for position declension
-
-			m_unit = rep_settings["military_unit"]
-			c_company = commander_company_info["company"]
-			text = f"{self.get_word_declension(c_position, declension_type)} {c_company} стрелковой роты 2 стрелкового батальона войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
-		return text

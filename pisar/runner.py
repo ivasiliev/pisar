@@ -7,6 +7,7 @@ from classes.personnel_storage import PersonnelStorage
 from documents.doc_act_copy_impossible import DocActCopyImpossible
 from documents.doc_act_explanation_impossible import DocActExplanationImpossible
 from documents.doc_official_proceeding import DocOfficialProceeding
+from documents.doc_order_official_proceeding import DocOrderOfficialProceeding
 from documents.doc_performance_characteristics import DocPerformanceCharacteristics
 from helpers.data_model_helper import create_from_json
 
@@ -33,17 +34,21 @@ if __name__ == '__main__':
 		# we define type of generation via settings file name
 		settings_filename = os.path.basename(settings_full_path)
 		doc = None
-		if "official_proceeding" in settings_filename:
-			doc = DocOfficialProceeding(data_model)
+
+		if "order_official_proceeding" in settings_filename:
+			doc = DocOrderOfficialProceeding(data_model)
 		else:
-			if "performance_characteristics" in settings_filename:
-				doc = DocPerformanceCharacteristics(data_model)
+			if "official_proceeding" in settings_filename:
+				doc = DocOfficialProceeding(data_model)
 			else:
-				if "explanation_impossible" in settings_filename:
-					doc = DocActExplanationImpossible(data_model)
+				if "performance_characteristics" in settings_filename:
+					doc = DocPerformanceCharacteristics(data_model)
 				else:
-					if "copy_impossible" in settings_filename:
-						doc = DocActCopyImpossible(data_model)
+					if "explanation_impossible" in settings_filename:
+						doc = DocActExplanationImpossible(data_model)
+					else:
+						if "copy_impossible" in settings_filename:
+							doc = DocActCopyImpossible(data_model)
 
 		if doc is None:
 			print(f"Не удалось определить тип документа. Выполнение программы прервано.")
