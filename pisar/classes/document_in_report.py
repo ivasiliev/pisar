@@ -230,7 +230,7 @@ class DocumentInReport:
 		if len(name_tokens) > 2:
 			middle_name = name_tokens[2]
 
-		sn = maker.make(NamePart.FIRSTNAME, Gender.MALE, cs, surname)
+		sn = maker.make(NamePart.LASTNAME, Gender.MALE, cs, surname)
 		fn = maker.make(NamePart.FIRSTNAME, Gender.MALE, cs, first_name)
 		mn = maker.make(NamePart.MIDDLENAME, Gender.MALE, cs, middle_name)
 
