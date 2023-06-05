@@ -5,6 +5,7 @@ from docx.shared import Mm
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 from pytrovich.enums import NamePart, Gender, Case
 
 from classes.paragraph_settings import ParagraphSettings
@@ -42,15 +43,28 @@ class DocumentInReport:
 		self.align_right_settings = ParagraphSettings()
 		self.align_right_settings.align_right = True
 
+		self.bold_right_settings = ParagraphSettings()
+		self.bold_right_settings.align_right = True
+		self.bold_right_settings.is_bold = True
+
 		self.align_center_settings = ParagraphSettings()
 		self.align_center_settings.align_center = True
 
 		self.align_justify_settings = ParagraphSettings()
 		self.align_justify_settings.align_justify = True
 
+		self.bold_justify_settings = ParagraphSettings()
+		self.bold_justify_settings.align_justify = True
+		self.bold_justify_settings.is_bold = True
+
 		self.ident_align_justify_settings = ParagraphSettings()
 		self.ident_align_justify_settings.align_justify = True
 		self.ident_align_justify_settings.first_line_indent = Mm(12.5)
+
+		self.bold_title = ParagraphSettings()
+		self.bold_title.font_size = Pt(16)
+		self.bold_title.is_bold = True
+		self.bold_title.align_center = True
 
 		self.personnel_info = None
 		if self.data_model is not None and self.data_model[MODEL_PERSONNEL_PATH] is not None:
@@ -88,6 +102,10 @@ class DocumentInReport:
 			runner = p.add_run(text)
 			if paragraph_settings.is_bold:
 				runner.bold = True
+			if paragraph_settings.is_underline:
+				runner.underline = True
+			if paragraph_settings.font_size > 0:
+				runner.font.size = paragraph_settings.font_size
 
 		else:
 			p = self.word_document.add_paragraph(text)
@@ -117,7 +135,18 @@ class DocumentInReport:
 		if paragraph_settings.right_indent > 0:
 			pf.right_indent = paragraph_settings.right_indent
 
+		if paragraph_settings.line_spacing > 0:
+			pf.line_spacing = paragraph_settings.line_spacing
+
 		return p
+
+	def add_empty_paragraphs_spacing(self, how_many_rows, line_spacing):
+		num_row = 1
+		paragraph_settings = ParagraphSettings()
+		paragraph_settings.line_spacing = line_spacing
+		while num_row <= how_many_rows:
+			self.add_paragraph("", paragraph_settings)
+			num_row = num_row + 1
 
 	def add_empty_paragraphs(self, how_many_rows):
 		num_row = 1
@@ -147,19 +176,22 @@ class DocumentInReport:
 		table.style = 'Table Grid'
 		table.allow_autofit = False
 		table.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-		# TODO set columns width
 		# TODO put table in the center and set margins 0;0
 		# process header
 		hdr_cells = table.rows[0].cells
 		num_column = 0
 		for caption in captions:
-			hdr_cells[num_column].text = caption
+			cell = hdr_cells[num_column]
+			p = cell.paragraphs[0]
+			p.text = caption
+			p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+			cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
 			num_column = num_column + 1
 
 		# set column width
 		self.set_column_width(table, 0, 10)
-		self.set_column_width(table, 1, 140)
-		self.set_column_width(table, 2, 20)
+		self.set_column_width(table, 1, 120)
+		self.set_column_width(table, 2, 35)
 
 		# process rows
 		num_row = 1
@@ -198,7 +230,7 @@ class DocumentInReport:
 		if len(name_tokens) > 2:
 			middle_name = name_tokens[2]
 
-		sn = maker.make(NamePart.FIRSTNAME, Gender.MALE, cs, surname)
+		sn = maker.make(NamePart.LASTNAME, Gender.MALE, cs, surname)
 		fn = maker.make(NamePart.FIRSTNAME, Gender.MALE, cs, first_name)
 		mn = maker.make(NamePart.MIDDLENAME, Gender.MALE, cs, middle_name)
 
@@ -270,14 +302,83 @@ class DocumentInReport:
 
 	# format = 16-04-2023/16.04.2023 -> 16 апреля 2023 года
 	def get_date_format_1(self, date_str):
-		tokens = date_str.split("-")
-		if len(tokens) < 3:
-			tokens = date_str.split(".")
+		tokens = date_str.split(".")
 		if len(tokens) != 3:
 			print(f"Не удалось определить формат даты {date_str}")
-		months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
+		months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября",
+		          "ноября", "декабря"]
 		d = int(tokens[0])
 		m = int(tokens[1])
 		y = int(tokens[2])
-		return f"{d} {months[m-1]} {y} года"
+		return f"{d} {months[m - 1]} {y} года"
 
+	# declension_type. 0 (without), 1 (gent), 2 (ablt), 3 (datv)
+	def get_person_full_str(self, declension_type, battalion_only, militaryman_required,
+	                        position_required, dob_required):
+		s_info = self.get_soldier_info()
+		rep_settings = self.get_report_settings()
+		sld_position = ""  # if not required
+		if militaryman_required:
+			sld_position = self.get_word_declension("военнослужащий", declension_type)
+		else:
+			if position_required:
+				sld_position = self.get_word_declension(s_info.position, declension_type)
+
+		sld_rank = self.get_person_rank(s_info.rank, declension_type)
+
+		# TODO battalion must be a variable
+		address = "2 стрелкового батальона войсковой части " + rep_settings["military_unit"]
+		if not battalion_only:
+			address = f"{s_info.squad} стрелкового отделения {s_info.platoon} стрелкового взвода {s_info.company} стрелковой роты " + address
+
+		full_name = self.get_person_name_declension(s_info.full_name, declension_type)
+
+		dob_str = ""
+		if dob_required:
+			dob_str = self.get_date_format_1(s_info.dob_string) + " рождения"
+
+		result = f"{sld_position} {address} {sld_rank} {full_name}"
+		if len(dob_str) > 0:
+			result = result + " " + dob_str
+		return result
+
+	def get_person_rank(self, rnk, declension_type):
+		if declension_type != 0:
+			rnk = self.get_word_declension(rnk, declension_type)
+		if self.get_report_settings()["is_guard"]:
+			rnk = "гвардии " + rnk
+		return rnk
+
+	def get_commander_company(self):
+		s_info = self.get_soldier_info()
+		commander = s_info.company_commander
+		c_name = "[ФИО РОТНОГО КОМАНДИРА]"
+		c_rank = "[ЗВАНИЕ РОТНОГО КОМАНДИРА]"
+		c_position = "[ДОЛЖНОСТЬ РОТНОГО КОМАНДИРА]"
+		found = len(commander) > 0
+		if found:
+			c_name = self.get_person_name_short_format_1(commander["name"])
+			c_rank = self.get_person_rank(commander["rank"], 0)
+			c_position = commander["position"]
+		return {"name": c_name, "rank": c_rank, "position": c_position, "found": found}
+
+	def get_commander_company_full_str(self, declension_type):
+		rep_settings = self.get_report_settings()
+		commander_company_info = self.get_soldier_info().company_commander
+
+		# TODO refactoring?
+
+		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ РОТЫ]"
+		if len(commander_company_info) > 0:
+			c_name = commander_company_info["name"]
+			c_rank = commander_company_info["rank"]
+			if rep_settings["is_guard"]:
+				c_rank = "гвардии " + self.get_word_declension(c_rank, declension_type)
+			c_position = commander_company_info["position"]
+
+			# TODO more intelligent algorithm for position declension
+
+			m_unit = rep_settings["military_unit"]
+			c_company = commander_company_info["company"]
+			text = f"{self.get_word_declension(c_position, declension_type)} {c_company} стрелковой роты 2 стрелкового батальона войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
+		return text

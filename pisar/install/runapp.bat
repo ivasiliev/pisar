@@ -1,0 +1,1 @@
+python C:\pisar\pisar\gui\main_window.py
