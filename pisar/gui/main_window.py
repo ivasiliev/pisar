@@ -1,26 +1,75 @@
+import os
+
 import PySimpleGUI as sg
 import subprocess
+from pathlib import Path
+
+from runner import run_generation
+
+
+# 0 -- pointer, 1 -- clock
+def set_cursor(ctrl_name, cursor_type):
+	curs_name = "arrow"
+	if cursor_type == 1:
+		curs_name = "circle"
+	window[ctrl_name].set_cursor(curs_name)
+
+
+current_path = Path(os.getcwd())
+print(f"current path={current_path}")
+root_path = current_path.parent.absolute()
+print(f"root path={root_path}")
 
 sg.theme('DarkGreen5')
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text(size=(15,1), key='-OUTPUT-')],
-          [sg.Input(key='-IN-')],
-          [sg.Button('Show'), sg.Button('Exit'), sg.Button(key="updateButton", button_text="Обновить")]
-          ]
+button_text_report_settings = "Настройки"
+button_text_report_run = "Запуск"
 
-window = sg.Window('Pattern 2B', layout)
+update_button_key = "update_app_button"
+
+rep1_text1 = sg.Text("Служебное разбирательство по факту грубого дисциплинарного проступка",
+                     font=("Helvetica", 12, "bold"))
+rep1_button_settings = sg.Button(key="report1_settings", button_text=button_text_report_settings)
+rep1_button_run = sg.Button(key="report1_run", button_text=button_text_report_run)
+
+rep1_layer1 = [rep1_text1, rep1_button_run, rep1_button_settings]
+
+docs_list = ["Служебное разбирательство (сам документ)", "Протокол о ГДП",
+             "Акт о невозможности получения копии протокола о ГДП", "Акт о невозможности взять объяснение",
+             "Служебная характеристика", "Заключение служебного разбирательства"]
+rep1_layer2 = []
+for dc in docs_list:
+	rep1_layer2.append([sg.Text(f"* {dc}")])
+col_content = [[sg.Text(f"* {docs_list[0]}")]]
+cl = sg.Column(rep1_layer2)
+
+layout = [
+	[sg.Button(key=update_button_key, button_text="Обновить программу")],
+	[sg.VPush()],
+	[sg.Frame("", [rep1_layer1, [cl]])]
+]
+
+window = sg.Window("Писарь", layout)
 
 while True:  # Event Loop
-    event, values = window.read()
-    print(event, values)
-    if event == sg.WIN_CLOSED or event == 'Exit':
-        break
-    if event == 'Show':
-        # Update the "output" text element to be the value of "input" element
-        window['-OUTPUT-'].update(values['-IN-'])
-    if event == 'updateButton':
-        window['-OUTPUT-'].update("Обновление...")
-        subprocess.call(["c:\\Leonov\\pisar\\pisar\\install\\update.bat"])
-        window['-OUTPUT-'].update("Обновление выполнено")
+	event, values = window.read()
+	print(event, values)
+	if event == sg.WIN_CLOSED:
+		break
+	if event == update_button_key:
+		full_path = os.path.join(root_path, "install", "update.bat")
+		set_cursor(update_button_key, 1)
+		subprocess.call([full_path])
+		set_cursor(update_button_key, 0)
+
+	if event == "report1_run":
+		full_path = os.path.join(root_path, "report-settings", "batch_official_proceeding.json")
+		set_cursor(update_button_key, 1)
+		run_generation(full_path)
+		set_cursor(update_button_key, 0)
+
+	if event == 'Show':
+		# Update the "output" text element to be the value of "input" element
+		window['-OUTPUT-'].update(values['-IN-'])
 
 window.close()

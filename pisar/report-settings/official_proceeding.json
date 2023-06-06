@@ -1,16 +1,16 @@
 {
 	"personnel_path": "data\\personnel-demo.xlsx",
-	"output_path": "c:\\temp\\reports_output\\",
+	"output_path": "c:\\pisar_output\\",
 	"soldier_ids": "1",
 	"military_unit": "42600",
 	"is_guard": true,
 	"date_of_event": "16.04.2023",
-	"commander_2_level": {
+	"commander_1_level": {
 		"name" : "Козырев Артем Васильевич",
 		"rank" : "лейтенант",
 		"position": "ВРИО ЗКБ по ВПР 2СБ"
 	},
-	"commander_3_level": {
+	"commander_2_level": {
 		"name" : "Рудаков Илья Сергеевич",
 		"rank" : "подполковник",
 		"position": "ВРИО командира 2 стрелкового батальона"

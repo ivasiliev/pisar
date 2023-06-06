@@ -108,7 +108,7 @@ class DocOrderOfficialProceeding(DocumentInReport):
 		par_set_right.is_bold = True
 		par_set_right.line_spacing = line_spacing
 
-		self.add_commander(rep_settings["commander_2_level"], military_unit, par_set_center, par_set_right)
+		self.add_commander(rep_settings["commander_4_level"], military_unit, par_set_center, par_set_right)
 		self.add_empty_paragraphs(2)
 		self.add_commander(rep_settings["commander_3_level"], military_unit, par_set_center, par_set_right)
 

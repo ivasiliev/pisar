@@ -57,7 +57,7 @@ class DocOfficialProceeding(DocumentInReport):
 	# Опись (стр 2)
 	def inventory_page(self):
 		rep_settings = self.get_report_settings()
-		commander = rep_settings["commander_2_level"]
+		commander = rep_settings["commander_1_level"]
 
 		self.add_paragraph("О П И С Ь", self.align_center_settings)
 		self.add_paragraph("документов, находящихся в материалах служебного разбирательства",
@@ -87,7 +87,7 @@ class DocOfficialProceeding(DocumentInReport):
 	# Рапорт 1 (стр 3)
 	def report1_page(self):
 		rep_settings = self.get_report_settings()
-		commander = rep_settings["commander_3_level"]
+		commander = rep_settings["commander_2_level"]
 		date_of_event = rep_settings["date_of_event"]
 
 		self.add_paragraph("Командиру войсковой части " + rep_settings["military_unit"], self.align_right_settings)
@@ -114,7 +114,7 @@ class DocOfficialProceeding(DocumentInReport):
 	# Рапорт 2 (стр 4)
 	def report2_page(self):
 		rep_settings = self.get_report_settings()
-		commander = rep_settings["commander_2_level"]
+		commander = rep_settings["commander_1_level"]
 		date_of_event = rep_settings["date_of_event"]
 
 		self.add_paragraph("Командиру 2 СБ", self.align_right_settings)
@@ -171,9 +171,8 @@ class DocOfficialProceeding(DocumentInReport):
 	# Заключение (стр 6 и 7)
 	def conclusion_page(self):
 		s_info = self.get_soldier_info()
-		commander_company_info = s_info.company_commander
 		rep_settings = self.get_report_settings()
-		commander = rep_settings["commander_3_level"]
+		commander = rep_settings["commander_2_level"]
 		date_of_event = rep_settings["date_of_event"]
 
 		self.add_paragraph(f"Командиру войсковой части {rep_settings['military_unit']}", self.align_right_settings)

@@ -2,6 +2,7 @@ import json
 import os
 import sys
 
+from batches.batch_official_proceeding import BatchOfficialProceeding
 from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_PERSONNEL_PATH, MODEL_IS_VALID, MODEL_CURRENT_SOLDIER
 from classes.personnel_storage import PersonnelStorage
 from documents.doc_act_copy_impossible import DocActCopyImpossible
@@ -11,9 +12,9 @@ from documents.doc_order_official_proceeding import DocOrderOfficialProceeding
 from documents.doc_performance_characteristics import DocPerformanceCharacteristics
 from helpers.data_model_helper import create_from_json
 
-if __name__ == '__main__':
+
+def run_generation(settings_full_path):
 	print("Писарь начинает работу")
-	settings_full_path = str(sys.argv[1])
 	print(f"Файл настроек={settings_full_path}")
 	if not os.path.exists(settings_full_path):
 		print(f"Файл настроек не обнаружен либо недоступен. Выполнение программы прервано.")
@@ -33,22 +34,29 @@ if __name__ == '__main__':
 	else:
 		# we define type of generation via settings file name
 		settings_filename = os.path.basename(settings_full_path)
+		settings_key = os.path.splitext(settings_filename)[0]
+		# we can have a single document generation or batch generation
 		doc = None
 
-		if "order_official_proceeding" in settings_filename:
-			doc = DocOrderOfficialProceeding(data_model)
+		if settings_key.startswith("batch"):
+			if settings_key == "batch_official_proceeding":
+				doc = BatchOfficialProceeding(data_model)
+			pass
 		else:
-			if "official_proceeding" in settings_filename:
-				doc = DocOfficialProceeding(data_model)
+			if settings_key == "order_official_proceeding":
+				doc = DocOrderOfficialProceeding(data_model)
 			else:
-				if "performance_characteristics" in settings_filename:
-					doc = DocPerformanceCharacteristics(data_model)
+				if settings_key == "official_proceeding":
+					doc = DocOfficialProceeding(data_model)
 				else:
-					if "explanation_impossible" in settings_filename:
-						doc = DocActExplanationImpossible(data_model)
+					if settings_key == "performance_characteristics":
+						doc = DocPerformanceCharacteristics(data_model)
 					else:
-						if "copy_impossible" in settings_filename:
-							doc = DocActCopyImpossible(data_model)
+						if settings_key == "explanation_impossible":
+							doc = DocActExplanationImpossible(data_model)
+						else:
+							if settings_key == "copy_impossible":
+								doc = DocActCopyImpossible(data_model)
 
 		if doc is None:
 			print(f"Не удалось определить тип документа. Выполнение программы прервано.")
@@ -73,3 +81,7 @@ if __name__ == '__main__':
 					      f"заполните эту информацию вручную.")
 				doc.render()
 	print("Писарь завершил работу")
+
+
+if __name__ == '__main__':
+	run_generation(str(sys.argv[1]))

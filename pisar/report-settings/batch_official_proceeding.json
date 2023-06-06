@@ -1,12 +1,18 @@
 {
-	"personnel_path": "data\\personnel-demo.xlsx",
+	"personnel_path": "c:\\pisar_data\\personnel-demo.xlsx",
 	"output_path": "c:\\pisar_output\\",
 	"soldier_ids": "1",
+	"date_of_event": "16.04.2023",
 	"military_unit": "42600",
 	"is_guard": true,
 	"nationality": "русский",
 	"education": "среднее",
 	"year_service_started": "2019",
+	"commander_1_level": {
+		"name" : "Козырев Артем Васильевич",
+		"rank" : "лейтенант",
+		"position": "ВРИО ЗКБ по ВПР 2СБ"
+	},
 	"commander_2_level": {
 		"name" : "Рудаков Илья Сергеевич",
 		"rank" : "подполковник",
@@ -16,5 +22,10 @@
 		"name" : "Минаев Дмитрий Николаевич",
 		"rank" : "полковник",
 		"position": "Начальник штаба войсковой части"
+	},
+	"commander_4_level": {
+		"name" : "Артемьев Станислав Львович",
+		"rank" : "полковник",
+		"position": "Командир войсковой части"
 	}
 }

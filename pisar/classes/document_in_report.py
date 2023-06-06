@@ -23,7 +23,6 @@ MODEL_CURRENT_SOLDIER = "current_soldier"
 
 
 class DocumentInReport:
-
 	def __init__(self, data_model):
 		self.data_model = data_model
 		self.pages = []
