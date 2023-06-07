@@ -67,4 +67,8 @@ while True:
 		run_generation(full_path)
 		set_cursor("report1_run", 0)
 
+	if event == "report1_settings":
+		subprocess.call(["notepad", "c:\\pisar_data\\batch_official_proceeding.json"])
+
+
 window.close()
