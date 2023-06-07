@@ -39,7 +39,7 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("по факту грубого дисциплинарного проступка", self.bold_center_settings)
 
-		sold_str = self.get_person_full_str(2, True, True, False, False, True)
+		sold_str = self.get_person_full_str(2, True, True, False, False, True, False)
 
 		self.add_paragraph(
 			sold_str,
@@ -100,7 +100,7 @@ class DocOfficialProceeding(DocumentInReport):
 		ps = "Настоящим докладываю, что"
 		ps = f"{ps} {self.get_date_format_1(rep_settings['date_of_event'])} "
 
-		sold_str = self.get_person_full_str(0, False, False, True, True, False)
+		sold_str = self.get_person_full_str(0, False, False, True, True, False, False)
 
 		ps = ps + sold_str + ", отсутствовал на месте несения службы более 4 (четырех) часов, служебные обязанности не выполняет."
 		self.add_paragraph(ps, self.ident_align_justify_settings)
@@ -123,7 +123,7 @@ class DocOfficialProceeding(DocumentInReport):
 		ps = "Настоящим докладываю, что в ходе проведения розыскных мероприятий розыскной группой из числа " \
 		     "военнослужащих 2 стрелкового батальона под моим руководством место нахождения"
 
-		sold_str = self.get_person_full_str(1, False, False, True, False, False)
+		sold_str = self.get_person_full_str(1, False, False, True, False, False, False)
 
 		ps = f"{ps} {sold_str} не установлено."
 		self.add_paragraph(ps, self.ident_align_justify_settings)
@@ -145,7 +145,7 @@ class DocOfficialProceeding(DocumentInReport):
 
 		ps = f"Настоящим докладываю, что {self.get_date_format_1(date_of_event)}"
 
-		sold_str = self.get_person_full_str(0, False, False, True, False, False)
+		sold_str = self.get_person_full_str(0, False, False, True, False, False, False)
 
 		ps = f"{ps} {sold_str} отсутствует на службе без уважительных причин, не уведомив об этом вышестоящее командование."
 		self.add_paragraph(ps, self.ident_align_justify_settings)
@@ -186,12 +186,12 @@ class DocOfficialProceeding(DocumentInReport):
 
 		txt = txt + f"{self.get_person_rank(commander['rank'], 2)} {self.get_person_name_instr(commander['name'])},"
 		txt = txt + " проведено служебное разбирательство по факту грубого дисциплинарного проступка"
-		sold_str = self.get_person_full_str(2, False, False, True, True, True)
+		sold_str = self.get_person_full_str(2, False, False, True, True, True, False)
 		self.add_paragraph(f"{txt} {sold_str}.", paragraph_settings)
 
 		txt = f"В ходе проведения служебного разбирательства было установлено, что {self.get_date_format_1(rep_settings['date_of_event'])}"
-		sold_str = self.get_person_full_str(0, False, False, True, False, False)
-		txt2 = f"{txt} {sold_str} отсутствовал в месте несения военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени, тем самым совершил грубый дисциплинарный проступок."
+		sold_str = self.get_person_full_str(0, False, False, True, False, False, False)
+		txt = f"{txt} {sold_str} отсутствовал в месте несения военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени, тем самым совершил грубый дисциплинарный проступок."
 		self.add_paragraph(txt, paragraph_settings)
 
 		txt = "Проведенные розыскные мероприятия, опрос сослуживцев, поиск в лечебных учреждениях, " \
@@ -213,13 +213,14 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_paragraph(f"{txt} {commander_company_text1};", paragraph_settings)
 
 		# TODO use dynamic part
+		commander_platoon = self.get_commander_platoon_full_str(2)
 		txt = "невыполнение требований статьи 152, 153 Устава Внутренней Службы Вооруженных Сил Российской Федерации в " \
 		      "части, касающейся воспитания, поддержания воинской дисциплины, морально–психологического состояния во " \
-		      "взводе командиром 1 стрелкового взвода 4 стрелковой роты 2 стрелкового батальона войсковой части 42600 " \
-		      "гвардии лейтенантом Литвиненко Романом Владимировичем;"
+		      f"взводе командиром {commander_platoon};"
+
 		self.add_paragraph(txt, paragraph_settings)
 
-		sold_str = self.get_person_full_str(1, False, False, True, False, True)
+		sold_str = self.get_person_full_str(1, False, False, True, False, True, False)
 		self.add_paragraph("невыполнение требований статьи 160, 161 Устава Внутренней Службы Вооруженных Сил "
 		                   "Российской Федерации в части, касающейся точного и своевременного исполнения возложенных "
 		                   f"на него обязанностей, поставленных задач и личная недисциплинированность {sold_str}.",
@@ -243,14 +244,14 @@ class DocOfficialProceeding(DocumentInReport):
 		       "состояния личного состава в роте, а также в части касающееся знаний деловых и морально–психологических " \
 		       "качеств и особенностей всех военнослужащих роты, постоянного проведения с ними индивидуальной работы " \
 		       "по воинскому воспитанию, объявить ВЫГОВОР."
-
 		self.add_paragraph(f"1. {commander_company_text2} {txt}", paragraph_settings)
 
 		# TODO dynamic
-		txt = "2. Командиру 1 стрелкового взвода 4 стрелковой роты 2 стрелкового батальона войсковой части 42600 гвардии лейтенанту Литвиненко Роману Владимировичу за невыполнение требований статьи 152, 153 Устава Внутренней Службы Вооруженных Сил Российской Федерации в части, касающейся воспитания, поддержания воинской дисциплины, морально–психологического состояния во взводе, объявить СТРОГИЙ ВЫГОВОР."
+		commander_platoon_text = self.get_commander_platoon_full_str(3)
+		txt = f"2. Командиру {commander_platoon_text} за невыполнение требований статьи 152, 153 Устава Внутренней Службы Вооруженных Сил Российской Федерации в части, касающейся воспитания, поддержания воинской дисциплины, морально–психологического состояния во взводе, объявить СТРОГИЙ ВЫГОВОР."
 		self.add_paragraph(txt, paragraph_settings)
 
-		sold_str = self.get_person_full_str(1, False, False, True, False, True)
+		sold_str = self.get_person_full_str(1, False, False, True, False, True, False)
 		txt = f"3. {sold_str} за грубый дисциплинарный проступок самовольное оставление места несения службы более 4 (четырех) часов, ПРЕДУПРЕДИТЬ О НЕПОЛНОМ СЛУЖЕБНОМ СООТВЕТСТВИИ."
 		self.add_paragraph(txt, paragraph_settings)
 		self.add_empty_paragraphs(2)

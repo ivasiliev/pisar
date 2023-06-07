@@ -11,7 +11,6 @@ class BatchOfficialProceeding(BatchPrototype):
 
 	def render(self):
 		self.add_document(DocOfficialProceeding(self.data_model))
-		# TODO Протокол ГДП
 		self.add_document(DocActCopyImpossible(self.data_model))
 		self.add_document(DocActExplanationImpossible(self.data_model))
 		self.add_document(DocPerformanceCharacteristics(self.data_model))

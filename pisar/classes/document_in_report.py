@@ -313,7 +313,7 @@ class DocumentInReport:
 
 	# declension_type. 0 (without), 1 (gent), 2 (ablt), 3 (datv)
 	def get_person_full_str(self, declension_type, battalion_only, militaryman_required,
-	                        position_required, dob_required, military_unit_required):
+	                        position_required, dob_required, military_unit_required, dob_short):
 		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 		sld_position = ""  # if not required
@@ -336,7 +336,10 @@ class DocumentInReport:
 
 		dob_str = ""
 		if dob_required:
-			dob_str = self.get_date_format_1(s_info.dob_string) + " рождения"
+			if dob_short:
+				dob_str = s_info.dob_string + " г.р."
+			else:
+				dob_str = self.get_date_format_1(s_info.dob_string) + " рождения"
 
 		result = f"{sld_position} {address} {sld_rank} {full_name}"
 		if len(dob_str) > 0:
@@ -351,35 +354,72 @@ class DocumentInReport:
 		return rnk
 
 	def get_commander_company(self):
-		s_info = self.get_soldier_info()
-		commander = s_info.company_commander
 		c_name = "[ФИО РОТНОГО КОМАНДИРА]"
 		c_rank = "[ЗВАНИЕ РОТНОГО КОМАНДИРА]"
 		c_position = "[ДОЛЖНОСТЬ РОТНОГО КОМАНДИРА]"
-		found = len(commander) > 0
+
+		rep_settings = self.get_report_settings()
+		found = "commander_company" in rep_settings
+
 		if found:
+			commander = rep_settings["commander_company"]
 			c_name = self.get_person_name_short_format_1(commander["name"])
 			c_rank = self.get_person_rank(commander["rank"], 0)
 			c_position = commander["position"]
 		return {"name": c_name, "rank": c_rank, "position": c_position, "found": found}
 
 	def get_commander_company_full_str(self, declension_type):
-		rep_settings = self.get_report_settings()
-		commander_company_info = self.get_soldier_info().company_commander
-
 		# TODO refactoring?
-
 		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ РОТЫ]"
-		if len(commander_company_info) > 0:
-			c_name = commander_company_info["name"]
-			c_rank = commander_company_info["rank"]
+		rep_settings = self.get_report_settings()
+		found = "commander_company" in rep_settings
+		if found:
+			commander = rep_settings["commander_company"]
+			c_name = commander["name"]
+			c_rank = commander["rank"]
 			if rep_settings["is_guard"]:
 				c_rank = "гвардии " + self.get_word_declension(c_rank, declension_type)
-			c_position = commander_company_info["position"]
+			c_position = commander["position"]
 
 			# TODO more intelligent algorithm for position declension
 
 			m_unit = rep_settings["military_unit"]
-			c_company = commander_company_info["company"]
-			text = f"{self.get_word_declension(c_position, declension_type)} {c_company} стрелковой роты 2 стрелкового батальона войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
+			company = self.get_soldier_info().company
+			text = f"{self.get_word_declension(c_position, declension_type)} {company} стрелковой роты 2 стрелкового батальона войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
+		return text
+
+	# TODO similar methods
+	def get_commander_platoon(self):
+		c_name = "[ФИО ВЗВОДНОГО КОМАНДИРА]"
+		c_rank = "[ЗВАНИЕ ВЗВОДНОГО КОМАНДИРА]"
+		c_position = "[ДОЛЖНОСТЬ ВЗВОДНОГО КОМАНДИРА]"
+
+		rep_settings = self.get_report_settings()
+		found = "commander_platoon" in rep_settings
+
+		if found:
+			commander = rep_settings["commander_platoon"]
+			c_name = self.get_person_name_short_format_1(commander["name"])
+			c_rank = self.get_person_rank(commander["rank"], 0)
+			c_position = commander["position"]
+		return {"name": c_name, "rank": c_rank, "position": c_position, "found": found}
+
+	def get_commander_platoon_full_str(self, declension_type):
+		# TODO refactoring?
+		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ ВЗВОДА]"
+		rep_settings = self.get_report_settings()
+		found = "commander_platoon" in rep_settings
+		if found:
+			commander = rep_settings["commander_platoon"]
+			c_name = commander["name"]
+			c_rank = commander["rank"]
+			if rep_settings["is_guard"]:
+				c_rank = "гвардии " + self.get_word_declension(c_rank, declension_type)
+			c_position = commander["position"]
+
+			# TODO more intelligent algorithm for position declension
+
+			m_unit = rep_settings["military_unit"]
+			platoon = self.get_soldier_info().platoon
+			text = f"{platoon} стрелкового взвода 2 стрелкового батальона войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
 		return text

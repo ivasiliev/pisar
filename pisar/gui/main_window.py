@@ -34,9 +34,9 @@ rep1_button_run = sg.Button(key="report1_run", button_text=button_text_report_ru
 
 rep1_layer1 = [rep1_text1, rep1_button_run, rep1_button_settings]
 
-docs_list = ["Служебное разбирательство (сам документ)", "Протокол о ГДП",
+docs_list = ["Служебное разбирательство (сам документ)",
              "Акт о невозможности получения копии протокола о ГДП", "Акт о невозможности взять объяснение",
-             "Служебная характеристика", "Заключение служебного разбирательства"]
+             "Служебная характеристика"]
 rep1_layer2 = []
 for dc in docs_list:
 	rep1_layer2.append([sg.Text(f"* {dc}")])
