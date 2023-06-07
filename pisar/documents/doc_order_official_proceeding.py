@@ -47,7 +47,7 @@ class DocOrderOfficialProceeding(DocumentInReport):
 		txt = f"Несмотря на меры, принимаемые командованием войсковой части {military_unit} по профилактике нарушения воинской дисциплины, направленные на укрепление правопорядка, сплочения воинских коллективов, создания в них здоровой морально–психологической обстановки, способствующих успешному выполнению поставленных задач, проведение профилактической работы по недопущению подобных случаев, среди военнослужащих продолжает иметь место случаи уклонения от исполнения обязанностей военной службы."
 		self.add_paragraph(txt, self.ident_align_justify_settings)
 
-		sold_str = self.get_person_full_str(0, False, False, True, False)
+		sold_str = self.get_person_full_str(0, False, False, True, False, True, False)
 		txt = f"{date_of_event} {sold_str} самовольно покинул расположение части не уведомив вышестоящее командование."
 		self.add_paragraph(txt, self.ident_align_justify_settings)
 
@@ -68,7 +68,7 @@ class DocOrderOfficialProceeding(DocumentInReport):
 
 		self.add_paragraph(txt, self.ident_align_justify_settings)
 
-		sold_str = self.get_person_full_str(1, False, False, True, False)
+		sold_str = self.get_person_full_str(1, False, False, True, False, True, False)
 		txt = f"невыполнение требований статьи 160, 161 Устава Внутренней Службы Вооруженных Сил Российской Федерации в части, касающейся точного и своевременного исполнения возложенных на него обязанностей, поставленных задач и личная недисциплинированность {sold_str}."
 		self.add_paragraph(txt, self.ident_align_justify_settings)
 
@@ -90,7 +90,7 @@ class DocOrderOfficialProceeding(DocumentInReport):
 		       "по воинскому воспитанию, строго указать на УПУЩЕНИЕ ПО СЛУЖБЕ."
 		self.add_paragraph(f"1. {commander_company_text} {txt}", self.ident_align_justify_settings)
 
-		sold_str = self.get_person_full_str(3, False, False, True, False)
+		sold_str = self.get_person_full_str(3, False, False, True, False, True, False)
 		txt = f"2. {sold_str} за грубый дисциплинарный проступок самовольное оставление части более 4 (четырех) часов, объявить СТРОГИЙ ВЫГОВОР."
 		self.add_paragraph(txt, self.ident_align_justify_settings)
 		self.add_empty_paragraphs(1)
@@ -108,7 +108,7 @@ class DocOrderOfficialProceeding(DocumentInReport):
 		par_set_right.is_bold = True
 		par_set_right.line_spacing = line_spacing
 
-		self.add_commander(rep_settings["commander_2_level"], military_unit, par_set_center, par_set_right)
+		self.add_commander(rep_settings["commander_4_level"], military_unit, par_set_center, par_set_right)
 		self.add_empty_paragraphs(2)
 		self.add_commander(rep_settings["commander_3_level"], military_unit, par_set_center, par_set_right)
 

@@ -1,6 +1,6 @@
 {
 	"personnel_path": "data\\personnel-demo.xlsx",
-	"output_path": "c:\\temp\\reports_output\\",
+	"output_path": "c:\\pisar_output\\",
 	"soldier_ids": "1",
 	"military_unit": "42600",
 	"is_guard": true,
