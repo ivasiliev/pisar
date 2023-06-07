@@ -4,7 +4,7 @@ import PySimpleGUI as sg
 import subprocess
 from pathlib import Path
 
-from runner import run_generation
+from gui.runner import run_generation
 
 
 # 0 -- pointer, 1 -- clock
