@@ -17,8 +17,9 @@ folders_to_copy = [settings_folder, data_folder]
 for fldr in folders_to_copy:
 	src_files = os.listdir(fldr)
 	for file_name in src_files:
-		full_file_name = os.path.join(settings_folder, file_name)
+		full_file_name = os.path.join(fldr, file_name)
 		if os.path.isfile(full_file_name):
+			print(f"{full_file_name} -> {dest_folder}")
 			shutil.copy(full_file_name, dest_folder)
 
 print(f"Каталог настроек: {folders[0]}")
