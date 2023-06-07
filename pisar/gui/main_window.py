@@ -51,9 +51,8 @@ layout = [
 
 window = sg.Window("Писарь", layout)
 
-while True:  # Event Loop
+while True:
 	event, values = window.read()
-	print(event, values)
 	if event == sg.WIN_CLOSED:
 		break
 	if event == update_button_key:
@@ -64,12 +63,8 @@ while True:  # Event Loop
 
 	if event == "report1_run":
 		full_path = os.path.join(root_path, "report-settings", "batch_official_proceeding.json")
-		set_cursor(update_button_key, 1)
+		set_cursor("report1_run", 1)
 		run_generation(full_path)
-		set_cursor(update_button_key, 0)
-
-	if event == 'Show':
-		# Update the "output" text element to be the value of "input" element
-		window['-OUTPUT-'].update(values['-IN-'])
+		set_cursor("report1_run", 0)
 
 window.close()

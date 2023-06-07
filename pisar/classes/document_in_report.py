@@ -313,7 +313,7 @@ class DocumentInReport:
 
 	# declension_type. 0 (without), 1 (gent), 2 (ablt), 3 (datv)
 	def get_person_full_str(self, declension_type, battalion_only, militaryman_required,
-	                        position_required, dob_required):
+	                        position_required, dob_required, military_unit_required):
 		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 		sld_position = ""  # if not required
@@ -326,7 +326,9 @@ class DocumentInReport:
 		sld_rank = self.get_person_rank(s_info.rank, declension_type)
 
 		# TODO battalion must be a variable
-		address = "2 стрелкового батальона войсковой части " + rep_settings["military_unit"]
+		address = "2 стрелкового батальона"
+		if military_unit_required:
+			address = f"{address} войсковой части {rep_settings['military_unit']}"
 		if not battalion_only:
 			address = f"{s_info.squad} стрелкового отделения {s_info.platoon} стрелкового взвода {s_info.company} стрелковой роты " + address
 
@@ -339,7 +341,7 @@ class DocumentInReport:
 		result = f"{sld_position} {address} {sld_rank} {full_name}"
 		if len(dob_str) > 0:
 			result = result + " " + dob_str
-		return result
+		return result.strip()
 
 	def get_person_rank(self, rnk, declension_type):
 		if declension_type != 0:

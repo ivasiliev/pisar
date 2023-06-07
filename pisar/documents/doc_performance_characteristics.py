@@ -31,7 +31,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		paragraph_settings.left_indent = Mm(65)
 		paragraph_settings.align_justify = True
 		paragraph_settings.line_spacing = line_spacing
-		sold_str = self.get_person_full_str(1, False, False, True, True)
+		sold_str = self.get_person_full_str(1, False, False, True, True, True)
 		nationality = self.get_word_gent(rep_settings["nationality"])
 		education = rep_settings["education"]
 		yss = rep_settings["year_service_started"]
@@ -41,7 +41,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		self.add_empty_paragraphs_spacing(1, line_spacing)  # 2
 
 		position_str = self.get_word_gent(s_info.position)
-		sold_str = self.get_person_full_str(0, False, False, False, False).strip()
+		sold_str = self.get_person_full_str(0, False, False, False, False, True).strip()
 		txt = f"За время прохождения службы в должности {position_str} {sold_str}, проявил себя неоднозначно, как военнослужащий, требующий контроля со стороны командования при исполнении поставленных задач."
 		paragraph_settings = self.ident_align_justify_settings
 		paragraph_settings.line_spacing = line_spacing
