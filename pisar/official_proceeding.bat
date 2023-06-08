@@ -1,1 +1,0 @@
-python "c:\pisar\pisar\run_doc_official_proceeding.py" "c:\pisar_data\official_proceeding.json"
