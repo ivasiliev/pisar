@@ -4,6 +4,8 @@ import sys
 from pathlib import Path
 import PySimpleGUI as sg
 
+app_version = "1.0 | 08.07.2023"
+
 current_path = Path(os.getcwd())
 print(f"current path={current_path}")
 root_path = current_path.parent.absolute()
@@ -58,7 +60,7 @@ layout = [
 	[sg.Frame("", [rep1_layer1, [cl]])]
 ]
 
-window = sg.Window("Писарь", layout)
+window = sg.Window(f"Писарь   {app_version}", layout)
 
 while True:
 	event, values = window.read()
