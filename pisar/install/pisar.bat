@@ -1,1 +1,1 @@
-python C:\pisar\pisar\gui\main_window.py
+python C:\pisar\pisar\main_window.py

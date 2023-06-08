@@ -1,1 +1,0 @@
-python C:\pisar\pisar\gui\runner.py C:\pisar-data\batch_official_proceeding.json
