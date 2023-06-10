@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 import PySimpleGUI as sg
 
-app_version = "1.0 | 08.07.2023"
+app_version = "1.1 | 10.07.2023"
 
 current_path = Path(os.getcwd())
 print(f"current path={current_path}")
@@ -48,6 +48,9 @@ rep1_layer1 = [rep1_text1, rep1_button_run, rep1_button_settings]
 docs_list = ["Служебное разбирательство (сам документ)",
              "Акт о невозможности получения копии протокола о ГДП", "Акт о невозможности взять объяснение",
              "Служебная характеристика"]
+
+config_file1 = "c:\\pisar_data\\batch_official_proceeding.json"
+
 rep1_layer2 = []
 for dc in docs_list:
 	rep1_layer2.append([sg.Text(f"* {dc}")])
@@ -73,12 +76,12 @@ while True:
 		set_cursor(update_button_key, 0)
 
 	if event == "report1_run":
-		full_path = os.path.join(root_path, "report-settings", "batch_official_proceeding.json")
+		# full_path = os.path.join(root_path, "report-settings", "batch_official_proceeding.json")
 		set_cursor("report1_run", 1)
-		run_generation(full_path)
+		run_generation(config_file1)
 		set_cursor("report1_run", 0)
 
 	if event == "report1_settings":
-		subprocess.call(["notepad", "c:\\pisar_data\\batch_official_proceeding.json"])
+		subprocess.call(["notepad", config_file1])
 
 window.close()
