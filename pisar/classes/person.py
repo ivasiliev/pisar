@@ -15,9 +15,12 @@ class Person:
 
 	# proper format dd.mm.yyyy (d.m as well)
 	def set_dob(self, dob_str):
-		self.dob_string = dob_str
-		tokens = dob_str.split(".")
-		if len(tokens) != 3:
-			print(f"Ошибка при разборе даты {dob_str}")
-			return
-		self.dob = datetime.datetime(int(tokens[2]), int(tokens[1]), int(tokens[0]))
+		self.dob_string = str(dob_str)
+		if isinstance(dob_str, datetime.datetime):
+			self.dob = dob_str
+		else:
+			tokens = self.dob_string.split(".")
+			if len(tokens) != 3:
+				print(f"Ошибка при разборе даты {self.dob_string}")
+				return
+			self.dob = datetime.datetime(int(tokens[2]), int(tokens[1]), int(tokens[0]))

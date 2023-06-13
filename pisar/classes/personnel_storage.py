@@ -112,7 +112,7 @@ class PersonnelStorage:
 						continue
 					cv = str(cell.value)
 					cvl = cv.lower()
-					if cell.col_idx == self.COLUMN_COMPANY and int(cv) == int(person.company):
+					if cell.col_idx == self.COLUMN_COMPANY and cv.casefold() == str(person.company).casefold():
 						company_found = True
 						continue
 					if company_found and cell.col_idx == self.COLUMN_POSITION:

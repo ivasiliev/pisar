@@ -71,14 +71,7 @@ def run_generation(settings_full_path):
 
 				data_model[MODEL_CURRENT_SOLDIER] = current_soldier
 				print(f"Документ для военнослужащего: {current_soldier.full_name}")
-				if len(current_soldier.company_commander) > 0:
-					c_name = current_soldier.company_commander["name"]
-					c_position = current_soldier.company_commander["position"]
-					# TODO add rank
-					print(f"Ротный командир: {c_name} ({c_position})")
-				else:
-					print(f"Командир не обнаружен в штатном расписании для {current_soldier.company} роты! В документе "
-					      f"заполните эту информацию вручную.")
+
 				doc.render()
 	print("Писарь завершил работу")
 
