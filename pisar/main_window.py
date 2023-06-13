@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 import PySimpleGUI as sg
 
-app_version = "1.1 | 10.07.2023"
+app_version = "1.2 | 13.06.2023"
 
 current_path = Path(os.getcwd())
 print(f"current path={current_path}")

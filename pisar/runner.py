@@ -12,6 +12,10 @@ from documents.doc_order_official_proceeding import DocOrderOfficialProceeding
 from documents.doc_performance_characteristics import DocPerformanceCharacteristics
 from helpers.data_model_helper import create_from_json
 
+def print_commander(commander, title):
+	if commander is None or not commander["found"]:
+		return
+	print(f"{title}: {commander['name']} {commander['rank']} {commander['position']}")
 
 def run_generation(settings_full_path):
 	print("Писарь начинает работу")
@@ -71,6 +75,9 @@ def run_generation(settings_full_path):
 
 				data_model[MODEL_CURRENT_SOLDIER] = current_soldier
 				print(f"Документ для военнослужащего: {current_soldier.full_name}")
+
+				print_commander(doc.get_commander_company(), "ротный:")
+				print_commander(doc.get_commander_platoon(), "взводный:")
 
 				doc.render()
 	print("Писарь завершил работу")

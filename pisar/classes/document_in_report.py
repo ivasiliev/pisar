@@ -337,9 +337,9 @@ class DocumentInReport:
 		dob_str = ""
 		if dob_required:
 			if dob_short:
-				dob_str = s_info.dob_string + " г.р."
+				dob_str = s_info.get_dob() + " г.р."
 			else:
-				dob_str = self.get_date_format_1(s_info.dob_string) + " рождения"
+				dob_str = self.get_date_format_1(s_info.get_dob()) + " рождения"
 
 		result = f"{sld_position} {address} {sld_rank} {full_name}"
 		if len(dob_str) > 0:
