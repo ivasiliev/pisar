@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 import PySimpleGUI as sg
 
-app_version = "1.1 | 10.07.2023"
+app_version = "1.2 | 13.06.2023"
 
 current_path = Path(os.getcwd())
 print(f"current path={current_path}")
@@ -49,6 +49,7 @@ docs_list = ["Служебное разбирательство (сам доку
              "Акт о невозможности получения копии протокола о ГДП", "Акт о невозможности взять объяснение",
              "Служебная характеристика"]
 
+# TODO any better way?
 config_file1 = "c:\\pisar_data\\batch_official_proceeding.json"
 
 rep1_layer2 = []
