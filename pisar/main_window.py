@@ -1,10 +1,9 @@
+import json
 import os
 import subprocess
 import sys
 from pathlib import Path
 import PySimpleGUI as sg
-
-app_version = "1.2 | 13.06.2023"
 
 current_path = Path(os.getcwd())
 print(f"current path={current_path}")
@@ -30,6 +29,20 @@ def set_cursor(ctrl_name, cursor_type):
 		curs_name = "circle"
 	window[ctrl_name].set_cursor(curs_name)
 
+
+def read_app_config():
+	a_path = os.path.join(current_path, "app_settings.json")
+	if not os.path.exists(a_path):
+		print("Не обнаружен файл настроек для приложения. Выполнение программы прекращено.")
+		print(a_path)
+		sys.exit()
+	return json.load(open(a_path, encoding='UTF8'))
+
+
+# check app settings
+app_settings = read_app_config()
+app_version = app_settings["app_version"]
+app_release_date = app_settings["app_release_date"]
 
 sg.theme('DarkGreen5')
 
@@ -64,16 +77,26 @@ layout = [
 	[sg.Frame("", [rep1_layer1, [cl]])]
 ]
 
-window = sg.Window(f"Писарь   {app_version}", layout)
+window = sg.Window(f"Писарь   {app_version} | {app_release_date}", layout)
 
 while True:
 	event, values = window.read()
 	if event == sg.WIN_CLOSED:
 		break
 	if event == update_button_key:
-		full_path = os.path.join(root_path, "install", "update.bat")
+		full_path_update = os.path.join(current_path, "install", "update.bat")
+		full_path_run = os.path.join(current_path, "install", "pisar.bat")
 		set_cursor(update_button_key, 1)
-		subprocess.call([full_path])
+		subprocess.call([full_path_update])
+		# if version changed, need to re-run app
+		app_settings = read_app_config()
+		# if app_settings["app_version"] != app_version:
+			# print("Приложение обновлено. Требуется перезапуск.")
+			# TODO
+			# subprocess.Popen([full_path_run])
+			# sys.exit()
+			# break
+
 		set_cursor(update_button_key, 0)
 
 	if event == "report1_run":
