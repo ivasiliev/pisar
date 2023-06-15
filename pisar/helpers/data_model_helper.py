@@ -21,6 +21,7 @@ def create_from_json(js_settings):
 		, MODEL_IS_VALID: True
 	}
 
+	print(f"Используется файл Штатного расписания: {data_model[MODEL_PERSONNEL_PATH]}")
 	if not os.path.exists(data_model[MODEL_PERSONNEL_PATH]):
 		print(f"Файл штатного расписания отсутствует или недоступен: '{data_model[MODEL_PERSONNEL_PATH]}'")
 		data_model[MODEL_IS_VALID] = False

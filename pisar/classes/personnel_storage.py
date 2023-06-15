@@ -28,7 +28,9 @@ class PersonnelStorage:
 
 		workbook = openpyxl.load_workbook(self.personnel_list_full_path)
 		if self.personnel_excel_sheet_name not in workbook.sheetnames:
-			print(f"В Excel-документе отсутствует лист '{self.personnel_excel_sheet_name}'. Штатное расписание должно располагаться на этом листе. Выполнение программы прервано.")
+			print(f"В Excel-документе отсутствует лист '{self.personnel_excel_sheet_name}'. Штатное расписание должно располагаться на этом листе.")
+			print("Список листов:")
+			print(workbook.sheetnames)
 			self.is_valid = False
 		else:
 			sh = workbook[self.personnel_excel_sheet_name]
