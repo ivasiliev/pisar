@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -88,10 +89,14 @@ while True:
 		full_path_run = os.path.join(current_path, "install", "pisar.bat")
 		set_cursor(update_button_key, 1)
 		subprocess.call([full_path_update])
+		# copy examples
+		shutil.copy("C:\\pisar\\pisar\\data\\personnel-demo.xlsx", "c:\\pisar_data\\")
+
 		# if version changed, need to re-run app
 		app_settings = read_app_config()
-		# if app_settings["app_version"] != app_version:
-			# print("Приложение обновлено. Требуется перезапуск.")
+		print("Приложение обновлено.")
+		if app_settings["app_version"] != app_version:
+			print("Требуется перезапуск!")
 			# TODO
 			# subprocess.Popen([full_path_run])
 			# sys.exit()

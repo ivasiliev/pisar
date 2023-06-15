@@ -1,15 +1,14 @@
 import os
 
 from docx import Document
+from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
+from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.shared import Mm
 from docx.shared import Pt
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-from docx.enum.table import WD_TABLE_ALIGNMENT
-from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 from pytrovich.enums import NamePart, Gender, Case
 
 from classes.paragraph_settings import ParagraphSettings
-from classes.personnel_storage import PersonnelStorage
 
 MODEL_PERSONNEL_PATH = "personnel_path"
 MODEL_OUTPUT_FOLDER = "output_folder"
@@ -65,9 +64,9 @@ class DocumentInReport:
 		self.bold_title.is_bold = True
 		self.bold_title.align_center = True
 
-		self.personnel_info = None
-		if self.data_model is not None and self.data_model[MODEL_PERSONNEL_PATH] is not None:
-			self.personnel_info = PersonnelStorage(self.data_model[MODEL_PERSONNEL_PATH])
+	# self.personnel_info = None
+	# if self.data_model is not None and self.data_model[MODEL_PERSONNEL_PATH] is not None:
+	#	self.personnel_info = PersonnelStorage(self.data_model[MODEL_PERSONNEL_PATH])
 
 	def get_name(self):
 		return ""

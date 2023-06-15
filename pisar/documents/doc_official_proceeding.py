@@ -11,7 +11,7 @@ class DocOfficialProceeding(DocumentInReport):
 		return "Служебное разбирательство по факту грубого дисциплинарного проступка"
 
 	def get_name_for_file(self):
-		return f"Служебное_Разбирательство_ГДП_СОЧ ({self.get_soldier_info().full_name}).docx"
+		return f"Служебное_Разбирательство_ГДП ({self.get_soldier_info().full_name}).docx"
 
 	def render(self):
 		# TODO order and list of documents should be customizable
