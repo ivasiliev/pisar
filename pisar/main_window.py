@@ -32,12 +32,15 @@ def set_cursor(ctrl_name, cursor_type):
 
 
 def read_app_config():
-	a_path = "app_settings.json"
-	# a_path = os.path.join(current_path, "app_settings.json")
+	# app can be run in different ways
+	app_settings_filename = "app_settings.json"
+	a_path = os.path.join(current_path, app_settings_filename)
 	if not os.path.exists(a_path):
-		print("Не обнаружен файл настроек для приложения. Выполнение программы прекращено.")
-		print(a_path)
-		sys.exit()
+		a_path = os.path.join(root_path, app_settings_filename)
+		if not os.path.exists(a_path):
+			print("Не обнаружен файл настроек для приложения. Выполнение программы прекращено.")
+			print(a_path)
+			sys.exit()
 	return json.load(open(a_path, encoding='UTF8'))
 
 
