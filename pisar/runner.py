@@ -12,10 +12,12 @@ from documents.doc_order_official_proceeding import DocOrderOfficialProceeding
 from documents.doc_performance_characteristics import DocPerformanceCharacteristics
 from helpers.data_model_helper import create_from_json
 
+
 def print_commander(commander, title):
 	if commander is None or not commander["found"]:
 		return
 	print(f"{title}: {commander['name']} {commander['rank']} {commander['position']}")
+
 
 def run_generation(settings_full_path):
 	print("Писарь начинает работу")
@@ -29,7 +31,7 @@ def run_generation(settings_full_path):
 	data_model = create_from_json(js_settings)
 	if not data_model[MODEL_IS_VALID]:
 		print("Файл настроек содержит неверную информацию. Выполнение программы прервано.")
-		sys.exit()
+		return
 
 	soldiers = data_model[MODEL_JSON_OBJECT]["soldier_ids"].split(",")
 	if len(soldiers) == 0:
@@ -69,7 +71,7 @@ def run_generation(settings_full_path):
 			pers_storage = PersonnelStorage(data_model[MODEL_PERSONNEL_PATH])
 			if not pers_storage.is_valid:
 				print("Неверная структура Штатного расписания. Выполнение программы прервано.")
-				sys.exit()
+				return
 			for sld in soldiers:
 				current_soldier = pers_storage.find_person_by_id(int(sld))
 				if current_soldier is None:
