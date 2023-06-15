@@ -90,7 +90,8 @@ while True:
 		break
 	if event == update_button_key:
 		full_path_update = os.path.join(current_path, "install", "update.bat")
-		full_path_run = os.path.join(current_path, "install", "pisar.bat")
+		print(f"Updater: {full_path_update}")
+		# full_path_run = os.path.join(current_path, "install", "pisar.bat")
 		set_cursor(update_button_key, 1)
 		subprocess.call([full_path_update])
 		# copy examples
