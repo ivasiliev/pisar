@@ -31,16 +31,27 @@ def set_cursor(ctrl_name, cursor_type):
 	window[ctrl_name].set_cursor(curs_name)
 
 
+def get_full_path(filename):
+	folders_to_search = [
+		current_path
+		, root_path
+		, os.path.join(current_path, "install")
+		, os.path.join(root_path, "install")
+	]
+	for fld in folders_to_search:
+		result = os.path.join(fld, filename)
+		if os.path.exists(result):
+			return result
+	print(f"Не удалось обнаружить файл: {filename}")
+	return None
+
+
 def read_app_config():
 	# app can be run in different ways
-	app_settings_filename = "app_settings.json"
-	a_path = os.path.join(current_path, app_settings_filename)
-	if not os.path.exists(a_path):
-		a_path = os.path.join(root_path, app_settings_filename)
-		if not os.path.exists(a_path):
-			print("Не обнаружен файл настроек для приложения. Выполнение программы прекращено.")
-			print(a_path)
-			sys.exit()
+	a_path = get_full_path("app_settings.json")
+	if a_path is None:
+		print("Не обнаружен файл настроек для приложения. Выполнение программы прекращено.")
+		sys.exit()
 	return json.load(open(a_path, encoding='UTF8'))
 
 
@@ -89,25 +100,28 @@ while True:
 	if event == sg.WIN_CLOSED:
 		break
 	if event == update_button_key:
-		full_path_update = os.path.join(current_path, "install", "update.bat")
-		print(f"Updater: {full_path_update}")
-		# full_path_run = os.path.join(current_path, "install", "pisar.bat")
-		set_cursor(update_button_key, 1)
-		subprocess.call([full_path_update])
-		# copy examples
-		shutil.copy("C:\\pisar\\pisar\\data\\personnel-demo.xlsx", "c:\\pisar_data\\")
+		full_path_update = get_full_path("update.bat")
+		if full_path_update is None:
+			print(f"Не удалось найти запускаемый файл для обновлений.")
+		else:
+			print(f"Updater: {full_path_update}")
+			# full_path_run = os.path.join(current_path, "install", "pisar.bat")
+			set_cursor(update_button_key, 1)
+			subprocess.call([full_path_update])
+			# copy examples
+			shutil.copy("C:\\pisar\\pisar\\data\\personnel-demo.xlsx", "c:\\pisar_data\\")
 
-		# if version changed, need to re-run app
-		app_settings = read_app_config()
-		print("Приложение обновлено.")
-		if app_settings["app_version"] != app_version:
-			print("Требуется перезапуск!")
+			# if version changed, need to re-run app
+			app_settings = read_app_config()
+			print("Приложение обновлено.")
+			if app_settings["app_version"] != app_version:
+				print("Требуется перезапуск!")
 			# TODO
 			# subprocess.Popen([full_path_run])
 			# sys.exit()
 			# break
 
-		set_cursor(update_button_key, 0)
+			set_cursor(update_button_key, 0)
 
 	if event == "report1_run":
 		# full_path = os.path.join(root_path, "report-settings", "batch_official_proceeding.json")
