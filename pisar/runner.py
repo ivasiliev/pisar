@@ -67,6 +67,9 @@ def run_generation(settings_full_path):
 		else:
 			print(f"Тип документа: {doc.get_name()}.")
 			pers_storage = PersonnelStorage(data_model[MODEL_PERSONNEL_PATH])
+			if not pers_storage.is_valid:
+				print("Неверная структура Штатного расписания. Выполнение программы прервано.")
+				sys.exit()
 			for sld in soldiers:
 				current_soldier = pers_storage.find_person_by_id(int(sld))
 				if current_soldier is None:
