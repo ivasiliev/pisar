@@ -113,9 +113,9 @@ while True:
 
 			# if version changed, need to re-run app
 			app_settings = read_app_config()
-			print("Приложение обновлено.")
-			if app_settings["app_version"] != app_version:
-				print("Требуется перезапуск!")
+			print("Приложение обновлено. Требуется перезапуск!")
+			#if app_settings["app_version"] != app_version:
+			#	print("Требуется перезапуск!")
 			# TODO
 			# subprocess.Popen([full_path_run])
 			# sys.exit()

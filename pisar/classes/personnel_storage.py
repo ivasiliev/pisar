@@ -89,7 +89,7 @@ class PersonnelStorage:
 		sh = workbook[self.personnel_excel_sheet_name]
 		indexes = [self.COLUMN_COMPANY, self.COLUMN_PLATOON, self.COLUMN_SQUAD, self.COLUMN_POSITION, self.COLUMN_RANK,
 		           self.COLUMN_FULL_NAME, self.COLUMN_DOB]
-		person = Person()
+		person = None
 		# analyze headers
 		iteration_count_to_find_person = 0
 		for row in sh.iter_rows(min_row=2, min_col=1, max_row=2001, max_col=max(indexes) + 1):
@@ -104,6 +104,7 @@ class PersonnelStorage:
 					person_row = row
 					break
 			if person_row is not None:
+				person = Person()
 				person.company = self.find_value_in_row_by_index(person_row, self.COLUMN_COMPANY)
 				person.platoon = self.find_value_in_row_by_index(person_row, self.COLUMN_PLATOON)
 				person.squad = self.find_value_in_row_by_index(person_row, self.COLUMN_SQUAD)
