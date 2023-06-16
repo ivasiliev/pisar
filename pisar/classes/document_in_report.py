@@ -9,6 +9,7 @@ from docx.shared import Pt
 from pytrovich.enums import NamePart, Gender, Case
 
 from classes.paragraph_settings import ParagraphSettings
+from helpers.text_helper import decode_acronyms
 
 MODEL_PERSONNEL_PATH = "personnel_path"
 MODEL_OUTPUT_FOLDER = "output_folder"
@@ -379,12 +380,12 @@ class DocumentInReport:
 			if rep_settings["is_guard"]:
 				c_rank = "гвардии " + self.get_word_declension(c_rank, declension_type)
 			c_position = commander["position"]
-
-			# TODO more intelligent algorithm for position declension
-
 			m_unit = rep_settings["military_unit"]
 			company = self.get_soldier_info().company
-			text = f"{self.get_word_declension(c_position, declension_type)} {company} стрелковой роты 2 стрелкового батальона войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
+			# self.get_word_declension(c_position, declension_type)
+			morph = self.data_model[MODEL_MORPHOLOGY]
+			# {company} стрелковой роты 2 стрелкового батальона войсковой части
+			text = f"{decode_acronyms(morph, c_position, declension_type).capitalize()} войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
 		return text
 
 	# TODO similar methods
@@ -422,3 +423,4 @@ class DocumentInReport:
 			platoon = self.get_soldier_info().platoon
 			text = f"{platoon} стрелкового взвода 2 стрелкового батальона войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
 		return text
+

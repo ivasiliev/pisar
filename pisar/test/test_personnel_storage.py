@@ -4,11 +4,11 @@ from pytrovich.enums import NamePart, Gender, Case
 from pytrovich.maker import PetrovichDeclinationMaker
 
 if __name__ == '__main__':
-	full_path = "data\\personnel-demo.xlsx"
+	full_path = "../data/personnel-demo.xlsx"
 	pers_storage = PersonnelStorage(full_path)
 	person = pers_storage.find_person_by_id(1)
 	assert person is not None
-	print(person.company_commander)
+	# print(person.company_commander)
 
 	morph = pymorphy2.MorphAnalyzer()
 	print(f"position = {person.position}")
@@ -47,6 +47,8 @@ if __name__ == '__main__':
 	# print(f"lex={lex}")
 	# gent_text = parsed.inflect({'gent'})
 	# print(f"gent_text={gent_text.word}")
+
+
 
 
 

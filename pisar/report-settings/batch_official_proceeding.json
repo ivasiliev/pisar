@@ -1,7 +1,7 @@
 {
 	"personnel_path": "c:\\pisar_data\\personnel-demo.xlsx",
 	"output_path": "c:\\pisar_output\\",
-	"soldier_ids": "90",
+	"soldier_ids": "9",
 	"date_of_event": "16.04.2023",
 	"military_unit": "42600",
 	"is_guard": true,

@@ -252,6 +252,8 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_paragraph(txt, paragraph_settings)
 
 		sold_str = self.get_person_full_str(1, False, False, True, False, True, False)
+		if len(sold_str) > 2:
+			sold_str = sold_str[0].upper() + sold_str[1:]
 		txt = f"3. {sold_str} за грубый дисциплинарный проступок самовольное оставление места несения службы более 4 (четырех) часов, ПРЕДУПРЕДИТЬ О НЕПОЛНОМ СЛУЖЕБНОМ СООТВЕТСТВИИ."
 		self.add_paragraph(txt, paragraph_settings)
 		self.add_empty_paragraphs(2)
