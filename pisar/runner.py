@@ -8,7 +8,7 @@ from classes.personnel_storage import PersonnelStorage
 from documents.doc_act_copy_impossible import DocActCopyImpossible
 from documents.doc_act_explanation_impossible import DocActExplanationImpossible
 from documents.doc_official_proceeding import DocOfficialProceeding
-from documents.doc_order_official_proceeding import DocOrderOfficialProceeding
+from documents.doc_official_proceeding_order import DocOfficialProceedingOrder
 from documents.doc_performance_characteristics import DocPerformanceCharacteristics
 from helpers.data_model_helper import create_from_json
 
@@ -50,7 +50,7 @@ def run_generation(settings_full_path):
 			pass
 		else:
 			if settings_key == "order_official_proceeding":
-				doc = DocOrderOfficialProceeding(data_model)
+				doc = DocOfficialProceedingOrder(data_model)
 			else:
 				if settings_key == "official_proceeding":
 					doc = DocOfficialProceeding(data_model)

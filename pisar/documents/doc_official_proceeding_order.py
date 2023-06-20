@@ -4,7 +4,7 @@ from classes.document_in_report import DocumentInReport
 from classes.paragraph_settings import ParagraphSettings
 
 
-class DocOrderOfficialProceeding(DocumentInReport):
+class DocOfficialProceedingOrder(DocumentInReport):
 	def get_name(self):
 		return "Приказ командира войсковой части"
 

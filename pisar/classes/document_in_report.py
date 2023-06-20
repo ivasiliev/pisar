@@ -68,6 +68,13 @@ class DocumentInReport:
 		self.underline_settings = ParagraphSettings()
 		self.underline_settings.is_underline = True
 
+		self.align_justify_underline = ParagraphSettings()
+		self.align_justify_underline.align_justify = True
+		self.align_justify_underline.is_underline = True
+
+		self.align_center_underline = ParagraphSettings()
+		self.align_center_underline.align_center = True
+		self.align_center_underline.is_underline = True
 
 	# self.personnel_info = None
 	# if self.data_model is not None and self.data_model[MODEL_PERSONNEL_PATH] is not None:
@@ -109,7 +116,6 @@ class DocumentInReport:
 				runner.underline = True
 			if paragraph_settings.font_size > 0:
 				runner.font.size = paragraph_settings.font_size
-
 		else:
 			p = self.word_document.add_paragraph(text)
 
@@ -401,3 +407,49 @@ class DocumentInReport:
 			text = f"{platoon} стрелкового взвода 2 стрелкового батальона войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
 		return text
 
+	# TODO refactor and use this function in particular methods
+	def get_commander_generic_full_str(self, settings_key, declension_type, empty_placeholder):
+		text = empty_placeholder
+		rep_settings = self.get_report_settings()
+		found = settings_key in rep_settings
+		if found:
+			commander = rep_settings[settings_key]
+			c_name = commander["name"]
+			c_rank = commander["rank"]
+			if rep_settings["is_guard"]:
+				c_rank = "гвардии " + get_word_declension(self.get_morph(), c_rank, declension_type)
+			c_position = commander["position"]
+			m_unit = rep_settings["military_unit"]
+			# self.get_word_declension(c_position, declension_type)
+			# {company} стрелковой роты 2 стрелкового батальона войсковой части
+			text = f"{decode_acronyms(self.get_morph(), c_position, declension_type).capitalize()} войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
+		return text
+
+	def get_military_unit(self):
+		return self.get_report_settings_by_name("military_unit")
+
+	def get_date_of_event(self):
+		return self.get_report_settings_by_name("date_of_event")
+
+	def get_report_settings_by_name(self, name):
+		rep_settings = self.get_report_settings()
+		if name in rep_settings:
+			return rep_settings[name]
+		else:
+			return ""
+
+	# TODO use this generic method in particular methods
+	def get_commander_generic(self, settings_key, empty_placeholder):
+		c_name = f"[ФИО {empty_placeholder}]"
+		c_rank = f"[ЗВАНИЕ {empty_placeholder}]"
+		c_position = f"[ДОЛЖНОСТЬ {empty_placeholder}]"
+
+		rep_settings = self.get_report_settings()
+		found = settings_key in rep_settings
+
+		if found:
+			commander = rep_settings[settings_key]
+			c_name = self.get_person_name_short_format_1(commander["name"])
+			c_rank = self.get_person_rank(commander["rank"], 0)
+			c_position = commander["position"]
+		return {"name": c_name, "rank": c_rank, "position": c_position, "found": found}
