@@ -65,6 +65,10 @@ class DocumentInReport:
 		self.bold_title.is_bold = True
 		self.bold_title.align_center = True
 
+		self.underline_settings = ParagraphSettings()
+		self.underline_settings.is_underline = True
+
+
 	# self.personnel_info = None
 	# if self.data_model is not None and self.data_model[MODEL_PERSONNEL_PATH] is not None:
 	#	self.personnel_info = PersonnelStorage(self.data_model[MODEL_PERSONNEL_PATH])
@@ -205,10 +209,13 @@ class DocumentInReport:
 		table = self.word_document.add_table(rows=1, cols=2)
 		table.alignment = WD_TABLE_ALIGNMENT.CENTER
 		cells = table.rows[0].cells
-		p0 = cells[0].add_paragraph(left_text)
+		p0 = cells[0].add_paragraph()
 		p0.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-		p1 = cells[1].add_paragraph(right_text)
+		r_left = p0.add_run(left_text)
+		p1 = cells[1].add_paragraph()
 		p1.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+		r_right = p1.add_run(right_text)
+		return r_left, r_right
 
 	def get_soldier_info(self):
 		return self.data_model[MODEL_CURRENT_SOLDIER]
