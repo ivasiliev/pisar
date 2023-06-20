@@ -9,6 +9,7 @@ from docx.shared import Pt
 from pytrovich.enums import NamePart, Gender, Case
 
 from classes.paragraph_settings import ParagraphSettings
+from helpers.text_helper import decode_acronyms, get_word_declension
 
 MODEL_PERSONNEL_PATH = "personnel_path"
 MODEL_OUTPUT_FOLDER = "output_folder"
@@ -63,6 +64,10 @@ class DocumentInReport:
 		self.bold_title.font_size = Pt(16)
 		self.bold_title.is_bold = True
 		self.bold_title.align_center = True
+
+		self.underline_settings = ParagraphSettings()
+		self.underline_settings.is_underline = True
+
 
 	# self.personnel_info = None
 	# if self.data_model is not None and self.data_model[MODEL_PERSONNEL_PATH] is not None:
@@ -204,10 +209,13 @@ class DocumentInReport:
 		table = self.word_document.add_table(rows=1, cols=2)
 		table.alignment = WD_TABLE_ALIGNMENT.CENTER
 		cells = table.rows[0].cells
-		p0 = cells[0].add_paragraph(left_text)
+		p0 = cells[0].add_paragraph()
 		p0.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
-		p1 = cells[1].add_paragraph(right_text)
+		r_left = p0.add_run(left_text)
+		p1 = cells[1].add_paragraph()
 		p1.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+		r_right = p1.add_run(right_text)
+		return r_left, r_right
 
 	def get_soldier_info(self):
 		return self.data_model[MODEL_CURRENT_SOLDIER]
@@ -257,38 +265,6 @@ class DocumentInReport:
 
 		return result
 
-	def get_word_gent(self, wrd):
-		return self.get_word_routines(wrd, "gent")
-
-	def get_word_ablt(self, wrd):
-		return self.get_word_routines(wrd, "ablt")
-
-	def get_word_datv(self, wrd):
-		return self.get_word_routines(wrd, "datv")
-
-	def get_word_declension(self, wrd, declension_type):
-		if declension_type == 1:
-			result = self.get_word_gent(wrd)
-		else:
-			if declension_type == 2:
-				result = self.get_word_ablt(wrd)
-			else:
-				if declension_type == 3:
-					result = self.get_word_datv(wrd)
-				else:
-					result = wrd
-
-		return result
-
-	def get_word_routines(self, wrd, grm):
-		morph = self.data_model[MODEL_MORPHOLOGY]
-		if morph is None:
-			print("Внутренняя ошибка. Морфоанализатор не создан.")
-			return ""
-		parsed = morph.parse(wrd)[0]
-		gent_text = parsed.inflect({grm})
-		return gent_text.word
-
 	# format = Петров Алексей Сергеевич -> А. Петров
 	def get_person_name_short_format_1(self, full_name):
 		name_tokens = full_name.split(" ")
@@ -317,10 +293,10 @@ class DocumentInReport:
 		rep_settings = self.get_report_settings()
 		sld_position = ""  # if not required
 		if militaryman_required:
-			sld_position = self.get_word_declension("военнослужащий", declension_type)
+			sld_position = get_word_declension(self.get_morph(), "военнослужащий", declension_type)
 		else:
 			if position_required:
-				sld_position = self.get_word_declension(s_info.position, declension_type)
+				sld_position = get_word_declension(self.get_morph(), s_info.position, declension_type)
 
 		sld_rank = self.get_person_rank(s_info.rank, declension_type)
 
@@ -347,7 +323,7 @@ class DocumentInReport:
 
 	def get_person_rank(self, rnk, declension_type):
 		if declension_type != 0:
-			rnk = self.get_word_declension(rnk, declension_type)
+			rnk = get_word_declension(self.get_morph(), rnk, declension_type)
 		if self.get_report_settings()["is_guard"]:
 			rnk = "гвардии " + rnk
 		return rnk
@@ -377,15 +353,17 @@ class DocumentInReport:
 			c_name = commander["name"]
 			c_rank = commander["rank"]
 			if rep_settings["is_guard"]:
-				c_rank = "гвардии " + self.get_word_declension(c_rank, declension_type)
+				c_rank = "гвардии " + get_word_declension(self.get_morph(), c_rank, declension_type)
 			c_position = commander["position"]
-
-			# TODO more intelligent algorithm for position declension
-
 			m_unit = rep_settings["military_unit"]
 			company = self.get_soldier_info().company
-			text = f"{self.get_word_declension(c_position, declension_type)} {company} стрелковой роты 2 стрелкового батальона войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
+			# self.get_word_declension(c_position, declension_type)
+			# {company} стрелковой роты 2 стрелкового батальона войсковой части
+			text = f"{decode_acronyms(self.get_morph(), c_position, declension_type).capitalize()} войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
 		return text
+
+	def get_morph(self):
+		return self.data_model[MODEL_MORPHOLOGY]
 
 	# TODO similar methods
 	def get_commander_platoon(self):
@@ -413,7 +391,7 @@ class DocumentInReport:
 			c_name = commander["name"]
 			c_rank = commander["rank"]
 			if rep_settings["is_guard"]:
-				c_rank = "гвардии " + self.get_word_declension(c_rank, declension_type)
+				c_rank = "гвардии " + get_word_declension(self.get_morph(), c_rank, declension_type)
 			c_position = commander["position"]
 
 			# TODO more intelligent algorithm for position declension
@@ -422,3 +400,4 @@ class DocumentInReport:
 			platoon = self.get_soldier_info().platoon
 			text = f"{platoon} стрелкового взвода 2 стрелкового батальона войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
 		return text
+
