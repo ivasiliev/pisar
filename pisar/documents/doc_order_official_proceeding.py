@@ -1,4 +1,4 @@
-from docx.shared import Mm, Pt
+from docx.shared import Mm
 
 from classes.document_in_report import DocumentInReport
 from classes.paragraph_settings import ParagraphSettings

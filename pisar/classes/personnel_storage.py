@@ -1,6 +1,7 @@
 import openpyxl
 
 from classes.person import Person
+from helpers.file_helper import get_file_size_info
 
 
 class PersonnelStorage:
@@ -8,7 +9,7 @@ class PersonnelStorage:
 	def __init__(self, full_path):
 		self.storage = None
 		# TODO to app_settings?
-		self.personnel_excel_sheet_name = "ШБС"
+		self.personnel_excel_sheet_name = "ШДС"
 		self.personnel_list_full_path = full_path
 		# рота
 		self.COLUMN_COMPANY = -1
@@ -27,11 +28,15 @@ class PersonnelStorage:
 		self.is_valid = True
 
 		workbook = openpyxl.load_workbook(self.personnel_list_full_path)
+		print("--- Сведения о файле Excel ---")
+		print(f"Размер: {get_file_size_info(self.personnel_list_full_path)}")
+		print(f"Всего листов: {len(workbook.sheetnames)}")
+		print("Список листов:")
+		print(workbook.sheetnames)
+		print("------------------------------")
 		if self.personnel_excel_sheet_name not in workbook.sheetnames:
 			print(
 				f"В Excel-документе отсутствует лист '{self.personnel_excel_sheet_name}'. Штатное расписание должно располагаться на этом листе.")
-			print("Список листов:")
-			print(workbook.sheetnames)
 			self.is_valid = False
 		else:
 			sh = workbook[self.personnel_excel_sheet_name]
@@ -131,4 +136,6 @@ class PersonnelStorage:
 			if cell.col_idx == index:
 				return cell.value
 		return None
+
+
 
