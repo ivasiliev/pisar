@@ -163,6 +163,14 @@ class DocumentInReport:
 			self.add_paragraph_simple("")
 			num_row = num_row + 1
 
+	def add_empty_paragraphs_small(self, how_many_rows):
+		paragraph_settings = ParagraphSettings()
+		paragraph_settings.font_size = Pt(8)
+		num_row = 1
+		while num_row <= how_many_rows:
+			self.add_paragraph("", paragraph_settings)
+			num_row = num_row + 1
+
 	def apply_default_settings(self):
 		sections = self.word_document.sections
 		for section in sections:
@@ -276,9 +284,22 @@ class DocumentInReport:
 		name_tokens = full_name.split(" ")
 		if len(name_tokens) < 2:
 			print(f"Не удалось преобразовать в нужный формат: {full_name}")
+			return full_name
 		surname = name_tokens[0]
 		first_name = name_tokens[1]
 		return f"{first_name[0]}. {surname}"
+
+	# format = Петров Алексей Сергеевич -> Петров А.С.
+	def get_person_name_short_format_2(self, full_name, declension_type):
+		full_name = self.get_person_name_declension(full_name, declension_type)
+		name_tokens = full_name.split(" ")
+		if len(name_tokens) < 2:
+			print(f"Не удалось преобразовать в нужный формат: {full_name}")
+			return full_name
+		surname = name_tokens[0]
+		first_name = name_tokens[1]
+		second_name = name_tokens[2]
+		return f"{surname} {first_name[0]}.{second_name[0]}."
 
 	# format = 16-04-2023/16.04.2023 -> 16 апреля 2023 года
 	def get_date_format_1(self, date_str):
