@@ -98,17 +98,20 @@ class PersonnelStorage:
 		person = None
 		# analyze headers
 		iteration_count_to_find_person = 0
+		count_for_report = 50
+		print("Поиск военнослужащего в ШР. Пожалуйста, подождите...")
 		for row in sh.iter_rows(min_row=2, min_col=1, max_row=2001, max_col=max(indexes) + 1):
 			person_row = None
 			for cell in row:
 				iteration_count_to_find_person = iteration_count_to_find_person + 1
-				if cell.col_idx > 1:
-					break
 				if cell.value is None:
 					break
 				if str(cell.value) == id_person_str:
 					person_row = row
 					break
+				if iteration_count_to_find_person % count_for_report == 0:
+					print(f"Обработано {iteration_count_to_find_person} строк...")
+				break
 			if person_row is not None:
 				person = Person()
 				person.company = self.find_value_in_row_by_index(person_row, self.COLUMN_COMPANY)
