@@ -1,7 +1,7 @@
 import random
 from openpyxl import Workbook
 
-file_name = "personnel_data_massive.xlsx"
+file_name = "personnel-demo-massive.xlsx"
 
 surnames = ["Петров", "Крикунов", "Лещенко", "Исаев", "Кораблев", "Курбатов", "Магомедов", "Козлов", "Кошкин", "Ягудин",
             "Божко", "Сурков", "Щипачев", "Пархоменко", "Гладков", "Тюряев", "Васильев", "Монастырский", "Брежнев",
