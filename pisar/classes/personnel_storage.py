@@ -2,6 +2,7 @@ import openpyxl
 
 from classes.person import Person
 from helpers.file_helper import get_file_size_info
+from helpers.performance_helper import PerformanceHelper
 
 
 class PersonnelStorage:
@@ -95,20 +96,25 @@ class PersonnelStorage:
 		sh = workbook[self.personnel_excel_sheet_name]
 		indexes = [self.COLUMN_COMPANY, self.COLUMN_PLATOON, self.COLUMN_SQUAD, self.COLUMN_POSITION, self.COLUMN_RANK,
 		           self.COLUMN_FULL_NAME, self.COLUMN_DOB]
+
+		performance = PerformanceHelper()
+		performance.start()
 		person = None
-		# analyze headers
 		iteration_count_to_find_person = 0
+		count_for_report = 50
+		print("Поиск военнослужащего в ШР. Пожалуйста, подождите...")
 		for row in sh.iter_rows(min_row=2, min_col=1, max_row=2001, max_col=max(indexes) + 1):
 			person_row = None
 			for cell in row:
 				iteration_count_to_find_person = iteration_count_to_find_person + 1
-				if cell.col_idx > 1:
-					break
 				if cell.value is None:
 					break
 				if str(cell.value) == id_person_str:
 					person_row = row
 					break
+				if iteration_count_to_find_person % count_for_report == 0:
+					print(f"Обработано {iteration_count_to_find_person} строк...")
+				break
 			if person_row is not None:
 				person = Person()
 				person.company = self.find_value_in_row_by_index(person_row, self.COLUMN_COMPANY)
@@ -129,6 +135,7 @@ class PersonnelStorage:
 				break
 
 		print(f"Количество итераций для поиска военнослужащего: {iteration_count_to_find_person}")
+		performance.stop_and_print()
 		return person
 
 	def find_value_in_row_by_index(self, row, index):

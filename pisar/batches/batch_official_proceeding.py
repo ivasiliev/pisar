@@ -3,7 +3,7 @@ from documents.doc_act_copy_impossible import DocActCopyImpossible
 from documents.doc_act_explanation_impossible import DocActExplanationImpossible
 from documents.doc_official_proceeding import DocOfficialProceeding
 from documents.doc_performance_characteristics import DocPerformanceCharacteristics
-from documents.doc_protocol_official_proceeding import DocProtocolOfficialProceeding
+from documents.doc_official_proceeding_protocol import DocOfficialProceedingProtocol
 
 
 class BatchOfficialProceeding(BatchPrototype):
@@ -12,7 +12,7 @@ class BatchOfficialProceeding(BatchPrototype):
 
 	def render(self):
 		self.add_document(DocOfficialProceeding(self.data_model))
-		# self.add_document(DocProtocolOfficialProceeding(self.data_model))
+		# self.add_document(DocOfficialProceedingProtocol(self.data_model))
 		self.add_document(DocActCopyImpossible(self.data_model))
 		self.add_document(DocActExplanationImpossible(self.data_model))
 		self.add_document(DocPerformanceCharacteristics(self.data_model))
