@@ -3,6 +3,7 @@ from docx.shared import Pt, Mm
 
 from classes.document_in_report import DocumentInReport
 from classes.paragraph_settings import ParagraphSettings
+from classes.pers_full_name_settings import PersFullNameSettings
 
 
 class DocOfficialProceedingProtocol(DocumentInReport):
@@ -36,7 +37,8 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 
 		# TODO without name
 		# TODO use settings for this function
-		soldier_full_str = self.get_person_full_str(0, False, False, True, False, True, False)
+		settings = PersFullNameSettings(0, False, False, True, False, True, False)
+		soldier_full_str = self.get_person_full_str(settings)
 		self.add_paragraph(soldier_full_str, self.align_justify_underline)
 		self.add_paragraph("воинская должность, звание, ФИО", small_underline)
 
@@ -73,7 +75,8 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 
 		self.add_paragraph("Обстоятельства совершения грубого дисциплинарного проступка:", self.align_justify_settings)
 		date_event = self.get_date_of_event()
-		soldier_full_str = self.get_person_full_str(0, False, False, True, False, True, False)
+		settings = PersFullNameSettings(0, False, False, True, False, True, False)
+		soldier_full_str = self.get_person_full_str(settings)
 		self.add_paragraph(f"{date_event} {soldier_full_str}", self.align_justify_underline)
 		self.add_paragraph("воинская должность, звание", small_underline)
 
@@ -84,7 +87,8 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 		self.render_combined_row("Рапорт ", f"{commander_company}, объяснения сослуживцев, другие материалы служебного разбирательства")
 		self.add_paragraph("перечисление доказательств: объяснения военнослужащего, привлекаемого к дисциплинарной ответственности, объяснения очевидцев, заключение и пояснение специалиста, документы, вещественные доказательства и др.", small_underline)
 
-		soldier_full_str = self.get_person_full_str(3, False, True, True, False, True, False)
+		settings = PersFullNameSettings(3, False, True, True, False, True, False)
+		soldier_full_str = self.get_person_full_str(settings)
 		self.add_paragraph(soldier_full_str, self.align_justify_underline)
 		self.add_paragraph("воинская должность, звание, ФИО", small_underline)
 
@@ -106,7 +110,8 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 
 		self.render_date_placeholder()
 
-		soldier_full_str = self.get_person_full_str(1, False, True, True, False, True, False)
+		settings = PersFullNameSettings(1, False, True, True, False, True, False)
+		soldier_full_str = self.get_person_full_str(settings)
 		self.add_paragraph(f"Решение командира войсковой части {self.get_military_unit()}:", self.align_justify_settings)
 		resolution_text = f"За грубый дисциплинарный проступок отсутствие в месте военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени, {soldier_full_str}, ПРЕДУПРЕДИТЬ О НЕПОЛНОМ СЛУЖЕБНОМ СООТВЕТСТВИИ."
 

@@ -5,6 +5,7 @@ from docx.shared import Pt
 
 from classes.document_in_report import DocumentInReport
 from classes.paragraph_settings import ParagraphSettings
+from classes.pers_full_name_settings import PersFullNameSettings
 from helpers.text_helper import get_word_gent
 
 
@@ -32,7 +33,8 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		paragraph_settings.left_indent = Mm(65)
 		paragraph_settings.align_justify = True
 		paragraph_settings.line_spacing = line_spacing
-		sold_str = self.get_person_full_str(1, False, False, True, True, False, True)
+		settings = PersFullNameSettings(1, False, False, True, True, False, True)
+		sold_str = self.get_person_full_str(settings)
 		nationality = get_word_gent(self.get_morph(), rep_settings["nationality"])
 		education = rep_settings["education"]
 		yss = rep_settings["year_service_started"]
@@ -42,7 +44,8 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		self.add_empty_paragraphs_spacing(1, line_spacing)  # 2
 
 		position_str = get_word_gent(self.get_morph(), s_info.position)
-		sold_str = self.get_person_full_str(0, False, False, False, False, True, False).strip()
+		settings = PersFullNameSettings(0, False, False, False, False, True, False)
+		sold_str = self.get_person_full_str(settings).strip()
 		txt = f"За время прохождения службы в должности {position_str} {sold_str}, проявил себя неоднозначно, как военнослужащий, требующий контроля со стороны командования при исполнении поставленных задач."
 		paragraph_settings = self.ident_align_justify_settings
 		paragraph_settings.line_spacing = line_spacing

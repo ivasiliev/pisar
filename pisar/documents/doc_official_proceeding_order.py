@@ -2,6 +2,7 @@ from docx.shared import Mm
 
 from classes.document_in_report import DocumentInReport
 from classes.paragraph_settings import ParagraphSettings
+from classes.pers_full_name_settings import PersFullNameSettings
 
 
 class DocOfficialProceedingOrder(DocumentInReport):
@@ -47,7 +48,8 @@ class DocOfficialProceedingOrder(DocumentInReport):
 		txt = f"Несмотря на меры, принимаемые командованием войсковой части {military_unit} по профилактике нарушения воинской дисциплины, направленные на укрепление правопорядка, сплочения воинских коллективов, создания в них здоровой морально–психологической обстановки, способствующих успешному выполнению поставленных задач, проведение профилактической работы по недопущению подобных случаев, среди военнослужащих продолжает иметь место случаи уклонения от исполнения обязанностей военной службы."
 		self.add_paragraph(txt, self.ident_align_justify_settings)
 
-		sold_str = self.get_person_full_str(0, False, False, True, False, True, False)
+		settings = PersFullNameSettings(0, False, False, True, False, True, False)
+		sold_str = self.get_person_full_str(settings)
 		txt = f"{date_of_event} {sold_str} самовольно покинул расположение части не уведомив вышестоящее командование."
 		self.add_paragraph(txt, self.ident_align_justify_settings)
 
@@ -68,7 +70,8 @@ class DocOfficialProceedingOrder(DocumentInReport):
 
 		self.add_paragraph(txt, self.ident_align_justify_settings)
 
-		sold_str = self.get_person_full_str(1, False, False, True, False, True, False)
+		settings = PersFullNameSettings(1, False, False, True, False, True, False)
+		sold_str = self.get_person_full_str(settings)
 		txt = f"невыполнение требований статьи 160, 161 Устава Внутренней Службы Вооруженных Сил Российской Федерации в части, касающейся точного и своевременного исполнения возложенных на него обязанностей, поставленных задач и личная недисциплинированность {sold_str}."
 		self.add_paragraph(txt, self.ident_align_justify_settings)
 
@@ -90,7 +93,8 @@ class DocOfficialProceedingOrder(DocumentInReport):
 		       "по воинскому воспитанию, строго указать на УПУЩЕНИЕ ПО СЛУЖБЕ."
 		self.add_paragraph(f"1. {commander_company_text} {txt}", self.ident_align_justify_settings)
 
-		sold_str = self.get_person_full_str(3, False, False, True, False, True, False)
+		settings = PersFullNameSettings(3, False, False, True, False, True, False)
+		sold_str = self.get_person_full_str(settings)
 		txt = f"2. {sold_str} за грубый дисциплинарный проступок самовольное оставление части более 4 (четырех) часов, объявить СТРОГИЙ ВЫГОВОР."
 		self.add_paragraph(txt, self.ident_align_justify_settings)
 		self.add_empty_paragraphs(1)
