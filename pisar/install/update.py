@@ -13,5 +13,8 @@ def copy_if_not_exists(full_path, destination_folder):
 			shutil.copy(full_path, destination_folder)
 			print(f"Скопирован файл {full_path} -> {destination_folder}")
 
+shutil.copy("C:\\pisar\\pisar\\data\\personnel-demo.xlsx", data_dir)
 
 copy_if_not_exists("c:\\pisar\\pisar\\data\\personnel-demo-massive.xlsx", data_dir)
+copy_if_not_exists("c:\\pisar\\pisar\\report-settings\\soldier_info.json", data_dir)
+copy_if_not_exists("c:\\pisar\\pisar\\report-settings\\common_info.json", data_dir)

@@ -71,3 +71,7 @@ def get_word_declension(morph, wrd, declension_type):
 					result = wrd
 
 	return result
+
+def parse_date_str(date_str):
+	tokens = date_str.split(".")
+
