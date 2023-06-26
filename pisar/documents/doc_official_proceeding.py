@@ -4,6 +4,7 @@ from docx.shared import Mm
 
 from classes.document_in_report import DocumentInReport
 from classes.paragraph_settings import ParagraphSettings
+from classes.pers_full_name_settings import PersFullNameSettings
 
 
 class DocOfficialProceeding(DocumentInReport):
@@ -39,7 +40,8 @@ class DocOfficialProceeding(DocumentInReport):
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("по факту грубого дисциплинарного проступка", self.bold_center_settings)
 
-		sold_str = self.get_person_full_str(2, True, True, False, False, True, False)
+		settings = PersFullNameSettings(2, True, True, False, False, True, False)
+		sold_str = self.get_person_full_str(settings)
 
 		self.add_paragraph(
 			sold_str,
@@ -100,7 +102,8 @@ class DocOfficialProceeding(DocumentInReport):
 		ps = "Настоящим докладываю, что"
 		ps = f"{ps} {self.get_date_format_1(rep_settings['date_of_event'])} "
 
-		sold_str = self.get_person_full_str(0, False, False, True, True, False, False)
+		settings = PersFullNameSettings(0, False, False, True, True, False, False)
+		sold_str = self.get_person_full_str(settings)
 
 		ps = ps + sold_str + ", отсутствовал на месте несения службы более 4 (четырех) часов, служебные обязанности не выполняет."
 		self.add_paragraph(ps, self.ident_align_justify_settings)
@@ -123,7 +126,8 @@ class DocOfficialProceeding(DocumentInReport):
 		ps = "Настоящим докладываю, что в ходе проведения розыскных мероприятий розыскной группой из числа " \
 		     "военнослужащих 2 стрелкового батальона под моим руководством место нахождения"
 
-		sold_str = self.get_person_full_str(1, False, False, True, False, False, False)
+		settings = PersFullNameSettings(1, False, False, True, False, False, False)
+		sold_str = self.get_person_full_str(settings)
 
 		ps = f"{ps} {sold_str} не установлено."
 		self.add_paragraph(ps, self.ident_align_justify_settings)
@@ -145,7 +149,8 @@ class DocOfficialProceeding(DocumentInReport):
 
 		ps = f"Настоящим докладываю, что {self.get_date_format_1(date_of_event)}"
 
-		sold_str = self.get_person_full_str(0, False, False, True, False, False, False)
+		settings = PersFullNameSettings(0, False, False, True, False, False, False)
+		sold_str = self.get_person_full_str(settings)
 
 		ps = f"{ps} {sold_str} отсутствует на службе без уважительных причин, не уведомив об этом вышестоящее командование."
 		self.add_paragraph(ps, self.ident_align_justify_settings)
@@ -186,11 +191,13 @@ class DocOfficialProceeding(DocumentInReport):
 
 		txt = txt + f"{self.get_person_rank(commander['rank'], 2)} {self.get_person_name_instr(commander['name'])},"
 		txt = txt + " проведено служебное разбирательство по факту грубого дисциплинарного проступка"
-		sold_str = self.get_person_full_str(2, False, False, True, True, True, False)
+		settings = PersFullNameSettings(2, False, False, True, True, True, False)
+		sold_str = self.get_person_full_str(settings)
 		self.add_paragraph(f"{txt} {sold_str}.", paragraph_settings)
 
 		txt = f"В ходе проведения служебного разбирательства было установлено, что {self.get_date_format_1(rep_settings['date_of_event'])}"
-		sold_str = self.get_person_full_str(0, False, False, True, False, False, False)
+		settings = PersFullNameSettings(0, False, False, True, False, False, False)
+		sold_str = self.get_person_full_str(settings)
 		txt = f"{txt} {sold_str} отсутствовал в месте несения военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени, тем самым совершил грубый дисциплинарный проступок."
 		self.add_paragraph(txt, paragraph_settings)
 
@@ -220,7 +227,8 @@ class DocOfficialProceeding(DocumentInReport):
 
 		self.add_paragraph(txt, paragraph_settings)
 
-		sold_str = self.get_person_full_str(1, False, False, True, False, True, False)
+		settings = PersFullNameSettings(1, False, False, True, False, True, False)
+		sold_str = self.get_person_full_str(settings)
 		self.add_paragraph("невыполнение требований статьи 160, 161 Устава Внутренней Службы Вооруженных Сил "
 		                   "Российской Федерации в части, касающейся точного и своевременного исполнения возложенных "
 		                   f"на него обязанностей, поставленных задач и личная недисциплинированность {sold_str}.",
@@ -251,7 +259,8 @@ class DocOfficialProceeding(DocumentInReport):
 		txt = f"2. Командиру {commander_platoon_text} за невыполнение требований статьи 152, 153 Устава Внутренней Службы Вооруженных Сил Российской Федерации в части, касающейся воспитания, поддержания воинской дисциплины, морально–психологического состояния во взводе, объявить СТРОГИЙ ВЫГОВОР."
 		self.add_paragraph(txt, paragraph_settings)
 
-		sold_str = self.get_person_full_str(1, False, False, True, False, True, False)
+		settings = PersFullNameSettings(1, False, False, True, False, True, False)
+		sold_str = self.get_person_full_str(settings)
 		if len(sold_str) > 2:
 			sold_str = sold_str[0].upper() + sold_str[1:]
 		txt = f"3. {sold_str} за грубый дисциплинарный проступок самовольное оставление места несения службы более 4 (четырех) часов, ПРЕДУПРЕДИТЬ О НЕПОЛНОМ СЛУЖЕБНОМ СООТВЕТСТВИИ."

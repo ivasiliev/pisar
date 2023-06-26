@@ -5,11 +5,6 @@ import sys
 from batches.batch_official_proceeding import BatchOfficialProceeding
 from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_PERSONNEL_PATH, MODEL_IS_VALID, MODEL_CURRENT_SOLDIER
 from classes.personnel_storage import PersonnelStorage
-from documents.doc_act_copy_impossible import DocActCopyImpossible
-from documents.doc_act_explanation_impossible import DocActExplanationImpossible
-from documents.doc_official_proceeding import DocOfficialProceeding
-from documents.doc_official_proceeding_order import DocOfficialProceedingOrder
-from documents.doc_performance_characteristics import DocPerformanceCharacteristics
 from helpers.data_model_helper import create_from_json
 
 
@@ -19,15 +14,29 @@ def print_commander(commander, title):
 	print(f"{title}: {commander['name']} {commander['rank']} {commander['position']}")
 
 
-def run_generation(settings_full_path):
-	print("Писарь начинает работу")
-	print(f"Файл настроек={settings_full_path}")
-	if not os.path.exists(settings_full_path):
-		print(f"Файл настроек не обнаружен либо недоступен. Выполнение программы прервано.")
+def check_settings_file(full_path, name):
+	is_valid = True
+	print(f"Файл настроек для {name}={full_path}")
+	if not os.path.exists(full_path):
+		print(f"Файл настроек для {name} не обнаружен либо недоступен. Выполнение программы прервано.")
+		is_valid = False
 	else:
 		print("Файл настроек обнаружен")
+	return is_valid
 
-	js_settings = json.load(open(settings_full_path, encoding='UTF8'))
+
+def run_generation(common_config_file, soldier_config_file, report_type):
+	print("Писарь начинает работу")
+	s_files = [
+		[common_config_file, "воинской части"]
+		, [soldier_config_file, "военнослужащего"]
+	]
+	for f in s_files:
+		if not check_settings_file(f[0], f[1]):
+			return
+
+	js_settings = json.load(open(common_config_file, encoding='UTF8'))
+	js_settings.update(json.load(open(soldier_config_file, encoding='UTF8')))
 	data_model = create_from_json(js_settings)
 	if not data_model[MODEL_IS_VALID]:
 		print("Файл настроек содержит неверную информацию. Выполнение программы прервано.")
@@ -38,31 +47,9 @@ def run_generation(settings_full_path):
 		print(f"Не заданы номера военнослужащих. В настроечном файле в поле 'soldier_ids' внесите их номера из "
 		      f"штатного расписания (первый столбец). Выполнение программы прервано.")
 	else:
-		# we define type of generation via settings file name
-		settings_filename = os.path.basename(settings_full_path)
-		settings_key = os.path.splitext(settings_filename)[0]
-		# we can have a single document generation or batch generation
 		doc = None
-
-		if settings_key.startswith("batch"):
-			if settings_key == "batch_official_proceeding":
-				doc = BatchOfficialProceeding(data_model)
-			pass
-		else:
-			if settings_key == "order_official_proceeding":
-				doc = DocOfficialProceedingOrder(data_model)
-			else:
-				if settings_key == "official_proceeding":
-					doc = DocOfficialProceeding(data_model)
-				else:
-					if settings_key == "performance_characteristics":
-						doc = DocPerformanceCharacteristics(data_model)
-					else:
-						if settings_key == "explanation_impossible":
-							doc = DocActExplanationImpossible(data_model)
-						else:
-							if settings_key == "copy_impossible":
-								doc = DocActCopyImpossible(data_model)
+		if report_type == "official_proceeding":
+			doc = BatchOfficialProceeding(data_model)
 
 		if doc is None:
 			print(f"Не удалось определить тип документа. Выполнение программы прервано.")

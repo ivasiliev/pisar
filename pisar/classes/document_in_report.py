@@ -168,7 +168,7 @@ class DocumentInReport:
 		paragraph_settings.font_size = Pt(8)
 		num_row = 1
 		while num_row <= how_many_rows:
-			self.add_paragraph("", paragraph_settings)
+			self.add_paragraph(" ", paragraph_settings)
 			num_row = num_row + 1
 
 	def apply_default_settings(self):
@@ -250,9 +250,14 @@ class DocumentInReport:
 		if len(name_tokens) > 2:
 			middle_name = name_tokens[2]
 
-		sn = maker.make(NamePart.LASTNAME, Gender.MALE, cs, surname)
-		fn = maker.make(NamePart.FIRSTNAME, Gender.MALE, cs, first_name)
-		mn = maker.make(NamePart.MIDDLENAME, Gender.MALE, cs, middle_name)
+		rs = self.get_report_settings()
+		gender = Gender.MALE
+		if "gender" in rs and rs["gender"].casefold() == "ж":
+			gender = Gender.FEMALE
+
+		sn = maker.make(NamePart.LASTNAME, gender, cs, surname)
+		fn = maker.make(NamePart.FIRSTNAME, gender, cs, first_name)
+		mn = maker.make(NamePart.MIDDLENAME, gender, cs, middle_name)
 
 		return f"{sn} {fn} {mn}".strip()
 
@@ -314,36 +319,40 @@ class DocumentInReport:
 		return f"{d} {months[m - 1]} {y} года"
 
 	# declension_type. 0 (without), 1 (gent), 2 (ablt), 3 (datv)
-	def get_person_full_str(self, declension_type, battalion_only, militaryman_required,
-	                        position_required, dob_required, military_unit_required, dob_short):
+	def get_person_full_str(self, settings):
 		s_info = self.get_soldier_info()
-		rep_settings = self.get_report_settings()
 		sld_position = ""  # if not required
-		if militaryman_required:
-			sld_position = get_word_declension(self.get_morph(), "военнослужащий", declension_type)
+		if settings.militaryman_required:
+			sld_position = get_word_declension(self.get_morph(), "военнослужащий", settings.declension_type)
 		else:
-			if position_required:
-				sld_position = get_word_declension(self.get_morph(), s_info.position, declension_type)
+			if settings.position_required:
+				sld_position = get_word_declension(self.get_morph(), s_info.position, settings.declension_type)
 
-		sld_rank = self.get_person_rank(s_info.rank, declension_type)
+		sld_rank = ""
+		if settings.rank_required:
+			sld_rank = self.get_person_rank(s_info.rank, settings.declension_type)
 
 		# TODO battalion must be a variable
-		address = "2 стрелкового батальона"
-		if military_unit_required:
-			address = f"{address} войсковой части {rep_settings['military_unit']}"
-		if not battalion_only:
-			address = f"{s_info.squad} стрелкового отделения {s_info.platoon} стрелкового взвода {s_info.company} стрелковой роты " + address
-
-		full_name = self.get_person_name_declension(s_info.full_name, declension_type)
+		address = ""
+		if settings.address_required:
+			address = "2 стрелкового батальона"
+			if settings.military_unit_required:
+				address = f"{address} войсковой части {self.get_military_unit()}"
+			if not settings.battalion_only:
+				address = f"{s_info.squad} стрелкового отделения {s_info.platoon} стрелкового взвода {s_info.company} стрелковой роты " + address
 
 		dob_str = ""
-		if dob_required:
-			if dob_short:
+		if settings.dob_required:
+			if settings.is_dob_short:
 				dob_str = s_info.get_dob() + " г.р."
 			else:
 				dob_str = self.get_date_format_1(s_info.get_dob()) + " рождения"
 
-		result = f"{sld_position} {address} {sld_rank} {full_name}"
+		result = f"{sld_position} {address} {sld_rank}"
+		if settings.person_name_required:
+			full_name = self.get_person_name_declension(s_info.full_name, settings.declension_type)
+			result = result + f" {full_name}"
+
 		if len(dob_str) > 0:
 			result = result + " " + dob_str
 		return result.strip()
