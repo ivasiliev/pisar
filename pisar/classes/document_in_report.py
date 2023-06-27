@@ -188,7 +188,8 @@ class DocumentInReport:
 		for cell in table.columns[index].cells:
 			cell.width = Mm(size)
 
-	def add_table(self, row_count, captions, rows_data):
+	def add_table(self, captions, rows_data):
+		row_count = len(rows_data) + 1
 		table = self.word_document.add_table(rows=row_count, cols=len(captions))
 		table.style = 'Table Grid'
 		table.allow_autofit = False

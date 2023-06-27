@@ -2,10 +2,14 @@ import json
 import os
 import sys
 
+from batches.batch_desert_unit import BatchDesertUnit
 from batches.batch_official_proceeding import BatchOfficialProceeding
 from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_PERSONNEL_PATH, MODEL_IS_VALID, MODEL_CURRENT_SOLDIER
 from classes.personnel_storage import PersonnelStorage
 from helpers.data_model_helper import create_from_json
+
+OFFICIAL_PROCEEDING_BATCH = "official_proceeding"
+DESERT_UNIT_BATCH = "desert_unit"
 
 
 def print_commander(commander, title):
@@ -48,8 +52,10 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 		      f"штатного расписания (первый столбец). Выполнение программы прервано.")
 	else:
 		doc = None
-		if report_type == "official_proceeding":
+		if report_type == OFFICIAL_PROCEEDING_BATCH:
 			doc = BatchOfficialProceeding(data_model)
+		if report_type == DESERT_UNIT_BATCH:
+			doc = BatchDesertUnit(data_model)
 
 		if doc is None:
 			print(f"Не удалось определить тип документа. Выполнение программы прервано.")
@@ -76,4 +82,7 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 
 
 if __name__ == '__main__':
-	run_generation(str(sys.argv[1]))
+	if len(sys.argv) == 2:
+		common_config = "report-settings/common_info.json"
+		soldier_config = "report-settings/soldier_info.json"
+		run_generation(common_config, soldier_config, sys.argv[1])
