@@ -6,6 +6,8 @@ from pathlib import Path
 
 import PySimpleGUI as sg
 
+from classes.run_info import RunInfo
+
 current_path = Path(os.getcwd())
 print(f"current path={current_path}")
 root_path = current_path.parent.absolute()
@@ -20,7 +22,7 @@ sys.path.append(documents_path)
 sys.path.append(batches_path)
 sys.path.append(helpers_path)
 
-from runner import run_generation
+from runner import run_generation, OFFICIAL_PROCEEDING_BATCH, DESERT_UNIT_BATCH
 
 
 # 0 -- pointer, 1 -- clock
@@ -62,9 +64,6 @@ app_release_date = app_settings["app_release_date"]
 
 sg.theme('DarkGreen5')
 
-# button_text_report_settings = "Настройки"
-button_text_report_run = "Запуск"
-
 update_button_key = "update_app_button"
 edit_common_settings_key = "edit_common_settings_button"
 edit_soldier_settings_key = "edit_soldier_settings_button"
@@ -72,32 +71,35 @@ edit_soldier_settings_key = "edit_soldier_settings_button"
 common_config_file = "c:\\pisar_data\\common_info.json"
 soldier_config_file = "c:\\pisar_data\\soldier_info.json"
 
-rep1_text1 = sg.Text("Служебное разбирательство по факту грубого дисциплинарного проступка",
-                     font=("Helvetica", 12, "bold"))
-# rep1_button_settings = sg.Button(key="report1_settings", button_text=button_text_report_settings)
-rep1_button_run = sg.Button(key="report1_run", button_text=button_text_report_run)
+group_official_proceeding = RunInfo()
+group_official_proceeding.group_number = 0
+group_official_proceeding.group_text = "Служебное разбирательство по факту грубого дисциплинарного проступка"
+group_official_proceeding.batch_name = OFFICIAL_PROCEEDING_BATCH
+group_official_proceeding.docs_list = ["Служебное разбирательство (сам документ)",
+                                       "Протокол о ГДП",
+                                       "Акт о невозможности получения копии протокола о ГДП",
+                                       "Акт о невозможности взять объяснение",
+                                       "Служебная характеристика"]
 
-rep1_layer1 = [rep1_text1, rep1_button_run]  # rep1_button_settings
+group_desert_unit = RunInfo()
+group_desert_unit.group_number = 1
+group_desert_unit.group_text = "Служебное разбирательство по факту cамовольного оставления части"
+group_desert_unit.batch_name = DESERT_UNIT_BATCH
+group_desert_unit.docs_list = ["Административное расследование по факту самовольного оставления части"]
 
-docs_list = ["Служебное разбирательство (сам документ)",
-             "Протокол о ГДП",
-             "Акт о невозможности получения копии протокола о ГДП", "Акт о невозможности взять объяснение",
-             "Служебная характеристика"]
-
-rep1_layer2 = []
-for dc in docs_list:
-	rep1_layer2.append([sg.Text(f"* {dc}")])
-col_content = [[sg.Text(f"* {docs_list[0]}")]]
-cl = sg.Column(rep1_layer2)
+batch_groups = [group_official_proceeding, group_desert_unit]
 
 layout = [
 	[sg.Button(key=update_button_key, button_text="Обновить программу"),
 	 sg.Button(key=edit_common_settings_key, button_text="Воинская часть"),
 	 sg.Button(key=edit_soldier_settings_key, button_text="Военнослужащий")
 	 ],
-	[sg.VPush()],
-	[sg.Frame("", [rep1_layer1, [cl]])]
+	[sg.VPush()]
 ]
+
+for grp in batch_groups:
+	# , size=(700, 160)
+	layout.append([sg.Frame("", grp.create_ui())])
 
 window = sg.Window(f"Писарь   {app_version} | {app_release_date}", layout)
 
@@ -130,10 +132,11 @@ while True:
 		subprocess.call(["notepad", common_config_file])
 	if event == edit_soldier_settings_key:
 		subprocess.call(["notepad", soldier_config_file])
-	if event == "report1_run":
-		# full_path = os.path.join(root_path, "report-settings", "batch_official_proceeding.json")
-		set_cursor("report1_run", 1)
-		run_generation(common_config_file, soldier_config_file, "official_proceeding")
-		set_cursor("report1_run", 0)
+	if event.endswith("_run"):
+		gr_num = int(event.replace("report_", "").replace("_run", ""))
+		gr = batch_groups[gr_num]
+		set_cursor(event, 1)
+		run_generation(common_config_file, soldier_config_file, gr.batch_name)
+		set_cursor(event, 0)
 
 window.close()
