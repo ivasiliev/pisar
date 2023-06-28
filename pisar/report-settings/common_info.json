@@ -2,6 +2,7 @@
 	"personnel_path": "c:\\pisar_data\\personnel-demo.xlsx",
 	"output_path": "c:\\pisar_output\\",
 	"military_unit": "42600",
+	"military_unit_address": "г.Донецк, ул.Лесная, 14",
 	"is_guard": true,
 	"battalion": "2 стрелковый батальон",
 	"phone_contact_to_report": "+7-999-111-22-33",
