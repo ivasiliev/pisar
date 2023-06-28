@@ -69,7 +69,7 @@ class InvestigationPrototype(DocumentInReport):
 			self.bold_center_settings)
 		self.add_empty_paragraphs(18)
 
-		current_year = datetime.date.today().year
+		current_year = self.get_current_year()
 
 		self.add_paragraph(f"Начато «     » _________ {current_year} г.", self.align_right_settings)
 		self.add_paragraph(f"Окончено «     » _________ {current_year} г.", self.align_right_settings)

@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from docx import Document
@@ -485,3 +486,6 @@ class DocumentInReport:
 			c_rank = self.get_person_rank(commander["rank"], 0)
 			c_position = commander["position"]
 		return {"name": c_name, "rank": c_rank, "position": c_position, "found": found}
+
+	def get_current_year(self):
+		return datetime.date.today().year
