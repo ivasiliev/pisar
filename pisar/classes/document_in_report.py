@@ -188,7 +188,7 @@ class DocumentInReport:
 		for cell in table.columns[index].cells:
 			cell.width = Mm(size)
 
-	def add_table(self, captions, rows_data):
+	def add_table(self, captions, rows_data, cols_width=None):
 		row_count = len(rows_data) + 1
 		table = self.word_document.add_table(rows=row_count, cols=len(captions))
 		table.style = 'Table Grid'
@@ -207,17 +207,18 @@ class DocumentInReport:
 			num_column = num_column + 1
 
 		# set column width
-		self.set_column_width(table, 0, 10)
-		self.set_column_width(table, 1, 120)
-		self.set_column_width(table, 2, 35)
+		if cols_width is not None:
+			for col_index in range(0, len(cols_width)):
+				self.set_column_width(table, col_index, cols_width[col_index])
 
 		# process rows
 		num_row = 1
 		for row in rows_data:
 			cells = table.rows[num_row].cells
-			cells[0].text = str(num_row)
-			cells[1].text = row
-			cells[2].text = ""
+			col_ind = 0
+			for c_data in row:
+				cells[col_ind].text = c_data
+				col_ind = col_ind + 1
 			num_row = num_row + 1
 
 	def add_paragraph_left_right(self, left_text, right_text):

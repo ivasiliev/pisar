@@ -15,11 +15,13 @@ class InvestigationPrototype(DocumentInReport):
 		self.doc_about = ""
 
 		self.inventory_caption = ""
+		self.inventory_list = []
 		# TODO should we use here positions from config files?
-		self.inventory_list = ["Рапорт ВРИО командира 2 СБ", "Рапорт ВРИО ЗКБ по ВПР 2 СБ",
+		rows_content = ["Рапорт ВРИО командира 2 СБ", "Рапорт ВРИО ЗКБ по ВПР 2 СБ",
 		                       "Рапорт ВРИО командира 5 СР 2 СБ"]
 		for i in range(0, 3):
-			self.inventory_list.append("Объяснение [звание и ФИО]")
+			rows_content.append("Объяснение [звание и ФИО]")
+		self.add_inventory_list(rows_content)
 
 		self.report1_action = ""
 		self.report1_request = ""
@@ -83,8 +85,9 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_empty_paragraphs(1)
 
 		captions = ["№ п/п", "Название документа", "Номер листов"]
+		cols_width = [10, 120, 35]
 
-		self.add_table(captions, self.inventory_list)
+		self.add_table(captions, self.inventory_list, cols_width)
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("Опись составил:", self.align_left_settings)
 		self.add_paragraph(commander["position"], self.align_center_settings)
@@ -276,8 +279,12 @@ class InvestigationPrototype(DocumentInReport):
 			nm = self.get_person_name_short_format_1(nm)
 			rnk = self.get_person_rank(rnk, 0)
 
-		rep_settings = self.get_report_settings()
-		date_of_event = rep_settings["date_of_event"]
 		self.add_paragraph(commander["position"], self.align_center_settings)
 		self.add_paragraph(rnk, self.align_center_settings)
-		self.add_paragraph_left_right(f"{date_of_event} г.", nm)
+		self.add_paragraph_left_right(f"{self.get_date_of_event()} г.", nm)
+
+	def add_inventory_list(self, rows_content):
+		num_row = len(self.inventory_list) + 1
+		for r in rows_content:
+			self.inventory_list.append([str(num_row), r, ""])
+			num_row = num_row + 1

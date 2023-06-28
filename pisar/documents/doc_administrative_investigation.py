@@ -4,7 +4,7 @@ from classes.pers_full_name_settings import PersFullNameSettings
 from documents.investigation_prototype import InvestigationPrototype
 
 
-class DocDesertUnit(InvestigationPrototype):
+class DocAdministrativeInvestigation(InvestigationPrototype):
 	def get_name(self):
 		return "Административное расследование по факту самовольного оставления части"
 
@@ -16,13 +16,8 @@ class DocDesertUnit(InvestigationPrototype):
 		self.doc_about = "по факту самовольного оставления части"
 
 		self.inventory_caption = "административного расследования"
-		self.inventory_list.append("Служебная характеристика")
-		self.inventory_list.append("Справка по форме ГУК МО РФ от 04.12.2006 г.")
-		self.inventory_list.append(f"Письмо командования в/ч {self.get_military_unit()} родителям")
-		self.inventory_list.append("Ориентировка")
-		self.inventory_list.append("Копия паспорта")
-		self.inventory_list.append("Копия служебной карточки")
-		self.inventory_list.append("Заключение административного расследования")
+		rows_content = ["Служебная характеристика", "Справка по форме ГУК МО РФ от 04.12.2006 г.", f"Письмо командования в/ч {self.get_military_unit()} родителям", "Ориентировка", "Копия паспорта", "Копия служебной карточки", "Заключение административного расследования"]
+		self.add_inventory_list(rows_content)
 
 		self.report1_action = "самовольно покинул расположение части, не уведомив вышестоящее командование"
 		self.report1_request = "проведение административного расследования по данному факту"

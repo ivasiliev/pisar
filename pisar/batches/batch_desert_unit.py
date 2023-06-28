@@ -1,5 +1,6 @@
 from batches.batch_prototype import BatchPrototype
-from documents.doc_desert_unit import DocDesertUnit
+from documents.doc_administrative_investigation import DocAdministrativeInvestigation
+from documents.doc_approval_sheet import DocApprovalSheet
 
 
 class BatchDesertUnit(BatchPrototype):
@@ -7,7 +8,8 @@ class BatchDesertUnit(BatchPrototype):
 		return "Самовольное оставление части (группа документов)"
 
 	def render(self):
-		self.add_document(DocDesertUnit(self.data_model))
+		self.add_document(DocAdministrativeInvestigation(self.data_model))
+		self.add_document(DocApprovalSheet(self.data_model))
 
 		super().render()
 
