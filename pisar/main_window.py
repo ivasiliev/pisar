@@ -91,7 +91,7 @@ batch_groups = [group_official_proceeding, group_desert_unit]
 
 layout = [
 	[sg.Button(key=update_button_key, button_text="Обновить программу"),
-	 sg.Button(key=edit_common_settings_key, button_text="Воинская часть"),
+	 sg.Button(key=edit_common_settings_key, button_text="Войсковая часть"),
 	 sg.Button(key=edit_soldier_settings_key, button_text="Военнослужащий")
 	 ],
 	[sg.VPush()]
