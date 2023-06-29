@@ -5,6 +5,8 @@ from documents.doc_administrative_investigation_order_copy import DocAdministrat
 from documents.doc_approval_sheet import DocApprovalSheet
 from documents.doc_letter_parents import DocLetterParents
 from documents.doc_orientation import DocOrientation
+from documents.doc_performance_characteristics import DocPerformanceCharacteristics
+from documents.doc_soldier_card import DocSoldierCard
 
 
 class BatchDesertUnit(BatchPrototype):
@@ -18,6 +20,7 @@ class BatchDesertUnit(BatchPrototype):
 		self.add_document(DocOrientation(self.data_model))
 		self.add_document(DocAdministrativeInvestigationOrder(self.data_model))
 		self.add_document(DocAdministrativeInvestigationOrderCopy(self.data_model))
+		self.add_document(DocPerformanceCharacteristics(self.data_model))
+		self.add_document(DocSoldierCard(self.data_model))
 
 		super().render()
-

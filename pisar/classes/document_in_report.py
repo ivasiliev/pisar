@@ -113,6 +113,8 @@ class DocumentInReport:
 			runner = p.add_run(text)
 			if paragraph_settings.is_bold:
 				runner.bold = True
+			if paragraph_settings.is_italic:
+				runner.italic = True
 			if paragraph_settings.is_underline:
 				runner.underline = True
 			if paragraph_settings.font_size > 0:
@@ -189,7 +191,7 @@ class DocumentInReport:
 		for cell in table.columns[index].cells:
 			cell.width = Mm(size)
 
-	def add_table(self, captions, rows_data, cols_width=None):
+	def add_table(self, captions, rows_data, table_settings=None):
 		row_count = len(rows_data) + 1
 		table = self.word_document.add_table(rows=row_count, cols=len(captions))
 		table.style = 'Table Grid'
@@ -197,12 +199,26 @@ class DocumentInReport:
 		table.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 		# TODO put table in the center and set margins 0;0
 		# process header
+		cols_width = []
+		ps = None
+		if table_settings is not None:
+			ps = table_settings["ps"]
+			cols_width = table_settings["cols_width"]
 		hdr_cells = table.rows[0].cells
 		num_column = 0
 		for caption in captions:
 			cell = hdr_cells[num_column]
 			p = cell.paragraphs[0]
-			p.text = caption
+			if ps is None:
+				p.text = caption
+			else:
+				# TODO use common method to apply settings
+				runner = p.add_run(caption)
+				if ps.is_bold:
+					runner.bold = True
+				if ps.font_size > 0:
+					runner.font.size = ps.font_size
+
 			p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 			cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
 			num_column = num_column + 1

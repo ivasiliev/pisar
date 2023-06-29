@@ -14,7 +14,8 @@ class DocAdministrativeInvestigationOrderCopy(DocAdministrativeInvestigationOrde
 
 	def copy_correct_text(self):
 		self.add_empty_paragraphs(1)
-		self.add_paragraph("Копия верна: делопроизводитель несекретного делопроизводства", self.bold_center_settings)
-		self.add_paragraph("гвардии старшина", self.bold_center_settings)
-		self.add_paragraph("О.Коломота", self.bold_right_settings)
+		clerk = self.get_report_settings()["clerk"]
+		self.add_paragraph(f"Копия верна: {clerk['position']}", self.bold_center_settings)
+		self.add_paragraph(self.get_person_rank(clerk["rank"], 0), self.bold_center_settings)
+		self.add_paragraph(self.get_person_name_short_format_1(clerk["name"]), self.bold_right_settings)
 

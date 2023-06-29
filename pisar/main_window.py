@@ -85,7 +85,7 @@ group_desert_unit = RunInfo()
 group_desert_unit.group_number = 1
 group_desert_unit.group_text = "Служебное разбирательство по факту cамовольного оставления части"
 group_desert_unit.batch_name = DESERT_UNIT_BATCH
-group_desert_unit.docs_list = ["Административное расследование по факту самовольного оставления части", "Лист согласования", "Письмо родственникам", "Ориентировка", "Приказ", "Приказ Копия"]
+group_desert_unit.docs_list = ["Административное расследование по факту самовольного оставления части", "Лист согласования", "Письмо родственникам", "Ориентировка", "Приказ", "Приказ Копия", "Служебная карточка", "Служебная характеристика", "Справка"]
 
 batch_groups = [group_official_proceeding, group_desert_unit]
 

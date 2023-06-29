@@ -85,9 +85,9 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_empty_paragraphs(1)
 
 		captions = ["№ п/п", "Название документа", "Номер листов"]
-		cols_width = [10, 120, 35]
 
-		self.add_table(captions, self.inventory_list, cols_width)
+		capt_settings = {"ps": None, "cols_width": [10, 120, 35]}
+		self.add_table(captions, self.inventory_list, capt_settings)
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("Опись составил:", self.align_left_settings)
 		self.add_paragraph(commander["position"], self.align_center_settings)
