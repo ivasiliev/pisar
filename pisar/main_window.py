@@ -75,23 +75,28 @@ group_official_proceeding = RunInfo()
 group_official_proceeding.group_number = 0
 group_official_proceeding.group_text = "Служебное разбирательство по факту грубого дисциплинарного проступка"
 group_official_proceeding.batch_name = OFFICIAL_PROCEEDING_BATCH
-group_official_proceeding.docs_list = ["Служебное разбирательство (сам документ)",
-                                       "Протокол о ГДП",
-                                       "Акт о невозможности получения копии протокола о ГДП",
-                                       "Акт о невозможности взять объяснение",
-                                       "Служебная характеристика"]
+group_official_proceeding.docs_list = [
+										"Служебное разбирательство (сам документ), Протокол о ГДП",
+										"Акт о невозможности получения копии протокола о ГДП",
+										"Акт о невозможности взять объяснение, Служебная характеристика"
+										]
 
 group_desert_unit = RunInfo()
 group_desert_unit.group_number = 1
 group_desert_unit.group_text = "Служебное разбирательство по факту cамовольного оставления части"
 group_desert_unit.batch_name = DESERT_UNIT_BATCH
-group_desert_unit.docs_list = ["Административное расследование по факту самовольного оставления части"]
+group_desert_unit.docs_list = [
+								"Административное расследование по факту самовольного оставления части",
+								"Лист согласования, Письмо родственникам, Ориентировка",
+								"Приказ, Приказ Копия, Служебная карточка",
+								"Служебная характеристика, Справка"
+								]
 
 batch_groups = [group_official_proceeding, group_desert_unit]
 
 layout = [
 	[sg.Button(key=update_button_key, button_text="Обновить программу"),
-	 sg.Button(key=edit_common_settings_key, button_text="Воинская часть"),
+	 sg.Button(key=edit_common_settings_key, button_text="Войсковая часть"),
 	 sg.Button(key=edit_soldier_settings_key, button_text="Военнослужащий")
 	 ],
 	[sg.VPush()]

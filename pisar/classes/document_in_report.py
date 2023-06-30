@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from docx import Document
@@ -112,6 +113,8 @@ class DocumentInReport:
 			runner = p.add_run(text)
 			if paragraph_settings.is_bold:
 				runner.bold = True
+			if paragraph_settings.is_italic:
+				runner.italic = True
 			if paragraph_settings.is_underline:
 				runner.underline = True
 			if paragraph_settings.font_size > 0:
@@ -188,7 +191,7 @@ class DocumentInReport:
 		for cell in table.columns[index].cells:
 			cell.width = Mm(size)
 
-	def add_table(self, captions, rows_data):
+	def add_table(self, captions, rows_data, table_settings=None):
 		row_count = len(rows_data) + 1
 		table = self.word_document.add_table(rows=row_count, cols=len(captions))
 		table.style = 'Table Grid'
@@ -196,38 +199,53 @@ class DocumentInReport:
 		table.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 		# TODO put table in the center and set margins 0;0
 		# process header
+		cols_width = []
+		ps = None
+		if table_settings is not None:
+			ps = table_settings["ps"]
+			cols_width = table_settings["cols_width"]
 		hdr_cells = table.rows[0].cells
 		num_column = 0
 		for caption in captions:
 			cell = hdr_cells[num_column]
 			p = cell.paragraphs[0]
-			p.text = caption
+			if ps is None:
+				p.text = caption
+			else:
+				# TODO use common method to apply settings
+				runner = p.add_run(caption)
+				if ps.is_bold:
+					runner.bold = True
+				if ps.font_size > 0:
+					runner.font.size = ps.font_size
+
 			p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 			cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
 			num_column = num_column + 1
 
 		# set column width
-		self.set_column_width(table, 0, 10)
-		self.set_column_width(table, 1, 120)
-		self.set_column_width(table, 2, 35)
+		if cols_width is not None:
+			for col_index in range(0, len(cols_width)):
+				self.set_column_width(table, col_index, cols_width[col_index])
 
 		# process rows
 		num_row = 1
 		for row in rows_data:
 			cells = table.rows[num_row].cells
-			cells[0].text = str(num_row)
-			cells[1].text = row
-			cells[2].text = ""
+			col_ind = 0
+			for c_data in row:
+				cells[col_ind].text = c_data
+				col_ind = col_ind + 1
 			num_row = num_row + 1
 
 	def add_paragraph_left_right(self, left_text, right_text):
 		table = self.word_document.add_table(rows=1, cols=2)
 		table.alignment = WD_TABLE_ALIGNMENT.CENTER
 		cells = table.rows[0].cells
-		p0 = cells[0].add_paragraph()
+		p0 = cells[0].paragraphs[0]
 		p0.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 		r_left = p0.add_run(left_text)
-		p1 = cells[1].add_paragraph()
+		p1 = cells[1].paragraphs[0]
 		p1.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
 		r_right = p1.add_run(right_text)
 		return r_left, r_right
@@ -484,3 +502,6 @@ class DocumentInReport:
 			c_rank = self.get_person_rank(commander["rank"], 0)
 			c_position = commander["position"]
 		return {"name": c_name, "rank": c_rank, "position": c_position, "found": found}
+
+	def get_current_year(self):
+		return datetime.date.today().year

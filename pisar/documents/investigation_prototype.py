@@ -15,11 +15,13 @@ class InvestigationPrototype(DocumentInReport):
 		self.doc_about = ""
 
 		self.inventory_caption = ""
+		self.inventory_list = []
 		# TODO should we use here positions from config files?
-		self.inventory_list = ["Рапорт ВРИО командира 2 СБ", "Рапорт ВРИО ЗКБ по ВПР 2 СБ",
+		rows_content = ["Рапорт ВРИО командира 2 СБ", "Рапорт ВРИО ЗКБ по ВПР 2 СБ",
 		                       "Рапорт ВРИО командира 5 СР 2 СБ"]
 		for i in range(0, 3):
-			self.inventory_list.append("Объяснение [звание и ФИО]")
+			rows_content.append("Объяснение [звание и ФИО]")
+		self.add_inventory_list(rows_content)
 
 		self.report1_action = ""
 		self.report1_request = ""
@@ -67,7 +69,7 @@ class InvestigationPrototype(DocumentInReport):
 			self.bold_center_settings)
 		self.add_empty_paragraphs(18)
 
-		current_year = datetime.date.today().year
+		current_year = self.get_current_year()
 
 		self.add_paragraph(f"Начато «     » _________ {current_year} г.", self.align_right_settings)
 		self.add_paragraph(f"Окончено «     » _________ {current_year} г.", self.align_right_settings)
@@ -84,7 +86,8 @@ class InvestigationPrototype(DocumentInReport):
 
 		captions = ["№ п/п", "Название документа", "Номер листов"]
 
-		self.add_table(captions, self.inventory_list)
+		capt_settings = {"ps": None, "cols_width": [10, 120, 35]}
+		self.add_table(captions, self.inventory_list, capt_settings)
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("Опись составил:", self.align_left_settings)
 		self.add_paragraph(commander["position"], self.align_center_settings)
@@ -172,12 +175,11 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_empty_paragraphs(1)
 
 		self.add_paragraph_left_right(self.get_date_of_event(), "г. Донецк")
-		self.add_empty_paragraphs(1)
 
 		paragraph_settings = ParagraphSettings()
 		paragraph_settings.first_line_indent = Mm(12.5)
 		paragraph_settings.align_justify = True
-		paragraph_settings.line_spacing = 0.95
+		paragraph_settings.line_spacing = 0.85
 
 		# TODO ВРИО -> временно исполняющим обязанности. long_position?
 		txt = f"Мной, временно исполняющим обязанности командира 2 стрелкового батальона войсковой части {self.get_military_unit()} "
@@ -276,8 +278,12 @@ class InvestigationPrototype(DocumentInReport):
 			nm = self.get_person_name_short_format_1(nm)
 			rnk = self.get_person_rank(rnk, 0)
 
-		rep_settings = self.get_report_settings()
-		date_of_event = rep_settings["date_of_event"]
 		self.add_paragraph(commander["position"], self.align_center_settings)
 		self.add_paragraph(rnk, self.align_center_settings)
-		self.add_paragraph_left_right(f"{date_of_event} г.", nm)
+		self.add_paragraph_left_right(f"{self.get_date_of_event()} г.", nm)
+
+	def add_inventory_list(self, rows_content):
+		num_row = len(self.inventory_list) + 1
+		for r in rows_content:
+			self.inventory_list.append([str(num_row), r, ""])
+			num_row = num_row + 1

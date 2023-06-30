@@ -22,7 +22,7 @@ def check_settings_file(full_path, name):
 	is_valid = True
 	print(f"Файл настроек для {name}={full_path}")
 	if not os.path.exists(full_path):
-		print(f"Файл настроек для {name} не обнаружен либо недоступен. Выполнение программы прервано.")
+		print(f"Файл настроек для {name} не обнаружен либо недоступен. Проверьте путь, имя файла и его расширение. Выполнение программы прервано.")
 		is_valid = False
 	else:
 		print("Файл настроек обнаружен")
@@ -32,7 +32,7 @@ def check_settings_file(full_path, name):
 def run_generation(common_config_file, soldier_config_file, report_type):
 	print("Писарь начинает работу")
 	s_files = [
-		[common_config_file, "воинской части"]
+		[common_config_file, "войсковой части"]
 		, [soldier_config_file, "военнослужащего"]
 	]
 	for f in s_files:
