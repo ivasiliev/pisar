@@ -93,7 +93,6 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		self.add_empty_paragraphs_spacing(1, line_spacing)
 
 		self.add_commander(rep_settings["commander_2_level"], par_set_center, par_set_right)
-		self.add_empty_paragraphs_spacing(1, line_spacing)
 
 		self.add_paragraph("С характеристикой ознакомлен, согласен:", self.align_justify_settings)
 		self.add_empty_paragraphs_spacing(1, line_spacing)
@@ -103,7 +102,6 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		comm3_pos = comm3_pos + " " + rep_settings["military_unit"]
 		comm3["position"] = comm3_pos
 		self.add_commander(comm3, par_set_center, par_set_right)
-		self.add_empty_paragraphs_spacing(1, line_spacing)
 
 		self.add_paragraph("«___» _________ 2023 г.", self.bold_justify_settings)
 

@@ -242,10 +242,10 @@ class DocumentInReport:
 		table = self.word_document.add_table(rows=1, cols=2)
 		table.alignment = WD_TABLE_ALIGNMENT.CENTER
 		cells = table.rows[0].cells
-		p0 = cells[0].add_paragraph()
+		p0 = cells[0].paragraphs[0]
 		p0.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 		r_left = p0.add_run(left_text)
-		p1 = cells[1].add_paragraph()
+		p1 = cells[1].paragraphs[0]
 		p1.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
 		r_right = p1.add_run(right_text)
 		return r_left, r_right

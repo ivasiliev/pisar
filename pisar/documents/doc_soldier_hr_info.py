@@ -29,7 +29,8 @@ class DocSoldierHrCard(DocumentInReport):
 				if t_ind == 0:
 					s = s.upper()
 				name = name + " " + s
-		self.add_paragraph(name, self.bold_center_settings)
+		self.add_paragraph(name.strip(), self.bold_center_settings)
+		self.add_empty_paragraphs(1)
 
 		settings = PersFullNameSettings(0, False, False, True, False, True, False, False, False)
 		sold_str = self.get_person_full_str(settings)
@@ -75,12 +76,12 @@ class DocSoldierHrCard(DocumentInReport):
 		table.alignment = WD_TABLE_ALIGNMENT.CENTER
 		cells_captions = table.rows[0].cells
 		# captions
-		p_left_caption = cells_captions[0].add_paragraph()
+		p_left_caption = cells_captions[0].paragraphs[0]  # cells_captions[0].add_paragraph()
 		p_left_caption.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 		runner = p_left_caption.add_run(left_caption)
 		runner.bold = True
 		p_left_caption.add_run(f"\n{left_content}")
-		p_right_caption = cells_captions[1].add_paragraph()
+		p_right_caption = cells_captions[1].paragraphs[0]  # cells_captions[1].add_paragraph()
 		p_right_caption.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 		runner = p_right_caption.add_run(right_caption)
 		runner.bold = True
@@ -90,14 +91,18 @@ class DocSoldierHrCard(DocumentInReport):
 		table = self.word_document.add_table(rows=1, cols=2)
 		table.alignment = WD_TABLE_ALIGNMENT.CENTER
 		cells = table.rows[0].cells
-		p = cells[0].add_paragraph()
+		p = cells[0].paragraphs[0]
 		p.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 		runner = p.add_run(caption)
 		runner.bold = True
 
-		p = cells[1].add_paragraph()
+		p = cells[1].paragraphs[0]
 		p.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
 		p.add_run(text)
+
+		self.set_column_width(table, 0, 50)
+		self.set_column_width(table, 1, 100)
+
 
 
 

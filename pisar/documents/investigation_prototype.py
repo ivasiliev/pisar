@@ -175,12 +175,11 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_empty_paragraphs(1)
 
 		self.add_paragraph_left_right(self.get_date_of_event(), "г. Донецк")
-		self.add_empty_paragraphs(1)
 
 		paragraph_settings = ParagraphSettings()
 		paragraph_settings.first_line_indent = Mm(12.5)
 		paragraph_settings.align_justify = True
-		paragraph_settings.line_spacing = 0.95
+		paragraph_settings.line_spacing = 0.85
 
 		# TODO ВРИО -> временно исполняющим обязанности. long_position?
 		txt = f"Мной, временно исполняющим обязанности командира 2 стрелкового батальона войсковой части {self.get_military_unit()} "
