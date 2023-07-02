@@ -126,7 +126,7 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 
 		self.render_date_placeholder()
 
-		commander4_info = self.get_commander_generic("commander_4_level", "КОМАНДИР ВОЙСКОВОЙ ЧАСТИ")
+		commander4_info = self.get_commander_generic("commander_4_level", "КОМАНДИР ВОЙСКОВОЙ ЧАСТИ", 0, True)
 		self.add_paragraph(f"{commander4_info['position'].upper()} {self.get_military_unit()}", self.bold_center_settings)
 		self.add_paragraph(commander4_info['rank'], self.bold_center_settings)
 		self.add_paragraph(commander4_info['name'], self.bold_right_settings)

@@ -36,7 +36,7 @@ class DocApprovalSheet(DocumentInReport):
 		ps.align_left = True
 		ps.font_size = Pt(12)
 
-		cmd = self.get_commander_generic("commander_1_level", "ИСПОЛНИТЕЛЯ")
+		cmd = self.get_commander_generic("commander_1_level", "ИСПОЛНИТЕЛЯ", 0, True)
 		self.add_paragraph(f"Исп. {cmd['rank']} {cmd['name']}", ps)
 		self.add_paragraph("   т. АТС ID 85623", ps)
 
