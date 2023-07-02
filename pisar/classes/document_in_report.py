@@ -91,18 +91,17 @@ class DocumentInReport:
 		self.apply_default_settings()
 		if self.data_model is not None and self.data_model[MODEL_OUTPUT_FOLDER]:
 			full_path_folder = self.data_model[MODEL_OUTPUT_FOLDER]
+			# store files in a sub folder with the soldier name
+			s_info = self.get_soldier_info()
+			if s_info is not None:
+				full_path_folder = os.path.join(full_path_folder, s_info.full_name)
+
 			if not os.path.exists(full_path_folder):
 				os.makedirs(full_path_folder)
 			full_path = os.path.join(full_path_folder, self.get_name_for_file())
 			self.word_document.save(full_path)
 			print(f"Создан документ {full_path}.")
 
-	# performs mapping of a document structure and data
-	def prepare(self):
-		pass
-
-	def add_paragraph_simple(self, text):
-		return self.add_paragraph(text, None)
 
 	def add_paragraph(self, text, paragraph_settings):
 		if paragraph_settings is None:
@@ -162,7 +161,7 @@ class DocumentInReport:
 	def add_empty_paragraphs(self, how_many_rows):
 		num_row = 1
 		while num_row <= how_many_rows:
-			self.add_paragraph_simple("")
+			self.add_paragraph("", None)
 			num_row = num_row + 1
 
 	def add_empty_paragraphs_small(self, how_many_rows):
