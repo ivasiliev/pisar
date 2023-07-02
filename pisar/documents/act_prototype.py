@@ -22,9 +22,9 @@ class ActPrototype(DocumentInReport):
 		paragraph_settings.right_indent = Mm(31)
 		paragraph_settings.align_right = True
 		paragraph_settings.is_bold = True
-		comm_3 = rep_settings["commander_3_level"]
-		self.add_paragraph(self.get_person_rank(comm_3["rank"], 0), paragraph_settings)
-		self.add_paragraph(self.get_person_name_short_format_1(comm_3["name"]), self.bold_right_settings)
+		comm_3 = self.get_commander_generic("commander_3_level", "КОМАНДИРА", 0, True)
+		self.add_paragraph(comm_3["rank"], paragraph_settings)
+		self.add_paragraph(comm_3["name"], self.bold_right_settings)
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("«___»____________2023 г.", self.bold_right_settings)
 		self.add_empty_paragraphs(3)
@@ -37,9 +37,9 @@ class ActPrototype(DocumentInReport):
 		self.add_paragraph("«___»____________2023 г.", self.align_left_settings)
 		self.add_empty_paragraphs(2)
 
-		self.print_commander(rep_settings["commander_2_level"])
+		self.print_commander("commander_2_level")
 		self.add_empty_paragraphs(2)
-		self.print_commander(rep_settings["commander_1_level"])
+		self.print_commander("commander_1_level")
 		self.add_empty_paragraphs(1)
 
 		comm_company = self.get_commander_company()
@@ -47,9 +47,9 @@ class ActPrototype(DocumentInReport):
 
 		super().render()
 
-	def print_commander(self, comm):
-		self.print_commander_routines(self.get_person_name_short_format_1(comm["name"]),
-		                              self.get_person_rank(comm["rank"], 0), comm["position"])
+	def print_commander(self, key):
+		comm = self.get_commander_generic(key, "КОМАНДИРА", 0, True)
+		self.print_commander_routines(comm["name"],	comm["rank"], comm["position"])
 
 	def print_commander_routines(self, c_name, c_rank, c_position):
 		self.add_paragraph(c_position, self.align_center_settings)

@@ -1,5 +1,3 @@
-import datetime
-
 from docx.shared import Mm
 
 from classes.document_in_report import DocumentInReport
@@ -76,9 +74,6 @@ class InvestigationPrototype(DocumentInReport):
 
 	# Опись (стр 2)
 	def inventory_page(self):
-		rep_settings = self.get_report_settings()
-		commander = rep_settings["commander_1_level"]
-
 		self.add_paragraph("О П И С Ь", self.align_center_settings)
 		self.add_paragraph(f"документов, находящихся в материалах {self.inventory_caption}",
 		                   self.align_center_settings)
@@ -90,16 +85,15 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_table(captions, self.inventory_list, capt_settings)
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("Опись составил:", self.align_left_settings)
-		self.add_paragraph(commander["position"], self.align_center_settings)
-		self.add_paragraph(self.get_person_rank(commander["rank"], 0), self.align_center_settings)
-		self.add_paragraph(self.get_person_name_short_format_1(commander["name"]), self.align_right_settings)
+
+		comm = self.get_commander_generic("commander_1_level", "КОМАНДИРА", 0, True)
+		self.add_paragraph(comm["position"], self.align_center_settings)
+		self.add_paragraph(comm["rank"], self.align_center_settings)
+		self.add_paragraph(comm["name"], self.align_right_settings)
 
 	# Рапорт 1 (стр 3)
 	def report1_page(self):
-		rep_settings = self.get_report_settings()
-		commander = rep_settings["commander_2_level"]
-
-		self.add_paragraph("Командиру войсковой части " + rep_settings["military_unit"], self.align_right_settings)
+		self.add_paragraph(f"Командиру войсковой части {self.get_military_unit()}", self.align_right_settings)
 		self.add_empty_paragraphs(2)
 		self.add_paragraph("Рапорт", self.align_center_settings)
 		self.add_empty_paragraphs(1)
@@ -114,13 +108,10 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_paragraph(f"Прошу Вашего указания на {self.report1_request}.",
 		                   self.ident_align_justify_settings)
 		self.add_empty_paragraphs(3)
-		self.officer_report_footer(commander, False)
+		self.officer_report_footer("commander_2_level")
 
 	# Рапорт 2 (стр 4)
 	def report2_page(self):
-		rep_settings = self.get_report_settings()
-		commander = rep_settings["commander_1_level"]
-
 		self.add_paragraph("Командиру 2 стрелкового батальона", self.align_right_settings)
 		self.add_empty_paragraphs(2)
 		self.add_paragraph("Рапорт", self.align_center_settings)
@@ -138,7 +129,7 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_paragraph("Опрос сослуживцев результата не дал, на телефонные звонки не отвечает.",
 		                   self.ident_align_justify_settings)
 		self.add_empty_paragraphs(3)
-		self.officer_report_footer(commander, False)
+		self.officer_report_footer("commander_1_level")
 
 	# Рапорт 3 (стр 5)
 	def report3_page(self):
@@ -153,14 +144,11 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_paragraph(f"{ps} {sold_str}, {self.report3_conclusion}.", self.ident_align_justify_settings)
 		self.add_empty_paragraphs(2)
 
-		cc_info = self.get_commander_company()
-		self.officer_report_footer(cc_info, True)
+		self.officer_report_footer("commander_company")
 
 	# Заключение (стр 6 и 7)
 	def conclusion_page(self):
 		s_info = self.get_soldier_info()
-		rep_settings = self.get_report_settings()
-		commander = rep_settings["commander_2_level"]
 
 		self.add_paragraph(f"Командиру войсковой части {self.get_military_unit()}", self.align_right_settings)
 		self.add_empty_paragraphs(3)
@@ -184,7 +172,8 @@ class InvestigationPrototype(DocumentInReport):
 		# TODO ВРИО -> временно исполняющим обязанности. long_position?
 		txt = f"Мной, временно исполняющим обязанности командира 2 стрелкового батальона войсковой части {self.get_military_unit()} "
 
-		txt = txt + f"{self.get_person_rank(commander['rank'], 2)} {self.get_person_name_instr(commander['name'])},"
+		commander = self.get_commander_generic("commander_2_level", "КОМАНДИРА", 2, True)
+		txt = txt + f"{commander['rank']} {commander['name']},"
 		txt = txt + f" проведено {self.conclusion_action_performed}"
 		settings = PersFullNameSettings(2, False, False, True, True, True, False)
 		sold_str = self.get_person_full_str(settings)
@@ -260,7 +249,7 @@ class InvestigationPrototype(DocumentInReport):
 
 		self.add_empty_paragraphs(2)
 
-		self.officer_report_footer(commander, False)
+		self.officer_report_footer("commander_2_level")
 
 	def summary_page(self):
 		# TODO border around text
@@ -268,19 +257,13 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_paragraph("В данном разбирательстве пронумеровано, прошито", self.align_center_settings)
 		self.add_paragraph("и скреплено печатью ____ лист___.", self.align_center_settings)
 		self.add_empty_paragraphs(1)
-		self.officer_report_footer(self.get_report_settings()["commander_1_level"], False)
+		self.officer_report_footer("commander_1_level")
 
-	# TODO find better way then is_name_shrunk
-	def officer_report_footer(self, commander, is_shrunk):
-		nm = commander["name"]
-		rnk = commander["rank"]
-		if not is_shrunk:
-			nm = self.get_person_name_short_format_1(nm)
-			rnk = self.get_person_rank(rnk, 0)
-
+	def officer_report_footer(self, key):
+		commander = self.get_commander_generic(key, "КОМАНДИРА", 0, True)
 		self.add_paragraph(commander["position"], self.align_center_settings)
-		self.add_paragraph(rnk, self.align_center_settings)
-		self.add_paragraph_left_right(f"{self.get_date_of_event()} г.", nm)
+		self.add_paragraph(commander["rank"], self.align_center_settings)
+		self.add_paragraph_left_right(f"{self.get_date_of_event()} г.", commander["name"])
 
 	def add_inventory_list(self, rows_content):
 		num_row = len(self.inventory_list) + 1

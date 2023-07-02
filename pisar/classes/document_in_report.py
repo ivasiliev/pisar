@@ -17,8 +17,7 @@ MODEL_OUTPUT_FOLDER = "output_folder"
 MODEL_PERSONS = "persons"
 MODEL_MORPHOLOGY = "morphology"
 MODEL_JSON_OBJECT = "json_settings"
-# TODO set a better name
-MODEL_NAME_MORPHOLOGY = "petrovich"
+MODEL_MORPHOLOGY_FOR_NAMES = "petrovich"
 MODEL_IS_VALID = "is_valid"
 MODEL_CURRENT_SOLDIER = "current_soldier"
 
@@ -257,7 +256,7 @@ class DocumentInReport:
 		return self.data_model[MODEL_JSON_OBJECT]
 
 	def get_person_name_routines(self, full_name, cs):
-		maker = self.data_model[MODEL_NAME_MORPHOLOGY]
+		maker = self.data_model[MODEL_MORPHOLOGY_FOR_NAMES]
 		if maker is None:
 			print("Внутренняя ошибка. Морфоанализатор для имён не создан.")
 			return ""
@@ -384,94 +383,42 @@ class DocumentInReport:
 		return rnk
 
 	def get_commander_company(self):
-		c_name = "[ФИО РОТНОГО КОМАНДИРА]"
-		c_rank = "[ЗВАНИЕ РОТНОГО КОМАНДИРА]"
-		c_position = "[ДОЛЖНОСТЬ РОТНОГО КОМАНДИРА]"
-
-		rep_settings = self.get_report_settings()
-		found = "commander_company" in rep_settings
-
-		if found:
-			commander = rep_settings["commander_company"]
-			c_name = self.get_person_name_short_format_1(commander["name"])
-			c_rank = self.get_person_rank(commander["rank"], 0)
-			c_position = commander["position"]
-		return {"name": c_name, "rank": c_rank, "position": c_position, "found": found}
+		return self.get_commander_generic("commander_company", "КОМАНДИРА РОТЫ", 0, False)
 
 	def get_commander_company_full_str(self, declension_type):
-		# TODO refactoring?
 		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ РОТЫ]"
 		rep_settings = self.get_report_settings()
-		found = "commander_company" in rep_settings
-		if found:
-			commander = rep_settings["commander_company"]
-			c_name = commander["name"]
-			c_rank = commander["rank"]
-			if rep_settings["is_guard"]:
-				c_rank = "гвардии " + get_word_declension(self.get_morph(), c_rank, declension_type)
-			c_position = commander["position"]
+		commander_info = self.get_commander_generic("commander_company", "КОМАНДИРА РОТЫ", declension_type, False)
+		if commander_info["found"]:
 			m_unit = rep_settings["military_unit"]
-			company = self.get_soldier_info().company
 			# self.get_word_declension(c_position, declension_type)
 			# {company} стрелковой роты 2 стрелкового батальона войсковой части
-			text = f"{decode_acronyms(self.get_morph(), c_position, declension_type).capitalize()} войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
+			text = f"{decode_acronyms(self.get_morph(), commander_info['position'], declension_type).capitalize()} войсковой части {m_unit} {commander_info['rank']} {self.get_person_name_declension(commander_info['name'], declension_type)}"
 		return text
 
 	def get_morph(self):
 		return self.data_model[MODEL_MORPHOLOGY]
 
-	# TODO similar methods
-	def get_commander_platoon(self):
-		c_name = "[ФИО ВЗВОДНОГО КОМАНДИРА]"
-		c_rank = "[ЗВАНИЕ ВЗВОДНОГО КОМАНДИРА]"
-		c_position = "[ДОЛЖНОСТЬ ВЗВОДНОГО КОМАНДИРА]"
-
-		rep_settings = self.get_report_settings()
-		found = "commander_platoon" in rep_settings
-
-		if found:
-			commander = rep_settings["commander_platoon"]
-			c_name = self.get_person_name_short_format_1(commander["name"])
-			c_rank = self.get_person_rank(commander["rank"], 0)
-			c_position = commander["position"]
-		return {"name": c_name, "rank": c_rank, "position": c_position, "found": found}
-
 	def get_commander_platoon_full_str(self, declension_type):
-		# TODO refactoring?
 		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ ВЗВОДА]"
+		commander_info = self.get_commander_generic("commander_platoon", "КОМАНДИРА ВЗВОДА", declension_type, False)
 		rep_settings = self.get_report_settings()
-		found = "commander_platoon" in rep_settings
-		if found:
-			commander = rep_settings["commander_platoon"]
-			c_name = commander["name"]
-			c_rank = commander["rank"]
-			if rep_settings["is_guard"]:
-				c_rank = "гвардии " + get_word_declension(self.get_morph(), c_rank, declension_type)
-			c_position = commander["position"]
-
-			# TODO more intelligent algorithm for position declension
-
+		if commander_info["found"]:
 			m_unit = rep_settings["military_unit"]
 			platoon = self.get_soldier_info().platoon
-			text = f"{platoon} стрелкового взвода 2 стрелкового батальона войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
+			text = f"{platoon} стрелкового взвода 2 стрелкового батальона войсковой части {m_unit} {commander_info['rank']} {self.get_person_name_declension(commander_info['name'], declension_type)}"
 		return text
 
-	# TODO refactor and use this function in particular methods
 	def get_commander_generic_full_str(self, settings_key, declension_type, empty_placeholder):
 		text = empty_placeholder
+
+		commander_info = self.get_commander_generic(settings_key, empty_placeholder, declension_type, False)
 		rep_settings = self.get_report_settings()
-		found = settings_key in rep_settings
-		if found:
-			commander = rep_settings[settings_key]
-			c_name = commander["name"]
-			c_rank = commander["rank"]
-			if rep_settings["is_guard"]:
-				c_rank = "гвардии " + get_word_declension(self.get_morph(), c_rank, declension_type)
-			c_position = commander["position"]
+		if commander_info["found"]:
 			m_unit = rep_settings["military_unit"]
 			# self.get_word_declension(c_position, declension_type)
 			# {company} стрелковой роты 2 стрелкового батальона войсковой части
-			text = f"{decode_acronyms(self.get_morph(), c_position, declension_type).capitalize()} войсковой части {m_unit} {c_rank} {self.get_person_name_declension(c_name, declension_type)}"
+			text = f"{decode_acronyms(self.get_morph(), commander_info['position'], declension_type).capitalize()} войсковой части {m_unit} {commander_info['rank']} {self.get_person_name_declension(commander_info['name'], declension_type)}"
 		return text
 
 	def get_military_unit(self):
@@ -487,8 +434,7 @@ class DocumentInReport:
 		else:
 			return ""
 
-	# TODO use this generic method in particular methods
-	def get_commander_generic(self, settings_key, empty_placeholder):
+	def get_commander_generic(self, settings_key, empty_placeholder, declension_type, is_short_name):
 		c_name = f"[ФИО {empty_placeholder}]"
 		c_rank = f"[ЗВАНИЕ {empty_placeholder}]"
 		c_position = f"[ДОЛЖНОСТЬ {empty_placeholder}]"
@@ -498,8 +444,16 @@ class DocumentInReport:
 
 		if found:
 			commander = rep_settings[settings_key]
-			c_name = self.get_person_name_short_format_1(commander["name"])
-			c_rank = self.get_person_rank(commander["rank"], 0)
+			c_name = commander["name"]
+			if is_short_name:
+				c_name = self.get_person_name_short_format_1(c_name)
+			c_rank = commander["rank"]
+			c_guard = commander["is_guard"]
+			c_rank_declension = get_word_declension(self.get_morph(), c_rank, declension_type)
+			if c_guard:
+				c_rank = "гвардии " + c_rank_declension
+			else:
+				c_rank = c_rank_declension
 			c_position = commander["position"]
 		return {"name": c_name, "rank": c_rank, "position": c_position, "found": found}
 

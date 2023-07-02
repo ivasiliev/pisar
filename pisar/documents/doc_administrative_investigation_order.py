@@ -109,10 +109,9 @@ class DocAdministrativeInvestigationOrder(DocumentInReport):
 		self.add_paragraph(f"7. Приказ довести до личного состава в части касающейся.", self.ident_align_justify_settings)
 
 		self.add_empty_paragraphs(1)
-		rep_settings = self.get_report_settings()
-		self.officer_report_footer(rep_settings["commander_4_level"])
+		self.officer_report_footer("commander_4_level")
 		self.add_empty_paragraphs(2)
-		self.officer_report_footer(rep_settings["commander_3_level"])
+		self.officer_report_footer("commander_3_level")
 
 		self.copy_correct_text()
 		super().render()
@@ -129,12 +128,9 @@ class DocAdministrativeInvestigationOrder(DocumentInReport):
 		name = self.get_person_name_declension(s_info.full_name, declension_type)
 		return f"{rank} {name}"
 
-	# TODO duplicated code but different
-	def officer_report_footer(self, commander):
-		nm = self.get_person_name_short_format_1(commander["name"])
-		rnk = self.get_person_rank(commander["rank"], 0)
-
+	def officer_report_footer(self, key):
+		commander = self.get_commander_generic(key, "КОМАНДИРА", 0, True)
 		self.add_paragraph(commander["position"].upper(), self.bold_center_settings)
-		self.add_paragraph(rnk, self.bold_center_settings)
-		self.add_paragraph(nm, self.bold_right_settings)
+		self.add_paragraph(commander["rank"], self.bold_center_settings)
+		self.add_paragraph(commander["name"], self.bold_right_settings)
 

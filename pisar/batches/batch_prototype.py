@@ -17,10 +17,10 @@ class BatchPrototype:
 	def get_commander_platoon(self):
 		if len(self.docs) == 0:
 			return None
-		return self.docs[0].get_commander_platoon()
+		return self.docs[0].get_commander_platoon_full_str(0)
 
 	def get_commander_company(self):
 		if len(self.docs) == 0:
 			return None
-		return self.docs[0].get_commander_company()
+		return self.docs[0].get_commander_company_full_str(0)
 

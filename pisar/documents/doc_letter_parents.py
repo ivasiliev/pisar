@@ -46,7 +46,7 @@ class DocLetterParents(DocumentInReport):
 		self.add_empty_paragraphs(2)
 
 		self.add_paragraph("С уважением,", self.align_center_settings)
-		cmd = self.get_commander_generic("commander_1_level", "СОСТАВИТЕЛЯ")
+		cmd = self.get_commander_generic("commander_1_level", "СОСТАВИТЕЛЯ", 0, True)
 		self.add_paragraph(cmd["position"], self.align_center_settings)
 		self.add_paragraph(cmd["rank"], self.align_center_settings)
 		self.add_paragraph(cmd["name"], self.align_right_settings)

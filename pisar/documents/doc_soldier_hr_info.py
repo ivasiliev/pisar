@@ -35,6 +35,7 @@ class DocSoldierHrCard(DocumentInReport):
 		settings = PersFullNameSettings(0, False, False, True, False, True, False, False, False)
 		sold_str = self.get_person_full_str(settings)
 		self.add_paragraph(sold_str, self.align_center_settings)
+		self.add_empty_paragraphs(1)
 
 		self.add_left_right_with_captions("Дата рождения", "Место рождения", s_info.get_dob(), rep_settings["place_of_birth"])
 		self.add_left_right_with_captions("Образование", "Окончил (когда, что)", rep_settings["education"], rep_settings["graduation_place"])
@@ -63,11 +64,11 @@ class DocSoldierHrCard(DocumentInReport):
 		self.add_paragraph(rep_settings["occupation"], self.align_center_settings)
 		self.add_empty_paragraphs(2)
 
-		hr_officer = rep_settings["hr_officer"]
+		hr_officer = self.get_commander_generic("hr_officer", "СПЕЦИАЛИСТА ОТДЕЛА КАДРОВ", 0, True)
 		self.add_paragraph(hr_officer["position"], self.align_center_settings)
 		self.add_paragraph(f"войсковой части {self.get_military_unit()}", self.align_center_settings)
-		self.add_paragraph(self.get_person_rank(hr_officer["rank"], 0), self.align_center_settings)
-		self.add_paragraph(self.get_person_name_short_format_1(hr_officer["name"]), self.align_right_settings)
+		self.add_paragraph(hr_officer["rank"], self.align_center_settings)
+		self.add_paragraph(hr_officer["name"], self.align_right_settings)
 
 		super().render()
 

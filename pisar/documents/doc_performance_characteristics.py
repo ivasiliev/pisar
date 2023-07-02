@@ -73,9 +73,6 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		c_name = cc_info["name"]
 		c_rank = cc_info["rank"]
 		c_position = cc_info["position"]
-		if cc_info["found"]:
-			# TODO battalion to variables
-			c_position = f"{c_position} {s_info.company} стрелковой роты 2 стрелкового батальона"
 
 		par_set_center = ParagraphSettings()
 		par_set_center.is_bold = True
