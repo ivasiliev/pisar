@@ -11,10 +11,10 @@ class Person:
 		self.full_name = ""
 		self.dob = None  # дата рождения
 		self.company_commander = {}  # командир роты
+		self.unique = ""  # личный номер (по нему сводятся данные между документами Excel)
 
 	# proper format dd.mm.yyyy (d.m as well)
 	def set_dob(self, dob_str):
-
 		if isinstance(dob_str, datetime.datetime):
 			self.dob = dob_str
 		else:

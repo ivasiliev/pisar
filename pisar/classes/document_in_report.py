@@ -13,6 +13,7 @@ from classes.paragraph_settings import ParagraphSettings
 from helpers.text_helper import decode_acronyms, get_word_declension
 
 MODEL_PERSONNEL_PATH = "personnel_path"
+MODEL_PERSONNEL_DETAILS_PATH = "personnel_details_path"
 MODEL_OUTPUT_FOLDER = "output_folder"
 MODEL_PERSONS = "persons"
 MODEL_MORPHOLOGY = "morphology"

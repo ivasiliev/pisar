@@ -4,8 +4,10 @@ from pytrovich.enums import NamePart, Gender, Case
 from pytrovich.maker import PetrovichDeclinationMaker
 
 if __name__ == '__main__':
-	full_path = "../data/personnel-demo.xlsx"
-	pers_storage = PersonnelStorage(full_path)
+	# TODO use data model
+	list_full_path = "../data/personnel-demo.xlsx"
+	details_full_path = "../data/personnel-details-demo.xlsx"
+	pers_storage = PersonnelStorage(list_full_path, details_full_path)
 	person = pers_storage.find_person_by_id(1)
 	assert person is not None
 	# print(person.company_commander)

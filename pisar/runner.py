@@ -4,7 +4,8 @@ import sys
 
 from batches.batch_desert_unit import BatchDesertUnit
 from batches.batch_official_proceeding import BatchOfficialProceeding
-from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_PERSONNEL_PATH, MODEL_IS_VALID, MODEL_CURRENT_SOLDIER
+from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_PERSONNEL_PATH, MODEL_IS_VALID, MODEL_CURRENT_SOLDIER, \
+	MODEL_PERSONNEL_DETAILS_PATH
 from classes.personnel_storage import PersonnelStorage
 from helpers.data_model_helper import create_from_json
 
@@ -61,9 +62,9 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 			print(f"Не удалось определить тип документа. Выполнение программы прервано.")
 		else:
 			print(f"Тип документа: {doc.get_name()}.")
-			pers_storage = PersonnelStorage(data_model[MODEL_PERSONNEL_PATH])
+			pers_storage = PersonnelStorage(data_model)
 			if not pers_storage.is_valid:
-				print("Неверная структура Штатного расписания. Выполнение программы прервано.")
+				print("Неверная структура Штатного расписания/Информации о личном составе. Выполнение программы прервано.")
 				return
 			for sld in soldiers:
 				current_soldier = pers_storage.find_person_by_id(int(sld))
@@ -74,8 +75,8 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 				data_model[MODEL_CURRENT_SOLDIER] = current_soldier
 				print(f"Документ для военнослужащего: {current_soldier.full_name}")
 
-				print_commander(doc.get_commander_company(), "ротный:")
-				print_commander(doc.get_commander_platoon(), "взводный:")
+				# print_commander(doc.get_commander_company(), "ротный:")
+				# print_commander(doc.get_commander_platoon(), "взводный:")
 
 				doc.render()
 	print("Писарь завершил работу")

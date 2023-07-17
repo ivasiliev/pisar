@@ -21,12 +21,13 @@ def delete_if_exists(full_path):
 
 
 shutil.copy("C:\\pisar\\pisar\\data\\personnel-demo.xlsx", data_dir)
+shutil.copy("C:\\pisar\\pisar\\data\\personnel-details-demo.xlsx", data_dir)
 
 copy_if_not_exists("c:\\pisar\\pisar\\data\\personnel-demo-massive.xlsx", data_dir)
 copy_if_not_exists("c:\\pisar\\pisar\\report-settings\\soldier_info.json", data_dir)
 copy_if_not_exists("c:\\pisar\\pisar\\report-settings\\common_info.json", data_dir)
 
-obsolete_files = ["copy_impossible.json", "explanation_impossible.json", "official_proceeding.json", "order_official_proceeding.json", "performance_characteristics.json"]
+obsolete_files = ["batch_official_proceeding.json", "copy_impossible.json", "explanation_impossible.json", "official_proceeding.json", "order_official_proceeding.json", "performance_characteristics.json"]
 for f in obsolete_files:
 	fp = os.path.join(data_dir, f)
 	delete_if_exists(fp)
