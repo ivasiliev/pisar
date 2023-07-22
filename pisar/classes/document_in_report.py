@@ -10,7 +10,7 @@ from docx.shared import Pt
 from pytrovich.enums import NamePart, Gender, Case
 
 from classes.paragraph_settings import ParagraphSettings
-from helpers.text_helper import decode_acronyms, get_word_declension
+from helpers.text_helper import decode_acronyms, get_word_declension, get_words_declension
 
 MODEL_PERSONNEL_PATH = "personnel_path"
 MODEL_PERSONNEL_DETAILS_PATH = "personnel_details_path"
@@ -357,7 +357,11 @@ class DocumentInReport:
 			if settings.military_unit_required:
 				address = f"{address} войсковой части {self.get_military_unit()}"
 			if not settings.battalion_only:
-				address = f"{s_info.squad} стрелкового отделения {s_info.platoon} стрелкового взвода {s_info.company} стрелковой роты " + address
+				sq = get_words_declension(self.get_morph(), s_info.squad, 1).strip()
+				pl = get_words_declension(self.get_morph(), s_info.platoon, 1).strip()
+				cm = get_words_declension(self.get_morph(), s_info.company, 1).strip()
+				address = f"{sq} {pl} {cm} {address}"
+				# address = f"{s_info.squad} стрелкового отделения {s_info.platoon} стрелкового взвода {s_info.company} стрелковой роты " + address
 
 		dob_str = ""
 		if settings.dob_required:
@@ -393,6 +397,7 @@ class DocumentInReport:
 			m_unit = rep_settings["military_unit"]
 			# self.get_word_declension(c_position, declension_type)
 			# {company} стрелковой роты 2 стрелкового батальона войсковой части
+			# TODO not everytime we need to capitalize here. Sometimes it should be lower
 			text = f"{decode_acronyms(self.get_morph(), commander_info['position'], declension_type).capitalize()} войсковой части {m_unit} {commander_info['rank']} {self.get_person_name_declension(commander_info['name'], declension_type)}"
 		return text
 
@@ -405,8 +410,8 @@ class DocumentInReport:
 		rep_settings = self.get_report_settings()
 		if commander_info["found"]:
 			m_unit = rep_settings["military_unit"]
-			platoon = self.get_soldier_info().platoon
-			text = f"{platoon} стрелкового взвода 2 стрелкового батальона войсковой части {m_unit} {commander_info['rank']} {self.get_person_name_declension(commander_info['name'], declension_type)}"
+			platoon = get_words_declension(self.get_morph(), self.get_soldier_info().platoon, 1)
+			text = f"{platoon} 2 стрелкового батальона войсковой части {m_unit} {commander_info['rank']} {self.get_person_name_declension(commander_info['name'], declension_type)}"
 		return text
 
 	def get_commander_generic_full_str(self, settings_key, declension_type, empty_placeholder):
@@ -459,3 +464,5 @@ class DocumentInReport:
 
 	def get_current_year(self):
 		return datetime.date.today().year
+
+

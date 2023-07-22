@@ -40,7 +40,10 @@ def get_word_routines(morph, wrd, grm):
 		return ""
 	parsed = morph.parse(wrd)[0]
 	gent_text = parsed.inflect({grm})
-	return gent_text.word
+	if gent_text is not None:
+		return gent_text.word
+	else:
+		return wrd
 
 
 def get_word_gent(morph, wrd):
@@ -74,4 +77,12 @@ def get_word_declension(morph, wrd, declension_type):
 
 def parse_date_str(date_str):
 	tokens = date_str.split(".")
+	# TODO
 
+# for a phrase contains several words
+def get_words_declension(morph, txt, declension_type):
+	tokens = txt.split(" ")
+	result = ""
+	for t in tokens:
+		result = result + get_word_declension(morph, t, declension_type) + " "
+	return result.rstrip()
