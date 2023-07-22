@@ -22,7 +22,8 @@ sys.path.append(documents_path)
 sys.path.append(batches_path)
 sys.path.append(helpers_path)
 
-from runner import run_generation, OFFICIAL_PROCEEDING_BATCH, DESERT_UNIT_BATCH
+from runner import run_generation, OFFICIAL_PROCEEDING_BATCH, DESERT_UNIT_BATCH, MASS_HR_INFO_BATCH, \
+	MASS_PERFORMANCE_CHARACTERISTICS_BATCH
 
 
 # 0 -- pointer, 1 -- clock
@@ -86,13 +87,24 @@ group_desert_unit.group_number = 1
 group_desert_unit.group_text = "Служебное разбирательство по факту cамовольного оставления части"
 group_desert_unit.batch_name = DESERT_UNIT_BATCH
 group_desert_unit.docs_list = [
-								"Административное расследование по факту самовольного оставления части",
-								"Лист согласования, Письмо родственникам, Ориентировка",
-								"Приказ, Приказ Копия, Служебная карточка",
-								"Служебная характеристика, Справка"
+								"Административное расследование по факту самовольного оставления части, Служебная характеристика, Справка",
+								"Лист согласования, Письмо родственникам, Ориентировка, Приказ, Приказ Копия, Служебная карточка"
 								]
 
-batch_groups = [group_official_proceeding, group_desert_unit]
+group_mass_hr_info_unit = RunInfo()
+group_mass_hr_info_unit.group_number = 2
+group_mass_hr_info_unit.group_text = "Массовая генерация документа 'Справка'"
+group_mass_hr_info_unit.batch_name = MASS_HR_INFO_BATCH
+group_mass_hr_info_unit.docs_list = []
+
+group_mass_perf_char_unit = RunInfo()
+group_mass_perf_char_unit.group_number = 3
+group_mass_perf_char_unit.group_text = "Массовая генерация документа 'Служебная характеристика'"
+group_mass_perf_char_unit.batch_name = MASS_PERFORMANCE_CHARACTERISTICS_BATCH
+group_mass_perf_char_unit.docs_list = []
+
+
+batch_groups = [group_official_proceeding, group_desert_unit, group_mass_hr_info_unit, group_mass_perf_char_unit]
 
 layout = [
 	[sg.Button(key=update_button_key, button_text="Обновить программу"),

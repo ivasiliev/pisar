@@ -46,11 +46,11 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 		birth_date = self.get_date_format_1(sold.get_dob())
 		birth_place = rep_settings["place_of_birth"]
 		home_address = rep_settings["home_address"]
-		education = rep_settings["education"]
-		nationality = rep_settings["nationality"]
+		education = rep_settings["education"].lower()
+		nationality = rep_settings["nationality"].lower()
 		passport = rep_settings["passport"]
-		marital_status = rep_settings["marital_status"]
-		criminal_status = rep_settings["criminal_status"]
+		marital_status = rep_settings["marital_status"].lower()
+		criminal_status = rep_settings["criminal_status"].lower()
 
 		self.add_paragraph_with_underline(f"{birth_date}, родился в {birth_place}")
 		self.add_paragraph("год и место рождения", small_underline)
