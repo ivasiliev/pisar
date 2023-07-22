@@ -26,6 +26,7 @@ MODEL_CURRENT_SOLDIER = "current_soldier"
 class DocumentInReport:
 	def __init__(self, data_model):
 		self.data_model = data_model
+		self.subfolder_name = None
 		self.pages = []
 		self.word_document = Document()
 		style = self.word_document.styles['Normal']
@@ -93,9 +94,13 @@ class DocumentInReport:
 		if self.data_model is not None and self.data_model[MODEL_OUTPUT_FOLDER]:
 			full_path_folder = self.data_model[MODEL_OUTPUT_FOLDER]
 			# store files in a sub folder with the soldier name
-			s_info = self.get_soldier_info()
-			if s_info is not None:
-				full_path_folder = os.path.join(full_path_folder, s_info.full_name)
+			# or use the dedicated sub folder if it is set
+			if self.subfolder_name is not None:
+				full_path_folder = os.path.join(full_path_folder, self.subfolder_name)
+			else:
+				s_info = self.get_soldier_info()
+				if s_info is not None:
+					full_path_folder = os.path.join(full_path_folder, s_info.full_name)
 
 			if not os.path.exists(full_path_folder):
 				os.makedirs(full_path_folder)

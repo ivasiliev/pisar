@@ -2,6 +2,7 @@ class BatchPrototype:
 	def __init__(self, data_model):
 		self.data_model = data_model
 		self.docs = []
+		self.subfolder_name = None
 
 	def get_name(self):
 		return ""
@@ -11,6 +12,7 @@ class BatchPrototype:
 
 	def render(self):
 		for doc in self.docs:
+			doc.subfolder_name = self.subfolder_name
 			print(f"{doc.get_name()}...")
 			doc.render()
 

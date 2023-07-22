@@ -3,6 +3,8 @@ import os
 import sys
 
 from batches.batch_desert_unit import BatchDesertUnit
+from batches.batch_mass_hr_info import BatchMassHrInfo
+from batches.batch_mass_performance_characteristics import BatchMassPerformanceCharacteristics
 from batches.batch_official_proceeding import BatchOfficialProceeding
 from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_PERSONNEL_PATH, MODEL_IS_VALID, MODEL_CURRENT_SOLDIER, \
 	MODEL_PERSONNEL_DETAILS_PATH
@@ -11,6 +13,8 @@ from helpers.data_model_helper import create_from_json
 
 OFFICIAL_PROCEEDING_BATCH = "official_proceeding"
 DESERT_UNIT_BATCH = "desert_unit"
+MASS_HR_INFO_BATCH = "MASS_HR_INFO_BATCH"
+MASS_PERFORMANCE_CHARACTERISTICS_BATCH = "MASS_PERFORMANCE_CHARACTERISTICS_BATCH"
 
 
 def print_commander(commander, title):
@@ -47,7 +51,17 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 		print("Файл настроек содержит неверную информацию. Выполнение программы прервано.")
 		return
 
-	soldiers = data_model[MODEL_JSON_OBJECT]["soldier_ids"].split(",")
+	sold_ids = data_model[MODEL_JSON_OBJECT]["soldier_ids"].split(",")
+	soldiers = []
+	for sld in sold_ids:
+		if "-" in sld:
+			tkn = sld.split("-")
+			if len(tkn) == 2:
+				for i in range(int(tkn[0]), int(tkn[1]) + 1):
+					soldiers.append(i)
+		else:
+			soldiers.append(int(sld))
+
 	if len(soldiers) == 0:
 		print(f"Не заданы номера военнослужащих. В настроечном файле в поле 'soldier_ids' внесите их номера из "
 		      f"штатного расписания (первый столбец). Выполнение программы прервано.")
@@ -57,6 +71,10 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 			doc = BatchOfficialProceeding(data_model)
 		if report_type == DESERT_UNIT_BATCH:
 			doc = BatchDesertUnit(data_model)
+		if report_type == MASS_HR_INFO_BATCH:
+			doc = BatchMassHrInfo(data_model)
+		if report_type == MASS_PERFORMANCE_CHARACTERISTICS_BATCH:
+			doc = BatchMassPerformanceCharacteristics(data_model)
 
 		if doc is None:
 			print(f"Не удалось определить тип документа. Выполнение программы прервано.")
@@ -67,7 +85,7 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 				print("Неверная структура Штатного расписания/Информации о личном составе. Выполнение программы прервано.")
 				return
 			for sld in soldiers:
-				current_soldier = pers_storage.find_person_by_id(int(sld))
+				current_soldier = pers_storage.find_person_by_id(sld)
 				if current_soldier is None:
 					print(f"Не удалось найти военнослужащего под номером '{str(sld)}'")
 					continue
