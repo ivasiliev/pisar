@@ -176,7 +176,8 @@ class PersonnelStorage:
 					]
 
 					for m in mapping:
-						dm[m[0]] = self.find_value_in_row_by_index(person_row, pers_details_excel_doc.get_column_index(m[1]))
+						dm[m[0]] = self.find_value_in_row_by_index(person_row,
+						                                           pers_details_excel_doc.get_column_index(m[1]))
 
 					parents_mapping = ["father_name", "mother_name"]
 					parents_delimiter = ","
@@ -198,7 +199,8 @@ class PersonnelStorage:
 					for pr in priorities:
 						p = pr[0]
 						key1 = passport_key.replace("X", str(p))
-						passport_number = self.find_value_in_row_by_index(person_row, pers_details_excel_doc.get_column_index(key1))
+						passport_number = self.find_value_in_row_by_index(person_row,
+						                                                  pers_details_excel_doc.get_column_index(key1))
 						if passport_number is not None and len(passport_number) > 0:
 							key2 = passport_issued_key.replace("X", str(p))
 							passport_issued = self.find_value_in_row_by_index(person_row,
@@ -259,4 +261,49 @@ class PersonnelStorage:
 			, ColumnInfo("COLUMN_MOTHER_NAME", "фио матери, дата рождения")
 		]
 
-		return ExcelDocMetadata(full_path, self.personnel_details_excel_sheet_name, cols, 60)
+		return ExcelDocMetadata(full_path, self.personnel_details_excel_sheet_name, cols, 70)
+
+	# what_file=0 (ШР),what_file=1 (ЛС)
+	def get_all_persons(self, what_file, row_limit=None):
+		excel_doc = self.excel_docs[what_file]
+		# this id must be at the first column of the personnel list Excel file
+		workbook = openpyxl.load_workbook(excel_doc.full_path)
+		sh = workbook[excel_doc.sheet_name]
+		# TODO implement this for what_file = 1
+		col_full_name = excel_doc.get_column_index("COLUMN_FULL_NAME")
+		col_dob = excel_doc.get_column_index("COLUMN_DOB")
+		col_unique = excel_doc.get_column_index(self.COLUMN_UNIQUE_KEY)
+
+		indexes = [
+			col_full_name
+			, col_dob
+			, col_unique
+		]
+
+		performance = PerformanceHelper()
+		performance.start()
+		iteration_count = 0
+		count_for_report = 50
+		print("Просмотр списка военнослужащих. Пожалуйста, подождите...")
+		max_row_value = 2001
+		if row_limit is not None:
+			max_row_value = row_limit
+		all_persons = []
+		for row in sh.iter_rows(min_row=2, min_col=1, max_row=max_row_value, max_col=max(indexes) + 1):
+			if row[0].value is None:
+				break
+			person = Person()
+			person.full_name = self.find_value_in_row_by_index(row, col_full_name)
+			person.set_dob(self.find_value_in_row_by_index(row, col_dob))
+			person.unique = self.find_value_in_row_by_index(row, col_unique)
+			all_persons.append(person)
+
+			iteration_count = iteration_count + 1
+			if iteration_count % count_for_report == 0:
+				print(f"Обработано {iteration_count} строк...")
+
+		print(f"Количество итераций для просмотра списка: {iteration_count}")
+		print(f"Обнаружено военнослужащих: {len(all_persons)}")
+		performance.stop_and_print()
+
+		return all_persons

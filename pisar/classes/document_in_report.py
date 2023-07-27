@@ -10,6 +10,7 @@ from docx.shared import Pt
 from pytrovich.enums import NamePart, Gender, Case
 
 from classes.paragraph_settings import ParagraphSettings
+from document_prototype import DocumentPrototype
 from helpers.text_helper import decode_acronyms, get_word_declension, get_words_declension
 
 MODEL_PERSONNEL_PATH = "personnel_path"
@@ -23,9 +24,9 @@ MODEL_IS_VALID = "is_valid"
 MODEL_CURRENT_SOLDIER = "current_soldier"
 
 
-class DocumentInReport:
+class DocumentInReport(DocumentPrototype):
 	def __init__(self, data_model):
-		self.data_model = data_model
+		super().__init__(data_model)
 		self.subfolder_name = None
 		self.pages = []
 		self.word_document = Document()
@@ -81,12 +82,6 @@ class DocumentInReport:
 	# self.personnel_info = None
 	# if self.data_model is not None and self.data_model[MODEL_PERSONNEL_PATH] is not None:
 	#	self.personnel_info = PersonnelStorage(self.data_model[MODEL_PERSONNEL_PATH])
-
-	def get_name(self):
-		return ""
-
-	def get_name_for_file(self):
-		return ""
 
 	# creates MS Word document
 	def render(self):
