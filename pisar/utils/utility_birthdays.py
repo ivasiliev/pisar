@@ -33,6 +33,8 @@ class UtilityBirthday(UtilityPrototype):
 		all_persons = pers_storage.get_all_persons(0, rl)
 		persons = []
 		for pers in all_persons:
+			if pers.dob is None:
+				continue
 			nd = datetime.date(self.current_date.year, pers.dob.month, pers.dob.day)
 			diff = nd - self.current_date
 			if 0 < diff.days <= self.in_days:

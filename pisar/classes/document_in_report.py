@@ -328,7 +328,8 @@ class DocumentInReport(DocumentPrototype):
 	def get_date_format_1(self, date_str):
 		tokens = date_str.split(".")
 		if len(tokens) != 3:
-			print(f"Не удалось определить формат даты {date_str}")
+			return date_str
+			# print(f"Не удалось определить формат даты {date_str}")
 		d = int(tokens[0])
 		m = int(tokens[1])
 		y = int(tokens[2])

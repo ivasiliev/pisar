@@ -1,5 +1,9 @@
-class BatchPrototype:
+from document_prototype import DocumentPrototype
+
+
+class BatchPrototype(DocumentPrototype):
 	def __init__(self, data_model):
+		super().__init__(data_model)
 		self.data_model = data_model
 		self.docs = []
 		self.subfolder_name = None
