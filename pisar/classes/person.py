@@ -16,6 +16,8 @@ class Person:
 
 	# proper format dd.mm.yyyy (d.m as well)
 	def set_dob(self, dob_str):
+		if dob_str is None:
+			return
 		if isinstance(dob_str, datetime.datetime):
 			self.dob = dob_str
 		else:
@@ -27,7 +29,7 @@ class Person:
 
 	def get_dob(self):
 		if self.dob is None:
-			return None
+			return "[ВСТАВЬТЕ ДАТУ РОЖДЕНИЯ]"
 		else:
 			d = str(self.dob.day)
 			if len(d) < 2:
