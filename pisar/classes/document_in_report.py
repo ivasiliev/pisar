@@ -11,7 +11,7 @@ from pytrovich.enums import NamePart, Gender, Case
 
 from classes.paragraph_settings import ParagraphSettings
 from document_prototype import DocumentPrototype
-from helpers.text_helper import decode_acronyms, get_word_declension, get_words_declension
+from helpers.text_helper import decode_acronyms, get_word_declension, get_words_declension, get_month_string
 
 MODEL_PERSONNEL_PATH = "personnel_path"
 MODEL_PERSONNEL_DETAILS_PATH = "personnel_details_path"
@@ -329,12 +329,10 @@ class DocumentInReport(DocumentPrototype):
 		tokens = date_str.split(".")
 		if len(tokens) != 3:
 			print(f"Не удалось определить формат даты {date_str}")
-		months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября",
-		          "ноября", "декабря"]
 		d = int(tokens[0])
 		m = int(tokens[1])
 		y = int(tokens[2])
-		return f"{d} {months[m - 1]} {y} года"
+		return f"{d} {get_month_string(m)} {y} года"
 
 	# declension_type. 0 (without), 1 (gent), 2 (ablt), 3 (datv)
 	def get_person_full_str(self, settings):
