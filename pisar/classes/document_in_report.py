@@ -10,7 +10,8 @@ from docx.shared import Pt
 from pytrovich.enums import NamePart, Gender, Case
 
 from classes.paragraph_settings import ParagraphSettings
-from helpers.text_helper import decode_acronyms, get_word_declension, get_words_declension
+from document_prototype import DocumentPrototype
+from helpers.text_helper import decode_acronyms, get_word_declension, get_words_declension, get_month_string
 
 MODEL_PERSONNEL_PATH = "personnel_path"
 MODEL_PERSONNEL_DETAILS_PATH = "personnel_details_path"
@@ -23,9 +24,9 @@ MODEL_IS_VALID = "is_valid"
 MODEL_CURRENT_SOLDIER = "current_soldier"
 
 
-class DocumentInReport:
+class DocumentInReport(DocumentPrototype):
 	def __init__(self, data_model):
-		self.data_model = data_model
+		super().__init__(data_model)
 		self.subfolder_name = None
 		self.pages = []
 		self.word_document = Document()
@@ -81,12 +82,6 @@ class DocumentInReport:
 	# self.personnel_info = None
 	# if self.data_model is not None and self.data_model[MODEL_PERSONNEL_PATH] is not None:
 	#	self.personnel_info = PersonnelStorage(self.data_model[MODEL_PERSONNEL_PATH])
-
-	def get_name(self):
-		return ""
-
-	def get_name_for_file(self):
-		return ""
 
 	# creates MS Word document
 	def render(self):
@@ -334,12 +329,10 @@ class DocumentInReport:
 		tokens = date_str.split(".")
 		if len(tokens) != 3:
 			print(f"Не удалось определить формат даты {date_str}")
-		months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября",
-		          "ноября", "декабря"]
 		d = int(tokens[0])
 		m = int(tokens[1])
 		y = int(tokens[2])
-		return f"{d} {months[m - 1]} {y} года"
+		return f"{d} {get_month_string(m)} {y} года"
 
 	# declension_type. 0 (without), 1 (gent), 2 (ablt), 3 (datv)
 	def get_person_full_str(self, settings):

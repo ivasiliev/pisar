@@ -12,6 +12,7 @@ class Person:
 		self.dob = None  # дата рождения
 		self.company_commander = {}  # командир роты
 		self.unique = ""  # личный номер (по нему сводятся данные между документами Excel)
+		self.age = 0
 
 	# proper format dd.mm.yyyy (d.m as well)
 	def set_dob(self, dob_str):

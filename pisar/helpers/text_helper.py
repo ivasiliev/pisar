@@ -79,6 +79,11 @@ def parse_date_str(date_str):
 	tokens = date_str.split(".")
 	# TODO
 
+def get_month_string(month_num):
+	months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября",
+	          "ноября", "декабря"]
+	return months[month_num - 1]
+
 # for a phrase contains several words
 def get_words_declension(morph, txt, declension_type):
 	tokens = txt.split(" ")
