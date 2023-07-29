@@ -124,7 +124,7 @@ class PersonnelStorage:
 		performance.stop_and_print()
 
 		# check on mandatory fields
-		if person.unique is None:
+		if person is not None and person.unique is None:
 			print(f"Не задан личный номер для {person.full_name}! Продолжение работы невозможно.")
 			person = None
 
