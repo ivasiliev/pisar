@@ -70,7 +70,7 @@ class DocSoldierCard(DocumentInReport):
 		self.add_paragraph("___________________________________________________________________", self.align_center_settings)
 		self.print_special_paragraph(f"2. Звание__", rank)
 		self.print_special_paragraph(f"3. Фамилия, имя, отчество__", s_info.full_name)
-		yss = rep_settings["service_started"].split(".")[2]
+		yss = self.get_service_started_str_year()
 		self.print_special_paragraph(f"4. С какого года на военной службе__", yss)
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("ПООЩРЕНИЯ", ps_18)
