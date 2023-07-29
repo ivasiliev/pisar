@@ -52,9 +52,9 @@ class DocSoldierHrCard(DocumentInReport):
 		family_status = ""
 		if len(marital_status) > 0:
 			family_status = marital_status
-		if len(father_name) > 0:
+		if father_name is not None and len(father_name) > 0:
 			family_status = family_status + f"\nОтец – {father_name}"
-		if len(mother_name) > 0:
+		if mother_name is not None and len(mother_name) > 0:
 			family_status = family_status + f"\nМать – {mother_name}"
 		family_status = family_status.rstrip()
 		self.add_bold_caption("Семейное положение", family_status)
