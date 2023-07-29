@@ -54,8 +54,8 @@ class DocLetterParents(DocumentInReport):
 		super().render()
 
 	def get_parent_name(self, name):
-		if len(name) == 0:
-			return name
+		if name is None or len(name) == 0:
+			return "[ВСТАВЬТЕ ИМЯ РОДИТЕЛЯ]"
 		tokens = name.split(" ")
 		if len(tokens) < 2:
 			return name
