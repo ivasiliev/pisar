@@ -44,7 +44,7 @@ class DocSoldierHrCard(DocumentInReport):
 		self.add_left_right_with_captions("Имеет ли государственные награды (какие)", "Был ли за границей (когда, где)", rep_settings["awards"], rep_settings["foreign_countries_visited"])
 
 		self.add_bold_caption("Воинское звание", self.get_person_rank(s_info.rank, 0))
-		self.add_bold_caption("Контракт", f"Мобилизован ДНР с {rep_settings['service_started']}")
+		self.add_bold_caption("Контракт", f"Мобилизован ДНР с {self.get_service_started_str()}")
 
 		marital_status = rep_settings["marital_status"]
 		father_name = rep_settings["father_name"]

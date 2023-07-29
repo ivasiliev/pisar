@@ -464,4 +464,16 @@ class DocumentInReport(DocumentPrototype):
 	def get_current_year(self):
 		return datetime.date.today().year
 
+	def get_service_started_str(self):
+		service_started = self.get_report_settings()["service_started"]
+		if service_started is None:
+			return ""
+		if isinstance(service_started, datetime.datetime):
+			return f"{service_started.day}.{service_started.month}.{service_started.year}"
+		return service_started
 
+	def get_service_started_str_year(self):
+		service_started = self.get_service_started_str()
+		if "." in service_started:
+			return service_started.split(".")[2]
+		return "[УКАЖИТЕ ГОД НАЧАЛА СЛУЖБЫ]"
