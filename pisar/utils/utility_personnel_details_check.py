@@ -27,58 +27,20 @@ class UtilityPersonnelDetailsCheck(UtilityPrototype):
 		persons_details = pers_storage.get_all_persons(1)
 
 		# есть в ЛС, нет в ШР
-		pers_group_1 = []
-		for p_ls in persons_details:
-			if p_ls.unique is None:
-				continue
-			if not self.pers_in_list(p_ls, persons_limited):
-				pers_group_1.append(p_ls)
-
+		pers_group_1 = self.prepare_pers_group(persons_details, persons_limited)
 		# есть в ШР, нет в ЛС
-		pers_group_2 = []
-		for p_sr in persons_limited:
-			if p_sr.unique is None:
-				continue
-			if not self.pers_in_list(p_sr, persons_details):
-				pers_group_2.append(p_sr)
-
-		pers_group_1.sort(key=lambda x: x.full_name, reverse=False)
-		pers_group_2.sort(key=lambda x: x.full_name, reverse=False)
+		pers_group_2 = self.prepare_pers_group(persons_limited, persons_details)
 
 		wb = Workbook()
 		ws = wb.active
 		ws.title = "Сравнение ШР и ЛС"
 		f_bold_14 = Font(bold=True, size=14)
 		f_bold = Font(bold=True)
-		# TODO to small functions
 		ws.column_dimensions["A"].width = 60
 		ws.column_dimensions["B"].width = 30
-		ws["A1"].font = f_bold_14
-		ws["A1"] = "Есть в ЛС, нет в ШР"
-		ws["A2"] = "ФИО"
-		ws["B2"] = "Личный номер"
-		ws["A2"].font = f_bold
-		ws["B2"].font = f_bold
-		num_row = 3
-		for pers in pers_group_1:
-			ws.cell(row=num_row, column=1, value=pers.full_name)
-			ws.cell(row=num_row, column=2, value=pers.unique)
-			num_row = num_row + 1
 
-		num_row = num_row + 1
-		ws.cell(row=num_row, column=1, value="Есть в ШР, нет в ЛС")
-		ws[f"A{num_row}"].font = f_bold_14
-		num_row = num_row + 1
-		ws[f"A{num_row}"] = "ФИО"
-		ws[f"B{num_row}"] = "Личный номер"
-		ws[f"A{num_row}"].font = f_bold
-		ws[f"B{num_row}"].font = f_bold
-		num_row = num_row + 1
-
-		for pers in pers_group_2:
-			ws.cell(row=num_row, column=1, value=pers.full_name)
-			ws.cell(row=num_row, column=2, value=pers.unique)
-			num_row = num_row + 1
+		num_row = self.print_persons_in_wb(ws, 1, "есть в ШР, нет в ЛС", pers_group_2)
+		self.print_persons_in_wb(ws, num_row + 2, "есть в ЛС, нет в ШР", pers_group_1)
 
 		self.save_workbook(wb)
 
@@ -94,3 +56,37 @@ class UtilityPersonnelDetailsCheck(UtilityPrototype):
 				break
 
 		return found
+
+	def prepare_pers_group(self, persons1, persons2):
+		pers_group = []
+		for p_sr in persons1:
+			if p_sr.unique is None:
+				continue
+			if not self.pers_in_list(p_sr, persons2):
+				pers_group.append(p_sr)
+
+		pers_group.sort(key=lambda x: x.full_name, reverse=False)
+		return pers_group
+
+	def print_persons_in_wb(self, ws, num_row_start, title, pers_group):
+		num_row = num_row_start
+		f_bold_14 = Font(bold=True, size=14)
+		f_bold = Font(bold=True)
+		ws.cell(row=num_row, column=1, value=title)
+		ws[f"A{num_row}"].font = f_bold_14
+		num_row = num_row + 1
+		ws[f"A{num_row}"] = "ФИО"
+		ws[f"B{num_row}"] = "Личный номер"
+		ws[f"A{num_row}"].font = f_bold
+		ws[f"B{num_row}"].font = f_bold
+		num_row = num_row + 1
+
+		if len(pers_group) > 0:
+			for pers in pers_group:
+				ws.cell(row=num_row, column=1, value=pers.full_name)
+				ws.cell(row=num_row, column=2, value=pers.unique)
+				num_row = num_row + 1
+		else:
+			ws.cell(row=num_row, column=1, value="<никого>")
+
+		return num_row

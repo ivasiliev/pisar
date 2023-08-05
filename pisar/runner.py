@@ -6,8 +6,7 @@ from batches.batch_desert_unit import BatchDesertUnit
 from batches.batch_mass_hr_info import BatchMassHrInfo
 from batches.batch_mass_performance_characteristics import BatchMassPerformanceCharacteristics
 from batches.batch_official_proceeding import BatchOfficialProceeding
-from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_PERSONNEL_PATH, MODEL_IS_VALID, MODEL_CURRENT_SOLDIER, \
-	MODEL_PERSONNEL_DETAILS_PATH
+from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_IS_VALID, MODEL_CURRENT_SOLDIER
 from classes.personnel_storage import PersonnelStorage
 from helpers.data_model_helper import create_from_json
 from utils.utility_birthdays import UtilityBirthday
