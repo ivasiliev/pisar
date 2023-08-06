@@ -1,0 +1,88 @@
+from datetime import date
+
+from openpyxl.workbook import Workbook
+
+from classes.personnel_storage import EXCEL_DOCUMENT_SR, EXCEL_DOCUMENT_LS
+from utils.utility_prototype import UtilityPrototype
+
+class UtilityPersonnelDetailsSorting(UtilityPrototype):
+	def __init__(self, data_model):
+		super().__init__(data_model)
+
+	def get_name(self):
+		return "Сортировка ЛС по порядку в ШР"
+
+	def get_name_for_file(self):
+		current_date = date.today()
+		return f"{self.get_name()}-{self.get_date_string(current_date)}.xlsx"
+
+	def render(self):
+		pers_storage = self.get_pers_storage()
+		# prepare hashes for search
+		persons_sr = pers_storage.get_all_persons(EXCEL_DOCUMENT_SR)
+		persons_ls = pers_storage.get_all_persons(EXCEL_DOCUMENT_LS)
+		sr_hash = self.prepare_hash_list(persons_sr)
+		ls_hash = self.prepare_hash_list(persons_ls)
+		# reading LS document
+		all_ls_rows = pers_storage.read_excel_file(EXCEL_DOCUMENT_LS)
+		new_ls_rows = []
+		# header of LS document
+		row_header = pers_storage.read_excel_header(EXCEL_DOCUMENT_LS)
+
+		# rows rearranged according SR (they exist in SR)
+		used_ls_indexes = []
+
+		# create new LS document based on SR rows order
+		for sr_hash_item in sr_hash:
+			# skip persons that doesn't exist in LS
+			if sr_hash_item not in ls_hash:
+				continue
+			index_in_sr = sr_hash[sr_hash_item]
+			index_in_ls = ls_hash[sr_hash_item]
+			row_in_ls = all_ls_rows[index_in_ls]
+			new_ls_rows.append(row_in_ls)
+			used_ls_indexes.append(index_in_ls)
+
+		# put all rows from LS that weren't touched by sorting in the end of the document
+		if len(used_ls_indexes) < len(all_ls_rows):
+			index = -1
+			for r in all_ls_rows:
+				index = index + 1
+				if index not in used_ls_indexes:
+					new_ls_rows.append(r)
+
+		# check that all rows are onboarded
+		if len(new_ls_rows) != len(all_ls_rows):
+			print("Внутренняя ошибка. Не все строки перемещены в новый документ.")
+		new_ls_rows.insert(0, row_header)
+		list_of_rows = self.convert_rows_to_lists(new_ls_rows)
+
+		# save re-ordered rows in a new Excel file
+		wb = Workbook()
+		ws = wb.active
+		ws.title = "ЛС после сортировки"
+		for row in list_of_rows:
+			ws.append(row)
+
+		self.save_workbook(wb)
+		super().render()
+
+	def prepare_hash_list(self, pers_list):
+		index = -1
+		result = {}
+		for p in pers_list:
+			index = index + 1
+			hsh = p.get_hash()
+			if hsh is None:
+				continue
+			result[hsh] = index
+		return result
+
+	def convert_rows_to_lists(self, rows):
+		all_rows = []
+		for row in rows:
+			row_list = []
+			for cell in row:
+				row_list.append(cell.value)
+			all_rows.append(row_list)
+		return all_rows

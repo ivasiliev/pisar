@@ -4,6 +4,7 @@ import datetime
 from openpyxl.styles import Font
 from openpyxl.workbook import Workbook
 
+from classes.personnel_storage import EXCEL_DOCUMENT_SR
 from helpers.text_helper import get_month_string, get_date_str
 from utils.utility_prototype import UtilityPrototype
 
@@ -44,7 +45,7 @@ class UtilityBirthday(UtilityPrototype):
 		rl = None
 		if self.get_row_limit() > 0:
 			rl = self.get_row_limit()
-		all_persons = pers_storage.get_all_persons(0, rl)
+		all_persons = pers_storage.get_all_persons(EXCEL_DOCUMENT_SR, rl)
 		persons = []
 		for pers in all_persons:
 			if pers.dob is None:

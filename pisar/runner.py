@@ -11,6 +11,7 @@ from classes.personnel_storage import PersonnelStorage
 from helpers.data_model_helper import create_from_json
 from utils.utility_birthdays import UtilityBirthday
 from utils.utility_personnel_details_check import UtilityPersonnelDetailsCheck
+from utils.utility_personnel_details_sorting import UtilityPersonnelDetailsSorting
 
 OFFICIAL_PROCEEDING_BATCH = "official_proceeding"
 DESERT_UNIT_BATCH = "desert_unit"
@@ -18,6 +19,7 @@ MASS_HR_INFO_BATCH = "MASS_HR_INFO_BATCH"
 MASS_PERFORMANCE_CHARACTERISTICS_BATCH = "MASS_PERFORMANCE_CHARACTERISTICS_BATCH"
 UTILITY_BIRTHDAYS = "UTILITY_BIRTHDAYS"
 UTILITY_PERSONNEL_DETAILS_CHECK = "UTILITY_PERSONNEL_DETAILS_CHECK"
+UTILITY_PERSONNEL_DETAILS_SORTING = "UTILITY_PERSONNEL_DETAILS_SORTING"
 
 
 def print_commander(commander, title):
@@ -68,6 +70,8 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 		doc = UtilityBirthday(data_model)
 	if report_type == UTILITY_PERSONNEL_DETAILS_CHECK:
 		doc = UtilityPersonnelDetailsCheck(data_model)
+	if report_type == UTILITY_PERSONNEL_DETAILS_SORTING:
+		doc = UtilityPersonnelDetailsSorting(data_model)
 
 	if doc is None:
 		print(f"Не удалось определить тип документа. Выполнение программы прервано.")

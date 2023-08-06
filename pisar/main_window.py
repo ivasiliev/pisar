@@ -23,7 +23,8 @@ sys.path.append(batches_path)
 sys.path.append(helpers_path)
 
 from runner import run_generation, OFFICIAL_PROCEEDING_BATCH, DESERT_UNIT_BATCH, MASS_HR_INFO_BATCH, \
-	MASS_PERFORMANCE_CHARACTERISTICS_BATCH, UTILITY_BIRTHDAYS, UTILITY_PERSONNEL_DETAILS_CHECK
+	MASS_PERFORMANCE_CHARACTERISTICS_BATCH, UTILITY_BIRTHDAYS, UTILITY_PERSONNEL_DETAILS_CHECK, \
+	UTILITY_PERSONNEL_DETAILS_SORTING
 
 
 # 0 -- pointer, 1 -- clock
@@ -115,8 +116,14 @@ group_utils_pers_det_check.group_text = "Утилита 'Сверка ШР и Л
 group_utils_pers_det_check.batch_name = UTILITY_PERSONNEL_DETAILS_CHECK
 group_utils_pers_det_check.docs_list = []
 
+group_utils_pers_det_sorting = RunInfo()
+group_utils_pers_det_sorting.group_number = 6
+group_utils_pers_det_sorting.group_text = "Утилита 'Сортировка ЛС согласно порядку в ШР'"
+group_utils_pers_det_sorting.batch_name = UTILITY_PERSONNEL_DETAILS_SORTING
+group_utils_pers_det_sorting.docs_list = []
 
-batch_groups = [group_official_proceeding, group_desert_unit, group_mass_hr_info_unit, group_mass_perf_char_unit, group_utils_birthdays, group_utils_pers_det_check]
+
+batch_groups = [group_official_proceeding, group_desert_unit, group_mass_hr_info_unit, group_mass_perf_char_unit, group_utils_birthdays, group_utils_pers_det_check, group_utils_pers_det_sorting]
 
 layout = [
 	[sg.Button(key=update_button_key, button_text="Обновить программу"),

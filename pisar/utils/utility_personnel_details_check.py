@@ -1,6 +1,7 @@
 from openpyxl.styles import Font
 from openpyxl.workbook import Workbook
 
+from classes.personnel_storage import EXCEL_DOCUMENT_SR, EXCEL_DOCUMENT_LS
 from utils.utility_prototype import UtilityPrototype
 
 
@@ -21,10 +22,10 @@ class UtilityPersonnelDetailsCheck(UtilityPrototype):
 			rl = self.get_row_limit()
 			rl_rep = str(rl)
 		print(f"Анализ ШР. Ограничение по строкам: {rl_rep}.")
-		persons_limited = pers_storage.get_all_persons(0, rl)
+		persons_limited = pers_storage.get_all_persons(EXCEL_DOCUMENT_SR, rl)
 
 		print(f"Анализ ЛС. Ограничения по строкам нет.")
-		persons_details = pers_storage.get_all_persons(1)
+		persons_details = pers_storage.get_all_persons(EXCEL_DOCUMENT_LS)
 
 		# есть в ЛС, нет в ШР
 		pers_group_1 = self.prepare_pers_group(persons_details, persons_limited)
@@ -34,8 +35,6 @@ class UtilityPersonnelDetailsCheck(UtilityPrototype):
 		wb = Workbook()
 		ws = wb.active
 		ws.title = "Сравнение ШР и ЛС"
-		f_bold_14 = Font(bold=True, size=14)
-		f_bold = Font(bold=True)
 		ws.column_dimensions["A"].width = 60
 		ws.column_dimensions["B"].width = 30
 

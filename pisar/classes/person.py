@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 
 
 class Person:
@@ -38,3 +39,17 @@ class Person:
 			if len(m) < 2:
 				m = f"0{m}"
 			return f"{d}.{m}.{self.dob.year}"
+
+	def get_hash(self):
+		un = None
+		if self.unique is not None and len(self.unique) > 0:
+			un = self.unique
+		else:
+			if self.full_name is not None and len(self.full_name) > 0:
+				un = self.full_name
+			else:
+				print("Can't define hash for this person")
+		if un is None:
+			return None
+		else:
+			return int(hashlib.md5(un.encode("utf-8")).hexdigest(), 16)
