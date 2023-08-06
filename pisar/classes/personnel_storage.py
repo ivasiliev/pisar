@@ -7,6 +7,13 @@ from classes.person import Person
 from helpers.file_helper import get_file_size_info
 from helpers.performance_helper import PerformanceHelper
 
+# Штатное расписание (ШР)
+EXCEL_DOCUMENT_SR = 0
+# Личный состав (ЛС)
+EXCEL_DOCUMENT_LS = 1
+COLUMN_UNIQUE_KEY = "COLUMN_UNIQUE"
+COLUMN_FULL_NAME = "COLUMN_FULL_NAME"
+COLUMN_DOB = "COLUMN_DOB"
 
 class PersonnelStorage:
 	# full_path = xlsx file
@@ -18,9 +25,9 @@ class PersonnelStorage:
 		self.data_model = data_model
 		self.personnel_list_full_path = data_model[MODEL_PERSONNEL_PATH]
 		self.personnel_details_full_path = data_model[MODEL_PERSONNEL_DETAILS_PATH]
-		self.COLUMN_UNIQUE_KEY = "COLUMN_UNIQUE"
-		self.COLUMN_FULL_NAME = "COLUMN_FULL_NAME"
-		self.COLUMN_DOB = "COLUMN_DOB"
+
+		# TODO calculate it automatically
+		self.MAX_COLUMNS_COUNT = 80
 		self.is_valid = True
 
 		self.excel_docs = [
@@ -63,24 +70,6 @@ class PersonnelStorage:
 		# this id must be at the first column of the personnel list Excel file
 		workbook = openpyxl.load_workbook(pers_list_excel_doc.full_path)
 		sh = workbook[pers_list_excel_doc.sheet_name]
-		col_company = pers_list_excel_doc.get_column_index("COLUMN_COMPANY")
-		col_platoon = pers_list_excel_doc.get_column_index("COLUMN_PLATOON")
-		col_squad = pers_list_excel_doc.get_column_index("COLUMN_SQUAD")
-		col_position = pers_list_excel_doc.get_column_index("COLUMN_POSITION")
-		col_rank = pers_list_excel_doc.get_column_index("COLUMN_RANK")
-		col_full_name = pers_list_excel_doc.get_column_index(self.COLUMN_FULL_NAME)
-		col_dob = pers_list_excel_doc.get_column_index("COLUMN_DOB")
-		col_unique = pers_list_excel_doc.get_column_index(self.COLUMN_UNIQUE_KEY)
-
-		indexes = [col_company
-			, col_platoon
-			, col_squad
-			, col_position
-			, col_rank
-			, col_full_name
-			, col_dob
-			, col_unique
-		           ]
 
 		performance = PerformanceHelper()
 		performance.start()
@@ -88,7 +77,7 @@ class PersonnelStorage:
 		iteration_count_to_find_person = 0
 		count_for_report = 50
 		print("Поиск военнослужащего в ШР. Пожалуйста, подождите...")
-		for row in sh.iter_rows(min_row=2, min_col=1, max_row=2001, max_col=max(indexes) + 1):
+		for row in sh.iter_rows(min_row=2, min_col=1, max_row=2001, max_col=self.MAX_COLUMNS_COUNT):
 			person_row = None
 			for cell in row:
 				iteration_count_to_find_person = iteration_count_to_find_person + 1
@@ -101,23 +90,7 @@ class PersonnelStorage:
 					print(f"Обработано {iteration_count_to_find_person} строк...")
 				break
 			if person_row is not None:
-				person = Person()
-				person.company = self.find_value_in_row_by_index(person_row, col_company)
-				person.platoon = self.find_value_in_row_by_index(person_row, col_platoon)
-				person.squad = self.find_value_in_row_by_index(person_row, col_squad)
-				person.position = self.find_value_in_row_by_index(person_row, col_position)
-				person.rank = self.find_value_in_row_by_index(person_row, col_rank)
-				person.full_name = self.find_value_in_row_by_index(person_row, col_full_name)
-				person.set_dob(self.find_value_in_row_by_index(person_row, col_dob))
-				person.unique = self.find_value_in_row_by_index(person_row, col_unique)
-
-				# normalization of a soldier name
-				if person.full_name is not None:
-					person.full_name = person.full_name.title()
-
-				person.position = person.position.lower()
-				person.rank = person.rank.lower()
-
+				person = self.create_person_from_row(pers_list_excel_doc, person_row)
 				break
 
 		print(f"Количество итераций для поиска военнослужащего: {iteration_count_to_find_person}")
@@ -136,7 +109,7 @@ class PersonnelStorage:
 			performance.start()
 			iteration_count_to_find_person = 0
 			count_for_report = 50
-			col_unique = pers_details_excel_doc.get_column_index(self.COLUMN_UNIQUE_KEY)
+			col_unique = pers_details_excel_doc.get_column_index(COLUMN_UNIQUE_KEY)
 			workbook = openpyxl.load_workbook(pers_details_excel_doc.full_path)
 			sh = workbook[pers_details_excel_doc.sheet_name]
 			person_row = None
@@ -228,18 +201,18 @@ class PersonnelStorage:
 			, ColumnInfo("COLUMN_SQUAD", "отделение")
 			, ColumnInfo("COLUMN_POSITION", "воинская должность")
 			, ColumnInfo("COLUMN_RANK", "воинское звание фактическое")
-			, ColumnInfo(self.COLUMN_FULL_NAME, "фио")
-			, ColumnInfo(self.COLUMN_DOB, "дата рождения")
-			, ColumnInfo(self.COLUMN_UNIQUE_KEY, "личный номер")
+			, ColumnInfo(COLUMN_FULL_NAME, "фио")
+			, ColumnInfo(COLUMN_DOB, "дата рождения")
+			, ColumnInfo(COLUMN_UNIQUE_KEY, "личный номер")
 		        ]
 
 		return ExcelDocMetadata(full_path, self.personnel_excel_sheet_name, cols, 20)
 
 	def create_metadata_for_pers_details(self, full_path):
 		cols = [
-			ColumnInfo(self.COLUMN_UNIQUE_KEY, "личный номер")
-			, ColumnInfo(self.COLUMN_FULL_NAME, "фио")
-			, ColumnInfo(self.COLUMN_DOB, "дата рождения")
+			ColumnInfo(COLUMN_UNIQUE_KEY, "личный номер")
+			, ColumnInfo(COLUMN_FULL_NAME, "фио")
+			, ColumnInfo(COLUMN_DOB, "дата рождения")
 			, ColumnInfo("COLUMN_NATIONALITY", "национальность")
 			, ColumnInfo("COLUMN_GENDER", "пол")
 			, ColumnInfo("COLUMN_EDUCATION", "тип образования")
@@ -269,23 +242,60 @@ class PersonnelStorage:
 
 	# what_file=0 (ШР),what_file=1 (ЛС)
 	def get_all_persons(self, what_file, row_limit=None):
+		all_rows = self.read_excel_file(what_file, row_limit)
+		all_persons = []
+		excel_doc = self.excel_docs[what_file]
+		for row in all_rows:
+			all_persons.append(self.create_person_from_row(excel_doc, row))
+
+		return all_persons
+
+	def create_person_from_row(self, excel_doc, person_row):
+		col_company = excel_doc.get_column_index("COLUMN_COMPANY")
+		col_platoon = excel_doc.get_column_index("COLUMN_PLATOON")
+		col_squad = excel_doc.get_column_index("COLUMN_SQUAD")
+		col_position = excel_doc.get_column_index("COLUMN_POSITION")
+		col_rank = excel_doc.get_column_index("COLUMN_RANK")
+		col_full_name = excel_doc.get_column_index(COLUMN_FULL_NAME)
+		col_dob = excel_doc.get_column_index(COLUMN_DOB)
+		col_unique = excel_doc.get_column_index(COLUMN_UNIQUE_KEY)
+
+		person = Person()
+		person.company = self.find_value_in_row_by_index(person_row, col_company)
+		person.platoon = self.find_value_in_row_by_index(person_row, col_platoon)
+		person.squad = self.find_value_in_row_by_index(person_row, col_squad)
+		person.position = self.find_value_in_row_by_index(person_row, col_position)
+		person.rank = self.find_value_in_row_by_index(person_row, col_rank)
+		person.full_name = self.find_value_in_row_by_index(person_row, col_full_name)
+		person.set_dob(self.find_value_in_row_by_index(person_row, col_dob))
+		person.unique = self.find_value_in_row_by_index(person_row, col_unique)
+
+		# normalization of a soldier name
+		if person.full_name is not None:
+			person.full_name = person.full_name.title()
+
+		if person.position is not None:
+			person.position = person.position.lower()
+		else:
+			person.position = ""
+		if person.rank is not None:
+			person.rank = person.rank.lower()
+		else:
+			person.rank = ""
+
+		return person
+
+	# what_file=0 (ШР),what_file=1 (ЛС)
+	def read_excel_file(self, what_file, row_limit=None):
 		excel_doc = self.excel_docs[what_file]
 		# this id must be at the first column of the personnel list Excel file
 		workbook = openpyxl.load_workbook(excel_doc.full_path)
 		sh = workbook[excel_doc.sheet_name]
-		col_full_name = excel_doc.get_column_index(self.COLUMN_FULL_NAME)
-		col_dob = excel_doc.get_column_index(self.COLUMN_DOB)
-		col_unique = excel_doc.get_column_index(self.COLUMN_UNIQUE_KEY)
 
-		indexes = [
-			col_full_name
-			, col_dob
-			, col_unique
-		]
-
-		if None in indexes:
-			print(f"Не удалось определить индексы столбцов! Выполнение программы прервано.")
-			return
+		# TODO
+		# if None in indexes:
+		#	print(f"Не удалось определить индексы столбцов! Выполнение программы прервано.")
+		#	return
 
 		performance = PerformanceHelper()
 		performance.start()
@@ -295,22 +305,30 @@ class PersonnelStorage:
 		max_row_value = 2001
 		if row_limit is not None:
 			max_row_value = row_limit
-		all_persons = []
-		for row in sh.iter_rows(min_row=2, min_col=1, max_row=max_row_value, max_col=max(indexes) + 1):
+		all_rows = []
+		for row in sh.iter_rows(min_row=2, min_col=1, max_row=max_row_value, max_col=self.MAX_COLUMNS_COUNT):
 			if row[0].value is None:
 				break
-			person = Person()
-			person.full_name = self.find_value_in_row_by_index(row, col_full_name)
-			person.set_dob(self.find_value_in_row_by_index(row, col_dob))
-			person.unique = self.find_value_in_row_by_index(row, col_unique)
-			all_persons.append(person)
+			all_rows.append(row)
 
 			iteration_count = iteration_count + 1
 			if iteration_count % count_for_report == 0:
 				print(f"Обработано {iteration_count} строк...")
 
 		print(f"Количество итераций для просмотра списка: {iteration_count}")
-		print(f"Обнаружено военнослужащих: {len(all_persons)}")
+		print(f"Обнаружено военнослужащих: {len(all_rows)}")
 		performance.stop_and_print()
 
-		return all_persons
+		return all_rows
+
+	def read_excel_header(self, what_file):
+		excel_doc = self.excel_docs[what_file]
+		# this id must be at the first column of the personnel list Excel file
+		workbook = openpyxl.load_workbook(excel_doc.full_path)
+		sh = workbook[excel_doc.sheet_name]
+		row_header = None
+		for row in sh.iter_rows(min_row=1, min_col=1, max_row=1, max_col=self.MAX_COLUMNS_COUNT):
+			row_header = row
+			break
+
+		return row_header

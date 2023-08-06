@@ -91,3 +91,8 @@ def get_words_declension(morph, txt, declension_type):
 	for t in tokens:
 		result = result + get_word_declension(morph, t, declension_type) + " "
 	return result.rstrip()
+
+def get_date_str(dt):
+	if dt is None:
+		return ""
+	return f"{dt.day}.{dt.month}.{dt.year}"
