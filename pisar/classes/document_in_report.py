@@ -261,9 +261,14 @@ class DocumentInReport(DocumentPrototype):
 			print("Внутренняя ошибка. Морфоанализатор для имён не создан.")
 			return ""
 
+		if full_name is None or len(full_name) == 0:
+			return ""
+
 		name_tokens = full_name.split(" ")
 		surname = name_tokens[0]
-		first_name = name_tokens[1]
+		first_name = ""
+		if len(name_tokens) > 1:
+			first_name = name_tokens[1]
 		middle_name = ""
 		if len(name_tokens) > 2:
 			middle_name = name_tokens[2]
@@ -314,15 +319,23 @@ class DocumentInReport(DocumentPrototype):
 
 	# format = Петров Алексей Сергеевич -> Петров А.С.
 	def get_person_name_short_format_2(self, full_name, declension_type):
+		if full_name is None or len(full_name):
+			return full_name
 		full_name = self.get_person_name_declension(full_name, declension_type)
 		name_tokens = full_name.split(" ")
-		if len(name_tokens) < 2:
-			print(f"Не удалось преобразовать в нужный формат: {full_name}")
-			return full_name
 		surname = name_tokens[0]
-		first_name = name_tokens[1]
-		second_name = name_tokens[2]
-		return f"{surname} {first_name[0]}.{second_name[0]}."
+		first_name = ""
+		second_name = ""
+		if len(name_tokens) > 1:
+			first_name = name_tokens[1]
+		if len(name_tokens) > 2:
+			second_name = name_tokens[2]
+		result = surname
+		if len(first_name) > 0:
+			result = result + f" {first_name[0]}."
+		if len(second_name) > 0:
+			result = result + f" {second_name[0]}."
+		return result
 
 	# format = 16-04-2023/16.04.2023 -> 16 апреля 2023 года
 	def get_date_format_1(self, date_str):
