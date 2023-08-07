@@ -13,8 +13,8 @@ from utils.utility_birthdays import UtilityBirthday
 from utils.utility_personnel_details_check import UtilityPersonnelDetailsCheck
 from utils.utility_personnel_details_sorting import UtilityPersonnelDetailsSorting
 
-OFFICIAL_PROCEEDING_BATCH = "official_proceeding"
-DESERT_UNIT_BATCH = "desert_unit"
+OFFICIAL_PROCEEDING_BATCH = "OFFICIAL_PROCEEDING_BATCH"
+DESERT_UNIT_BATCH = "DESERT_UNIT_BATCH"
 MASS_HR_INFO_BATCH = "MASS_HR_INFO_BATCH"
 MASS_PERFORMANCE_CHARACTERISTICS_BATCH = "MASS_PERFORMANCE_CHARACTERISTICS_BATCH"
 UTILITY_BIRTHDAYS = "UTILITY_BIRTHDAYS"
@@ -52,6 +52,7 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 
 	js_settings = json.load(open(common_config_file, encoding='UTF8'))
 	js_settings.update(json.load(open(soldier_config_file, encoding='UTF8')))
+	add_fields_json(js_settings)
 	data_model = create_from_json(js_settings)
 	if not data_model[MODEL_IS_VALID]:
 		print("Файл настроек содержит неверную информацию. Выполнение программы прервано.")
@@ -125,6 +126,10 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 					doc.render()
 	print("Писарь завершил работу")
 
+def add_fields_json(js):
+	fields = ["nationality", "gender", "education", "graduation_place", "specialization", "occupation", "foreign_languages", "awards", "government_authority", "foreign_countries_visited", "service_started", "place_of_birth", "home_address", "passport", "marital_status", "criminal_status", "father_name", "mother_name"]
+	for f in fields:
+		js[f] = ""
 
 if __name__ == '__main__':
 	if len(sys.argv) == 2:

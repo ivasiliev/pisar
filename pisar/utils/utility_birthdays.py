@@ -2,9 +2,10 @@ from datetime import date
 import datetime
 
 from openpyxl.styles import Font
+from openpyxl.utils import get_column_letter
 from openpyxl.workbook import Workbook
 
-from classes.personnel_storage import EXCEL_DOCUMENT_SR
+from classes.personnel_storage import EXCEL_DOCUMENT_SR, EXCEL_DOCUMENT_LS
 from helpers.text_helper import get_month_string, get_date_str
 from utils.utility_prototype import UtilityPrototype
 
@@ -46,6 +47,7 @@ class UtilityBirthday(UtilityPrototype):
 		if self.get_row_limit() > 0:
 			rl = self.get_row_limit()
 		all_persons = pers_storage.get_all_persons(EXCEL_DOCUMENT_SR, rl)
+		all_details = pers_storage.get_all_persons(EXCEL_DOCUMENT_LS)
 		persons = []
 		for pers in all_persons:
 			if pers.dob is None:
@@ -54,29 +56,38 @@ class UtilityBirthday(UtilityPrototype):
 			if self.date_left <= nd <= self.date_right:
 				diff = nd - self.current_date
 				pers.age = diff.days
+				# TODO create function notEmpty
+				if pers.unique is not None and len(pers.unique) > 0:
+					for p in all_details:
+						if p.unique is not None and len(p.unique) > 0 and p.unique == pers.unique:
+							pers.phone = p.phone
+							break
 				persons.append(pers)
 
 		print(f"Найдено {len(persons)} человек(а)")
 		persons.sort(key=lambda x: x.age, reverse=False)
 
+		captions = [
+			["ФИО", 40]
+			,["День рождения", 20]
+			, ["Исполняется", 15]
+			, ["Телефон", 15]
+			, ["Должность", 20]
+			, ["Где", 30]
+		]
+
 		wb = Workbook()
 		ws = wb.active
 		ws.title = "Дни рождения"
 		f_bold = Font(bold=True)
-		ws["A1"].font = f_bold
-		ws["B1"].font = f_bold
-		ws["C1"].font = f_bold
-		ws["D1"].font = f_bold
 
-		ws["A1"] = "ФИО"
-		ws["B1"] = "День рождения"
-		ws["C1"] = "Исполняется"
-		ws["D1"] = "Должность"
-
-		ws.column_dimensions["A"].width = 60
-		ws.column_dimensions["B"].width = 30
-		ws.column_dimensions["C"].width = 20
-		ws.column_dimensions["D"].width = 30
+		column_index = 0
+		for c in captions:
+			column_index = column_index + 1
+			cell = ws.cell(row=1, column=column_index)
+			cell.font = f_bold
+			cell.value = c[0]
+			ws.column_dimensions[get_column_letter(column_index)].width = int(c[1])
 
 		current_year = date.today().year
 
@@ -86,7 +97,9 @@ class UtilityBirthday(UtilityPrototype):
 			ws.cell(row=num_row, column=1, value=pers.full_name)
 			ws.cell(row=num_row, column=2, value=f"{pers.dob.day} {get_month_string(pers.dob.month)}")
 			ws.cell(row=num_row, column=3, value=age)
-			ws.cell(row=num_row, column=4, value=pers.position)
+			ws.cell(row=num_row, column=4, value=pers.phone)
+			ws.cell(row=num_row, column=5, value=pers.position)
+			ws.cell(row=num_row, column=6, value=f"{pers.company}, {pers.platoon}, {pers.squad}")
 			num_row = num_row + 1
 
 		self.save_workbook(wb)

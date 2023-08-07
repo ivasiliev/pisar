@@ -14,6 +14,7 @@ EXCEL_DOCUMENT_LS = 1
 COLUMN_UNIQUE_KEY = "COLUMN_UNIQUE"
 COLUMN_FULL_NAME = "COLUMN_FULL_NAME"
 COLUMN_DOB = "COLUMN_DOB"
+COLUMN_PHONE = "COLUMN_PHONE"
 
 class PersonnelStorage:
 	# full_path = xlsx file
@@ -148,6 +149,7 @@ class PersonnelStorage:
 						, ["criminal_status", "COLUMN_CRIMINAL_STATUS"]
 						, ["father_name", "COLUMN_FATHER_NAME"]
 						, ["mother_name", "COLUMN_MOTHER_NAME"]
+						, ["phone", COLUMN_PHONE]
 					]
 
 					for m in mapping:
@@ -190,13 +192,18 @@ class PersonnelStorage:
 		return person
 
 	def find_value_in_row_by_index(self, row, index):
+		result = ""
 		for cell in row:
 			if cell.col_idx == index:
-				return cell.value
-		return None
+				result = cell.value
+				break
+		if result is None:
+			result = ""
+		return result
 
 	def create_metadata_for_pers_list(self, full_path):
-		cols = [ColumnInfo("COLUMN_COMPANY", "рота")
+		cols = [
+			ColumnInfo("COLUMN_COMPANY", "рота")
 			, ColumnInfo("COLUMN_PLATOON", "взвод")
 			, ColumnInfo("COLUMN_SQUAD", "отделение")
 			, ColumnInfo("COLUMN_POSITION", "воинская должность")
@@ -236,6 +243,7 @@ class PersonnelStorage:
 			, ColumnInfo("COLUMN_CRIMINAL_STATUS", "наличие судимостей")
 			, ColumnInfo("COLUMN_FATHER_NAME", "фио отца, дата рождения")
 			, ColumnInfo("COLUMN_MOTHER_NAME", "фио матери, дата рождения")
+			, ColumnInfo(COLUMN_PHONE, "номер телефона")
 		]
 
 		return ExcelDocMetadata(full_path, self.personnel_details_excel_sheet_name, cols, 70)
@@ -259,8 +267,11 @@ class PersonnelStorage:
 		col_full_name = excel_doc.get_column_index(COLUMN_FULL_NAME)
 		col_dob = excel_doc.get_column_index(COLUMN_DOB)
 		col_unique = excel_doc.get_column_index(COLUMN_UNIQUE_KEY)
+		col_phone = excel_doc.get_column_index(COLUMN_PHONE)
 
 		person = Person()
+		# TODO this is incorrect because ID_SR and ID_LS are different values
+		person.id_sr = self.find_value_in_row_by_index(person_row, 1)
 		person.company = self.find_value_in_row_by_index(person_row, col_company)
 		person.platoon = self.find_value_in_row_by_index(person_row, col_platoon)
 		person.squad = self.find_value_in_row_by_index(person_row, col_squad)
@@ -269,6 +280,7 @@ class PersonnelStorage:
 		person.full_name = self.find_value_in_row_by_index(person_row, col_full_name)
 		person.set_dob(self.find_value_in_row_by_index(person_row, col_dob))
 		person.unique = self.find_value_in_row_by_index(person_row, col_unique)
+		person.phone = self.find_value_in_row_by_index(person_row, col_phone)
 
 		# normalization of a soldier name
 		if person.full_name is not None:

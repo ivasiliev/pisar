@@ -4,6 +4,7 @@ import hashlib
 
 class Person:
 	def __init__(self):
+		self.id_sr = "" # id в ШР (первый столбец)
 		self.company = ""  # рота
 		self.platoon = ""  # взвод
 		self.squad = ""  # отделение
@@ -13,6 +14,7 @@ class Person:
 		self.dob = None  # дата рождения
 		self.company_commander = {}  # командир роты
 		self.unique = ""  # личный номер (по нему сводятся данные между документами Excel)
+		self.phone = ""
 		self.age = 0
 
 	# proper format dd.mm.yyyy (d.m as well)
@@ -22,6 +24,8 @@ class Person:
 		if isinstance(dob_str, datetime.datetime):
 			self.dob = dob_str
 		else:
+			if len(dob_str) == 0:
+				return
 			tokens = dob_str.split(".")
 			if len(tokens) != 3:
 				print(f"Ошибка при разборе даты {dob_str}")
