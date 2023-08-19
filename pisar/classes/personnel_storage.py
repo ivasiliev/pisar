@@ -15,6 +15,13 @@ COLUMN_UNIQUE_KEY = "COLUMN_UNIQUE"
 COLUMN_FULL_NAME = "COLUMN_FULL_NAME"
 COLUMN_DOB = "COLUMN_DOB"
 COLUMN_PHONE = "COLUMN_PHONE"
+COLUMN_SIBLINGS = "COLUMN_SIBLINGS"
+COLUMN_SPOUSE = "COLUMN_SPOUSE"
+COLUMN_HEIGHT = "COLUMN_HEIGHT"
+COLUMN_WEIGHT = "COLUMN_WEIGHT"
+COLUMN_SIGNS = "COLUMN_SIGNS"
+COLUMN_TATOO = "COLUMN_TATOO"
+COLUMN_HABITS = "COLUMN_HABITS"
 
 class PersonnelStorage:
 	# full_path = xlsx file
@@ -150,6 +157,13 @@ class PersonnelStorage:
 						, ["father_name", "COLUMN_FATHER_NAME"]
 						, ["mother_name", "COLUMN_MOTHER_NAME"]
 						, ["phone", COLUMN_PHONE]
+						, ["siblings", COLUMN_SIBLINGS]
+						, ["spouse", COLUMN_SPOUSE]
+						, ["height", COLUMN_HEIGHT]
+						, ["weight", COLUMN_WEIGHT]
+						, ["signs", COLUMN_SIGNS]
+						, ["tatoo", COLUMN_TATOO]
+						, ["habits", COLUMN_HABITS]
 					]
 
 					for m in mapping:
@@ -243,7 +257,14 @@ class PersonnelStorage:
 			, ColumnInfo("COLUMN_CRIMINAL_STATUS", "наличие судимостей")
 			, ColumnInfo("COLUMN_FATHER_NAME", "фио отца, дата рождения")
 			, ColumnInfo("COLUMN_MOTHER_NAME", "фио матери, дата рождения")
+			, ColumnInfo(COLUMN_SIBLINGS, "данные братьев/сестер")
+			, ColumnInfo(COLUMN_SPOUSE, "фио жены/мужа")
 			, ColumnInfo(COLUMN_PHONE, "номер телефона")
+			, ColumnInfo(COLUMN_HEIGHT, "рост")
+			, ColumnInfo(COLUMN_WEIGHT, "вес")
+			, ColumnInfo(COLUMN_SIGNS, "особые приметы")
+			, ColumnInfo(COLUMN_TATOO, "татуировки")
+			, ColumnInfo(COLUMN_HABITS, "увлечения")
 		]
 
 		return ExcelDocMetadata(full_path, self.personnel_details_excel_sheet_name, cols, 70)

@@ -24,7 +24,7 @@ sys.path.append(helpers_path)
 
 from runner import run_generation, OFFICIAL_PROCEEDING_BATCH, DESERT_UNIT_BATCH, MASS_HR_INFO_BATCH, \
 	MASS_PERFORMANCE_CHARACTERISTICS_BATCH, UTILITY_BIRTHDAYS, UTILITY_PERSONNEL_DETAILS_CHECK, \
-	UTILITY_PERSONNEL_DETAILS_SORTING
+	UTILITY_PERSONNEL_DETAILS_SORTING, DIARY
 
 
 # 0 -- pointer, 1 -- clock
@@ -122,8 +122,14 @@ group_utils_pers_det_sorting.group_text = "Утилита 'Сортировка 
 group_utils_pers_det_sorting.batch_name = UTILITY_PERSONNEL_DETAILS_SORTING
 group_utils_pers_det_sorting.docs_list = []
 
+group_diary = RunInfo()
+group_diary.group_number = 7
+group_diary.group_text = "Дневник психолого-педагогических наблюдений"
+group_diary.batch_name = DIARY
+group_diary.docs_list = ["Индивидуальные данные военнослужащего (для каждого), Дни рождения, Нарушение воинской дисциплины"]
 
-batch_groups = [group_official_proceeding, group_desert_unit, group_mass_hr_info_unit, group_mass_perf_char_unit, group_utils_birthdays, group_utils_pers_det_check, group_utils_pers_det_sorting]
+
+batch_groups = [group_official_proceeding, group_desert_unit, group_mass_hr_info_unit, group_mass_perf_char_unit, group_utils_birthdays, group_utils_pers_det_check, group_utils_pers_det_sorting, group_diary]
 
 layout = [
 	[sg.Button(key=update_button_key, button_text="Обновить программу"),

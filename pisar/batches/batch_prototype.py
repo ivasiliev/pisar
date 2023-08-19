@@ -5,7 +5,11 @@ class BatchPrototype(DocumentPrototype):
 	def __init__(self, data_model):
 		super().__init__(data_model)
 		self.data_model = data_model
+		# these documents to be rendered for each soldier
 		self.docs = []
+		# these documents to be rendered once
+		self.singletons = []
+		self.singletons_executed = False
 		self.subfolder_name = None
 
 	def get_name(self):
@@ -14,11 +18,20 @@ class BatchPrototype(DocumentPrototype):
 	def add_document(self, doc):
 		self.docs.append(doc)
 
+	def add_singleton(self, doc):
+		self.singletons.append(doc)
+
 	def render(self):
 		for doc in self.docs:
 			doc.subfolder_name = self.subfolder_name
 			print(f"{doc.get_name()}...")
 			doc.render()
+		if not self.singletons_executed:
+			for doc in self.singletons:
+				doc.subfolder_name = self.subfolder_name
+				print(f"{doc.get_name()}...")
+				doc.render()
+			self.singletons_executed = True
 
 	def get_commander_platoon(self):
 		if len(self.docs) == 0:

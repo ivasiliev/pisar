@@ -96,3 +96,11 @@ def get_date_str(dt):
 	if dt is None:
 		return ""
 	return f"{dt.day}.{dt.month}.{dt.year}"
+
+def get_date_str_format2(dt):
+	if dt is None:
+		return ""
+	yr = str(dt.year)
+	if len(yr) == 4:
+		yr = yr[2:]
+	return f"{dt.day}/{yr}"

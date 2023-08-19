@@ -9,9 +9,6 @@ class UtilityPrototype(DocumentPrototype):
 	def is_utility(self):
 		return True
 
-	def get_pers_storage(self):
-		return self.data_model["pers_storage"]
-
 	def get_row_limit(self):
 		return self.data_model[MODEL_JSON_OBJECT]["row_limit"]
 

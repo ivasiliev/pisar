@@ -3,6 +3,7 @@ import os
 import sys
 
 from batches.batch_desert_unit import BatchDesertUnit
+from batches.batch_diary import BatchDiary
 from batches.batch_mass_hr_info import BatchMassHrInfo
 from batches.batch_mass_performance_characteristics import BatchMassPerformanceCharacteristics
 from batches.batch_official_proceeding import BatchOfficialProceeding
@@ -20,6 +21,7 @@ MASS_PERFORMANCE_CHARACTERISTICS_BATCH = "MASS_PERFORMANCE_CHARACTERISTICS_BATCH
 UTILITY_BIRTHDAYS = "UTILITY_BIRTHDAYS"
 UTILITY_PERSONNEL_DETAILS_CHECK = "UTILITY_PERSONNEL_DETAILS_CHECK"
 UTILITY_PERSONNEL_DETAILS_SORTING = "UTILITY_PERSONNEL_DETAILS_SORTING"
+DIARY = "DIARY"
 
 
 def print_commander(commander, title):
@@ -73,6 +75,8 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 		doc = UtilityPersonnelDetailsCheck(data_model)
 	if report_type == UTILITY_PERSONNEL_DETAILS_SORTING:
 		doc = UtilityPersonnelDetailsSorting(data_model)
+	if report_type == DIARY:
+		doc = BatchDiary(data_model)
 
 	if doc is None:
 		print(f"Не удалось определить тип документа. Выполнение программы прервано.")
@@ -82,10 +86,10 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 	if not pers_storage.is_valid:
 		print("Неверная структура Штатного расписания/Информации о личном составе. Выполнение программы прервано.")
 		return
+	doc.data_model["pers_storage"] = pers_storage
 
 	print(f"Выполняется: {doc.get_name()}.")
 	if doc.is_utility():
-		doc.data_model["pers_storage"] = pers_storage
 		doc.render()
 	else:
 		sold_ids = data_model[MODEL_JSON_OBJECT]["soldier_ids"].split(",")

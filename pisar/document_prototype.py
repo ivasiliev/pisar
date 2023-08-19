@@ -13,3 +13,6 @@ class DocumentPrototype:
 
 	def __init__(self, data_model):
 		self.data_model = data_model
+
+	def get_pers_storage(self):
+		return self.data_model["pers_storage"]

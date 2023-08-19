@@ -1,5 +1,6 @@
 import datetime
 import os
+import string
 
 from docx import Document
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
@@ -191,36 +192,55 @@ class DocumentInReport(DocumentPrototype):
 			cell.width = Mm(size)
 
 	def add_table(self, captions, rows_data, table_settings=None):
-		row_count = len(rows_data) + 1
-		table = self.word_document.add_table(rows=row_count, cols=len(captions))
-		table.style = 'Table Grid'
-		table.allow_autofit = False
-		table.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-		# TODO put table in the center and set margins 0;0
-		# process header
 		cols_width = []
 		ps = None
+		alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+		font_size = None
 		if table_settings is not None:
-			ps = table_settings["ps"]
-			cols_width = table_settings["cols_width"]
+			if "ps" in table_settings:
+				ps = table_settings["ps"]
+			if "cols_width" in table_settings:
+				cols_width = table_settings["cols_width"]
+			if "alignment" in table_settings:
+				alignment = table_settings["alignment"]
+			if "font_size" in table_settings:
+				font_size = table_settings["font_size"]
+
+		# if all captions are empty, don't render header
+		not_empty = False
+		for caption in captions:
+			if len(caption) > 0:
+				not_empty = True
+				break
+
+		rows_count = len(rows_data)
+		if not_empty:
+			rows_count = rows_count + 1
+		table = self.word_document.add_table(rows=rows_count, cols=len(captions))
+		table.style = 'Table Grid'
+		table.allow_autofit = False
+		table.alignment = alignment
+		# TODO put table in the center and set margins 0;0
 		hdr_cells = table.rows[0].cells
 		num_column = 0
-		for caption in captions:
-			cell = hdr_cells[num_column]
-			p = cell.paragraphs[0]
-			if ps is None:
-				p.text = caption
-			else:
-				# TODO use common method to apply settings
-				runner = p.add_run(caption)
-				if ps.is_bold:
-					runner.bold = True
-				if ps.font_size > 0:
-					runner.font.size = ps.font_size
 
-			p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-			cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
-			num_column = num_column + 1
+		if not_empty:
+			for caption in captions:
+				cell = hdr_cells[num_column]
+				p = cell.paragraphs[0]
+				if ps is None:
+					p.text = caption
+				else:
+					# TODO use common method to apply settings
+					runner = p.add_run(caption)
+					if ps.is_bold:
+						runner.bold = True
+					if ps.font_size > 0:
+						runner.font.size = ps.font_size
+
+				p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+				cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
+				num_column = num_column + 1
 
 		# set column width
 		if cols_width is not None:
@@ -229,17 +249,27 @@ class DocumentInReport(DocumentPrototype):
 
 		# process rows
 		num_row = 1
+		if not not_empty:
+			num_row = 0
 		for row in rows_data:
 			cells = table.rows[num_row].cells
 			col_ind = 0
 			for c_data in row:
-				cells[col_ind].text = c_data
+				cell = cells[col_ind]
+				if font_size is None:
+					cell.text = c_data
+				else:
+					p = cell.paragraphs[0]
+					runner = p.add_run(c_data)
+					runner.font.size = font_size
 				col_ind = col_ind + 1
 			num_row = num_row + 1
 
-	def add_paragraph_left_right(self, left_text, right_text):
+	def add_paragraph_left_right(self, left_text: string, right_text: string, font_size=None, table_alignment=None):
 		table = self.word_document.add_table(rows=1, cols=2)
-		table.alignment = WD_TABLE_ALIGNMENT.CENTER
+		if table_alignment is None:
+			table_alignment = WD_TABLE_ALIGNMENT.CENTER
+		table.alignment = table_alignment
 		cells = table.rows[0].cells
 		p0 = cells[0].paragraphs[0]
 		p0.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
@@ -247,6 +277,10 @@ class DocumentInReport(DocumentPrototype):
 		p1 = cells[1].paragraphs[0]
 		p1.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
 		r_right = p1.add_run(right_text)
+		if font_size is not None:
+			r_left.font.size = font_size
+			r_right.font.size = font_size
+
 		return r_left, r_right
 
 	def get_soldier_info(self):
@@ -319,7 +353,7 @@ class DocumentInReport(DocumentPrototype):
 
 	# format = Петров Алексей Сергеевич -> Петров А.С.
 	def get_person_name_short_format_2(self, full_name, declension_type):
-		if full_name is None or len(full_name):
+		if full_name is None or len(full_name) == 0:
 			return full_name
 		full_name = self.get_person_name_declension(full_name, declension_type)
 		name_tokens = full_name.split(" ")
@@ -369,10 +403,7 @@ class DocumentInReport(DocumentPrototype):
 			if settings.military_unit_required:
 				address = f"{address} войсковой части {self.get_military_unit()}"
 			if not settings.battalion_only:
-				sq = get_words_declension(self.get_morph(), s_info.squad, 1).strip()
-				pl = get_words_declension(self.get_morph(), s_info.platoon, 1).strip()
-				cm = get_words_declension(self.get_morph(), s_info.company, 1).strip()
-				address = f"{sq} {pl} {cm} {address}"
+				address = f"{self.get_soldier_address(1)} {address}"
 				# address = f"{s_info.squad} стрелкового отделения {s_info.platoon} стрелкового взвода {s_info.company} стрелковой роты " + address
 
 		dob_str = ""
@@ -490,3 +521,10 @@ class DocumentInReport(DocumentPrototype):
 		if "." in service_started:
 			return service_started.split(".")[2]
 		return "[УКАЖИТЕ ГОД НАЧАЛА СЛУЖБЫ]"
+
+	def get_soldier_address(self, declension_type):
+		s_info = self.get_soldier_info()
+		sq = get_words_declension(self.get_morph(), s_info.squad, declension_type).strip()
+		pl = get_words_declension(self.get_morph(), s_info.platoon, declension_type).strip()
+		cm = get_words_declension(self.get_morph(), s_info.company, declension_type).strip()
+		return f"{sq} {pl} {cm}"
