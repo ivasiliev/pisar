@@ -267,7 +267,7 @@ class PersonnelStorage:
 			, ColumnInfo(COLUMN_HABITS, "увлечения")
 		]
 
-		return ExcelDocMetadata(full_path, self.personnel_details_excel_sheet_name, cols, 70)
+		return ExcelDocMetadata(full_path, self.personnel_details_excel_sheet_name, cols, 200)
 
 	# what_file=0 (ШР),what_file=1 (ЛС)
 	def get_all_persons(self, what_file, row_limit=None):
