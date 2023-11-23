@@ -21,7 +21,9 @@ COLUMN_HEIGHT = "COLUMN_HEIGHT"
 COLUMN_WEIGHT = "COLUMN_WEIGHT"
 COLUMN_SIGNS = "COLUMN_SIGNS"
 COLUMN_TATOO = "COLUMN_TATOO"
+COLUMN_ADDITIONAL_ATTRIBUTES = "COLUMN_ADDITIONAL_ATTRIBUTES"
 COLUMN_HABITS = "COLUMN_HABITS"
+COLUMN_PERSONAL_PERKS = "COLUMN_PERSONAL_PERKS"
 
 class PersonnelStorage:
 	# full_path = xlsx file
@@ -35,7 +37,7 @@ class PersonnelStorage:
 		self.personnel_details_full_path = data_model[MODEL_PERSONNEL_DETAILS_PATH]
 
 		# TODO calculate it automatically
-		self.MAX_COLUMNS_COUNT = 80
+		self.MAX_COLUMNS_COUNT = 150
 		self.is_valid = True
 
 		self.excel_docs = [
@@ -62,7 +64,8 @@ class PersonnelStorage:
 					for cell in row:
 						col_str = str(cell.value).casefold()
 						for col_info in md.cols:
-							if col_str == col_info.get_name():
+							# col_str == col_info.get_name()
+							if col_info.get_name().startswith(col_str):
 								col_info.index = cell.col_idx
 								break
 				# validation
@@ -232,12 +235,14 @@ class PersonnelStorage:
 	def create_metadata_for_pers_details(self, full_path):
 		cols = [
 			ColumnInfo(COLUMN_UNIQUE_KEY, "личный номер")
+			, ColumnInfo("COLUMN_RANK", "в/звание")
+			, ColumnInfo("COLUMN_POSITION", "в/должность")
 			, ColumnInfo(COLUMN_FULL_NAME, "фио")
 			, ColumnInfo(COLUMN_DOB, "дата рождения")
 			, ColumnInfo("COLUMN_NATIONALITY", "национальность")
 			, ColumnInfo("COLUMN_GENDER", "пол")
 			, ColumnInfo("COLUMN_EDUCATION", "тип образования")
-			, ColumnInfo("COLUMN_GRADUATION_PLACE", "учреждение")
+			, ColumnInfo("COLUMN_GRADUATION_PLACE", "учреждение(год окончания)")
 			, ColumnInfo("COLUMN_SPECIALIZATION", "профессия")
 			, ColumnInfo("COLUMN_OCCUPATION", "места работы")
 			, ColumnInfo("COLUMN_FOREIGN_LANGUAGES", "знание иностранных языков")
@@ -254,16 +259,18 @@ class PersonnelStorage:
 			, ColumnInfo("COLUMN_PASSPORT_ISSUED_2", "кем выдан2")
 			, ColumnInfo("COLUMN_PASSPORT_3", "паспорт Украины")
 			, ColumnInfo("COLUMN_PASSPORT_ISSUED_3", "адресная справка")
-			, ColumnInfo("COLUMN_CRIMINAL_STATUS", "наличие судимостей")
+			, ColumnInfo("COLUMN_CRIMINAL_STATUS", "наличие судимостей(погашены/нет)")
 			, ColumnInfo("COLUMN_FATHER_NAME", "фио отца, дата рождения")
 			, ColumnInfo("COLUMN_MOTHER_NAME", "фио матери, дата рождения")
-			, ColumnInfo(COLUMN_SIBLINGS, "данные братьев/сестер")
-			, ColumnInfo(COLUMN_SPOUSE, "фио жены/мужа")
+			, ColumnInfo(COLUMN_SIBLINGS, "фио братьев/сестер, дата рождения")
+			, ColumnInfo(COLUMN_SPOUSE, "фио жены/мужа, дата рождения")
 			, ColumnInfo(COLUMN_PHONE, "номер телефона")
 			, ColumnInfo(COLUMN_HEIGHT, "рост")
 			, ColumnInfo(COLUMN_WEIGHT, "вес")
 			, ColumnInfo(COLUMN_SIGNS, "особые приметы")
 			, ColumnInfo(COLUMN_TATOO, "татуировки")
+			, ColumnInfo(COLUMN_ADDITIONAL_ATTRIBUTES, "описание дополнительных элементов")
+			, ColumnInfo(COLUMN_PERSONAL_PERKS, "индивидуальные отличительные признаки")
 			, ColumnInfo(COLUMN_HABITS, "увлечения")
 		]
 
