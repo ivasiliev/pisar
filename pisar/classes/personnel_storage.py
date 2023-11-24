@@ -24,6 +24,8 @@ COLUMN_TATOO = "COLUMN_TATOO"
 COLUMN_ADDITIONAL_ATTRIBUTES = "COLUMN_ADDITIONAL_ATTRIBUTES"
 COLUMN_HABITS = "COLUMN_HABITS"
 COLUMN_PERSONAL_PERKS = "COLUMN_PERSONAL_PERKS"
+COLUMN_RANK = "COLUMN_RANK"
+COLUMN_POSITION = "COLUMN_POSITION"
 
 class PersonnelStorage:
 	# full_path = xlsx file
@@ -42,7 +44,8 @@ class PersonnelStorage:
 
 		self.excel_docs = [
 			self.create_metadata_for_pers_list(self.personnel_list_full_path)
-			, self.create_metadata_for_pers_details(self.personnel_details_full_path)
+			,
+			self.create_metadata_for_pers_details(self.personnel_details_full_path)
 		]
 
 		for md in self.excel_docs:
@@ -61,13 +64,21 @@ class PersonnelStorage:
 				sh = workbook[md.sheet_name]
 				# analyze headers
 				for row in sh.iter_rows(min_row=1, min_col=1, max_row=1, max_col=md.column_count_to_search):
-					for cell in row:
-						col_str = str(cell.value).casefold()
+					for caption_cell in row:
+						col_str = str(caption_cell.value).casefold()
+						# firstly check exact match
+						found = False
 						for col_info in md.cols:
-							# col_str == col_info.get_name()
-							if col_info.get_name().startswith(col_str):
-								col_info.index = cell.col_idx
+							if col_str == col_info.get_name():
+								col_info.index = caption_cell.col_idx
+								found = True
 								break
+						if not found:
+							# not exact match
+							for col_info in md.cols:
+								if col_str.startswith(col_info.get_name()):
+									col_info.index = caption_cell.col_idx
+									break
 				# validation
 				for col_info in md.cols:
 					if not col_info.is_found():
@@ -167,6 +178,10 @@ class PersonnelStorage:
 						, ["signs", COLUMN_SIGNS]
 						, ["tatoo", COLUMN_TATOO]
 						, ["habits", COLUMN_HABITS]
+						, ["rank", COLUMN_RANK]
+						, ["position", COLUMN_POSITION]
+						, ["additional_attributes", COLUMN_ADDITIONAL_ATTRIBUTES]
+						, ["personal_perks", COLUMN_PERSONAL_PERKS]
 					]
 
 					for m in mapping:
@@ -223,20 +238,20 @@ class PersonnelStorage:
 			ColumnInfo("COLUMN_COMPANY", "рота")
 			, ColumnInfo("COLUMN_PLATOON", "взвод")
 			, ColumnInfo("COLUMN_SQUAD", "отделение")
-			, ColumnInfo("COLUMN_POSITION", "воинская должность")
-			, ColumnInfo("COLUMN_RANK", "воинское звание фактическое")
+			, ColumnInfo(COLUMN_POSITION, "воинская должность")
+			, ColumnInfo(COLUMN_RANK, "воинское звание фактическое")
 			, ColumnInfo(COLUMN_FULL_NAME, "фио")
 			, ColumnInfo(COLUMN_DOB, "дата рождения")
 			, ColumnInfo(COLUMN_UNIQUE_KEY, "личный номер")
-		        ]
+		]
 
 		return ExcelDocMetadata(full_path, self.personnel_excel_sheet_name, cols, 20)
 
 	def create_metadata_for_pers_details(self, full_path):
 		cols = [
 			ColumnInfo(COLUMN_UNIQUE_KEY, "личный номер")
-			, ColumnInfo("COLUMN_RANK", "в/звание")
-			, ColumnInfo("COLUMN_POSITION", "в/должность")
+			, ColumnInfo(COLUMN_RANK, "в/звание")
+			, ColumnInfo(COLUMN_POSITION, "в/должность")
 			, ColumnInfo(COLUMN_FULL_NAME, "фио")
 			, ColumnInfo(COLUMN_DOB, "дата рождения")
 			, ColumnInfo("COLUMN_NATIONALITY", "национальность")
@@ -290,8 +305,8 @@ class PersonnelStorage:
 		col_company = excel_doc.get_column_index("COLUMN_COMPANY")
 		col_platoon = excel_doc.get_column_index("COLUMN_PLATOON")
 		col_squad = excel_doc.get_column_index("COLUMN_SQUAD")
-		col_position = excel_doc.get_column_index("COLUMN_POSITION")
-		col_rank = excel_doc.get_column_index("COLUMN_RANK")
+		col_position = excel_doc.get_column_index(COLUMN_POSITION)
+		col_rank = excel_doc.get_column_index(COLUMN_RANK)
 		col_full_name = excel_doc.get_column_index(COLUMN_FULL_NAME)
 		col_dob = excel_doc.get_column_index(COLUMN_DOB)
 		col_unique = excel_doc.get_column_index(COLUMN_UNIQUE_KEY)
