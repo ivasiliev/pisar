@@ -3,6 +3,7 @@ from docx.shared import Pt
 
 from classes.document_in_report import DocumentInReport
 from classes.paragraph_settings import ParagraphSettings
+from helpers.text_helper import not_empty
 
 
 class DocQuestArrival(DocumentInReport):
@@ -27,6 +28,23 @@ class DocQuestArrival(DocumentInReport):
 		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 
+		# relatives info
+		relatives_info = self.add_relatives_item("father", "Отец", False)
+		relatives_info += f"{self.add_relatives_item('mother', 'Мать', True)}"
+		relatives_info += f"{self.add_relatives_item('siblings', 'Братья/Сёстры', True)}"
+		relatives_info += f"{self.add_relatives_item('spouse', 'Жена', True)}"
+
+		# prepare passport info
+		passport_info = ""
+		if not_empty(rep_settings["pass_rf"]):
+			passport_info = f"паспорт РФ {rep_settings['pass_rf']} {rep_settings['pass_rf_issued']}"
+		if not_empty(rep_settings["pass_dnr"]):
+			passport_info = f"{passport_info}\nпаспорт ДНР {rep_settings['pass_dnr']} {rep_settings['pass_dnr_issued']}"
+		if not_empty(rep_settings["pass_ukr"]):
+			passport_info = f"{passport_info}\nпаспорт Украины {rep_settings['pass_ukr']}"
+		if not_empty(rep_settings["pass_foreign"]):
+			passport_info = f"{passport_info}\nзагранпаспорт {rep_settings['pass_foreign']}"
+
 		row_data = [
 			["", "Анкета на прибывшего в зону СВО\n", ""]
 			, ["1.", "Фамилия Имя Отчество", s_info.full_name]
@@ -35,12 +53,12 @@ class DocQuestArrival(DocumentInReport):
 			, ["4.", "Условное наименование воинской части (места службы)", rep_settings["military_unit"]]
 			, ["5.", "Воинское звание", rep_settings["rank"]]
 			, ["6.", "Воинская должность", rep_settings["position"]]
-			, ["7.", "Документы удостоверяющие личность (серия, номер, дата выдачи и кем выдан)", "TODO"]
+			, ["7.", "Документы удостоверяющие личность (серия, номер, дата выдачи и кем выдан)", passport_info]
 			, ["8.", "Личный номер", s_info.unique]
 			, ["9.", "Место жительства", rep_settings["home_address"]]
 			, ["10.", "Контактный номер телефона", rep_settings["phone"]]
-			, ["11.", "Сведения о близких родственниках:(степень родства, ФИО, дата рождения, место жительства, номер телефона)", "TODO"]
-			, ["12.", "Командиры (начальники):(воинское звание, ФИО, место жительства, телефон и другая информация о должностных лицах для взаимодействия)", "???"]
+			, ["11.", "Сведения о близких родственниках:(степень родства, ФИО, дата рождения, место жительства, номер телефона)", relatives_info]
+			, ["12.", "Командиры (начальники):(воинское звание, ФИО, место жительства, телефон и другая информация о должностных лицах для взаимодействия)", "< вставьте сведения>"]
 			, ["13.", "Особенности внешности военнослужащего:(цвет волос (стрижка (наличие залысин), наличие бороды и бакенбардов), строение тела, описание лица (форма носа, цвет глаз, уши, подбородок), отличительные черты описать подробно). ФОТО обязательно (анфас, профиль и отдельно особенностей)", rep_settings["signs"]]
 			, ["14.", "Личные приметы:(наличие с описанием татуировок, шрамов, (где, когда и при каких обстоятельствах получен), родимых пятен, ампутаций, протезов, описание зубов и т.д.). Тату, шрамы и родимые пятна – ФОТО (обязательно)", rep_settings["tatoo"]]
 			, ["15.", "Индивидуальные отличительные признаки:(одежды, снаряжения, вооружения (размер одежды и обуви, какое имеет снаряжение и оружие, их номера, наличие особенностей и меток) ФОТО Дополнительно: информация о наличии нашивок, надписей, позывных на элементах снаряжения. ФОТО", rep_settings["personal_perks"]]
@@ -66,5 +84,11 @@ class DocQuestArrival(DocumentInReport):
 
 		super().render()
 
-
-
+	def add_relatives_item(self, key, title, is_new_str):
+		result = ""
+		rep_settings = self.get_report_settings()
+		if not_empty(rep_settings[f"{key}_name"]):
+			result = f"{title}: {rep_settings[f'{key}_name']}\n{rep_settings[f'{key}_address']}\n{rep_settings[f'{key}_phone']}"
+			if is_new_str:
+				result = f"\n{result}"
+		return result

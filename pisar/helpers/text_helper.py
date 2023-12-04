@@ -104,3 +104,6 @@ def get_date_str_format2(dt):
 	if len(yr) == 4:
 		yr = yr[2:]
 	return f"{dt.day}/{yr}"
+
+def not_empty(s):
+	return s is not None and len(s) > 0

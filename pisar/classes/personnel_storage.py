@@ -6,6 +6,7 @@ from classes.excel_doc_metadata import ExcelDocMetadata
 from classes.person import Person
 from helpers.file_helper import get_file_size_info
 from helpers.performance_helper import PerformanceHelper
+from helpers.text_helper import not_empty
 
 # Штатное расписание (ШР)
 EXCEL_DOCUMENT_SR = 0
@@ -15,8 +16,6 @@ COLUMN_UNIQUE_KEY = "COLUMN_UNIQUE"
 COLUMN_FULL_NAME = "COLUMN_FULL_NAME"
 COLUMN_DOB = "COLUMN_DOB"
 COLUMN_PHONE = "COLUMN_PHONE"
-COLUMN_SIBLINGS = "COLUMN_SIBLINGS"
-COLUMN_SPOUSE = "COLUMN_SPOUSE"
 COLUMN_HEIGHT = "COLUMN_HEIGHT"
 COLUMN_WEIGHT = "COLUMN_WEIGHT"
 COLUMN_SIGNS = "COLUMN_SIGNS"
@@ -26,11 +25,29 @@ COLUMN_HABITS = "COLUMN_HABITS"
 COLUMN_PERSONAL_PERKS = "COLUMN_PERSONAL_PERKS"
 COLUMN_RANK = "COLUMN_RANK"
 COLUMN_POSITION = "COLUMN_POSITION"
+# passports
+COLUMN_PASS_DNR = "COLUMN_PASS_DNR"
+COLUMN_PASS_DNR_ISSUED = "COLUMN_PASS_DNR_ISSUED"
+COLUMN_PASS_RF = "COLUMN_PASS_RF"
+COLUMN_PASS_RF_ISSUED = "COLUMN_PASS_RF_ISSUED"
+COLUMN_PASS_FOREIGN = "COLUMN_PASS_FOREIGN"
+COLUMN_PASS_UKR = "COLUMN_PASS_UKR"
+# relatives
+COLUMN_FATHER_NAME = "COLUMN_FATHER_NAME"
+COLUMN_MOTHER_NAME = "COLUMN_MOTHER_NAME"
+COLUMN_SIBLINGS_NAME = "COLUMN_SIBLINGS_NAME"
+COLUMN_SPOUSE_NAME = "COLUMN_SPOUSE_NAME"
+COLUMN_FATHER_ADDRESS = "COLUMN_FATHER_ADDRESS"
+COLUMN_MOTHER_ADDRESS = "COLUMN_MOTHER_ADDRESS"
+COLUMN_SIBLINGS_ADDRESS = "COLUMN_SIBLINGS_ADDRESS"
+COLUMN_SPOUSE_ADDRESS = "COLUMN_SPOUSE_ADDRESS"
+COLUMN_FATHER_PHONE = "COLUMN_FATHER_PHONE"
+COLUMN_MOTHER_PHONE = "COLUMN_MOTHER_PHONE"
+COLUMN_SIBLINGS_PHONE = "COLUMN_SIBLINGS_PHONE"
+COLUMN_SPOUSE_PHONE = "COLUMN_SPOUSE_PHONE"
 
 class PersonnelStorage:
-	# full_path = xlsx file
 	def __init__(self, data_model):
-		# self.storage = None
 		# TODO to app_settings?
 		self.personnel_excel_sheet_name = "ШДС"
 		self.personnel_details_excel_sheet_name = "ЛС"
@@ -76,6 +93,8 @@ class PersonnelStorage:
 						if not found:
 							# not exact match
 							for col_info in md.cols:
+								if col_info.index > -1:
+									continue
 								if col_str.startswith(col_info.get_name()):
 									col_info.index = caption_cell.col_idx
 									break
@@ -168,11 +187,7 @@ class PersonnelStorage:
 						, ["home_address", "COLUMN_HOME_ADDRESS"]
 						, ["marital_status", "COLUMN_MARITAL_STATUS"]
 						, ["criminal_status", "COLUMN_CRIMINAL_STATUS"]
-						, ["father_name", "COLUMN_FATHER_NAME"]
-						, ["mother_name", "COLUMN_MOTHER_NAME"]
 						, ["phone", COLUMN_PHONE]
-						, ["siblings", COLUMN_SIBLINGS]
-						, ["spouse", COLUMN_SPOUSE]
 						, ["height", COLUMN_HEIGHT]
 						, ["weight", COLUMN_WEIGHT]
 						, ["signs", COLUMN_SIGNS]
@@ -182,6 +197,26 @@ class PersonnelStorage:
 						, ["position", COLUMN_POSITION]
 						, ["additional_attributes", COLUMN_ADDITIONAL_ATTRIBUTES]
 						, ["personal_perks", COLUMN_PERSONAL_PERKS]
+						# passports
+						, ["pass_dnr", COLUMN_PASS_DNR]
+						, ["pass_dnr_issued", COLUMN_PASS_DNR_ISSUED]
+						, ["pass_rf", COLUMN_PASS_RF]
+						, ["pass_rf_issued", COLUMN_PASS_RF_ISSUED]
+						, ["pass_foreign", COLUMN_PASS_FOREIGN]
+						, ["pass_ukr", COLUMN_PASS_UKR]
+						#relatives
+						, ["father_name", COLUMN_FATHER_NAME]
+						, ["mother_name", COLUMN_MOTHER_NAME]
+						, ["siblings_name", COLUMN_SIBLINGS_NAME]
+						, ["spouse_name", COLUMN_SPOUSE_NAME]
+						, ["father_address", COLUMN_FATHER_ADDRESS]
+						, ["mother_address", COLUMN_MOTHER_ADDRESS]
+						, ["siblings_address", COLUMN_SIBLINGS_ADDRESS]
+						, ["spouse_address", COLUMN_SPOUSE_ADDRESS]
+						, ["father_phone", COLUMN_FATHER_PHONE]
+						, ["mother_phone", COLUMN_MOTHER_PHONE]
+						, ["siblings_phone", COLUMN_SIBLINGS_PHONE]
+						, ["spouse_phone", COLUMN_SPOUSE_PHONE]
 					]
 
 					for m in mapping:
@@ -197,26 +232,17 @@ class PersonnelStorage:
 							if len(tokens) >= 2:
 								dm[p] = tokens[0]
 
+					# select passport by priority
+					# паспорт ДНР, паспорт РФ, паспорт Украины
 					dm["passport"] = ""
-					passport_key = "COLUMN_PASSPORT_X"
-					passport_issued_key = "COLUMN_PASSPORT_ISSUED_X"
-					priorities = [
-						[2, "паспорт РФ"]
-						, [1, "паспорт ДНР"]
-						, [3, "паспорт Украины"]
-					]
-					for pr in priorities:
-						p = pr[0]
-						key1 = passport_key.replace("X", str(p))
-						passport_number = self.find_value_in_row_by_index(person_row,
-						                                                  pers_details_excel_doc.get_column_index(key1))
-						if passport_number is not None and len(passport_number) > 0:
-							key2 = passport_issued_key.replace("X", str(p))
-							passport_issued = self.find_value_in_row_by_index(person_row,
-							                                                  pers_details_excel_doc.get_column_index(
-								                                                  key2))
-							dm["passport"] = f"{pr[1]} {passport_number} {passport_issued}"
-							break
+					if not_empty(dm["pass_rf"]):
+						dm["passport"] = f"паспорт РФ {dm['pass_rf']} {dm['pass_rf_issued']}"
+					else:
+						if not_empty(dm["pass_dnr"]):
+							dm["passport"] = f"паспорт ДНР {dm['pass_dnr']} {dm['pass_dnr_issued']}"
+						else:
+							if not_empty(dm["pass_dnr"]):
+								dm["passport"] = f"паспорт Украины {dm['pass_ukr']}"
 					print(f"Количество итераций для поиска военнослужащего: {iteration_count_to_find_person}")
 					performance.stop_and_print()
 					break
@@ -268,17 +294,7 @@ class PersonnelStorage:
 			, ColumnInfo("COLUMN_PLACE_OF_BIRTH", "место рождения")
 			, ColumnInfo("COLUMN_HOME_ADDRESS", "адрес прописки")
 			, ColumnInfo("COLUMN_MARITAL_STATUS", "семейное положение")
-			, ColumnInfo("COLUMN_PASSPORT_1", "паспорт ДНР")
-			, ColumnInfo("COLUMN_PASSPORT_ISSUED_1", "кем выдан")
-			, ColumnInfo("COLUMN_PASSPORT_2", "паспорт РФ")
-			, ColumnInfo("COLUMN_PASSPORT_ISSUED_2", "кем выдан2")
-			, ColumnInfo("COLUMN_PASSPORT_3", "паспорт Украины")
-			, ColumnInfo("COLUMN_PASSPORT_ISSUED_3", "адресная справка")
 			, ColumnInfo("COLUMN_CRIMINAL_STATUS", "наличие судимостей(погашены/нет)")
-			, ColumnInfo("COLUMN_FATHER_NAME", "фио отца, дата рождения")
-			, ColumnInfo("COLUMN_MOTHER_NAME", "фио матери, дата рождения")
-			, ColumnInfo(COLUMN_SIBLINGS, "фио братьев/сестер, дата рождения")
-			, ColumnInfo(COLUMN_SPOUSE, "фио жены/мужа, дата рождения")
 			, ColumnInfo(COLUMN_PHONE, "номер телефона")
 			, ColumnInfo(COLUMN_HEIGHT, "рост")
 			, ColumnInfo(COLUMN_WEIGHT, "вес")
@@ -287,6 +303,26 @@ class PersonnelStorage:
 			, ColumnInfo(COLUMN_ADDITIONAL_ATTRIBUTES, "описание дополнительных элементов")
 			, ColumnInfo(COLUMN_PERSONAL_PERKS, "индивидуальные отличительные признаки")
 			, ColumnInfo(COLUMN_HABITS, "увлечения")
+			# passports
+			, ColumnInfo(COLUMN_PASS_DNR, "Паспорт ДНР")
+			, ColumnInfo(COLUMN_PASS_DNR_ISSUED, "Кем выдан")
+			, ColumnInfo(COLUMN_PASS_RF, "Паспорт РФ")
+			, ColumnInfo(COLUMN_PASS_RF_ISSUED, "Кем выдан2")
+			, ColumnInfo(COLUMN_PASS_FOREIGN, "Загранпаспорт")
+			, ColumnInfo(COLUMN_PASS_UKR, "Паспорт Украины")
+			# relatives
+			, ColumnInfo(COLUMN_FATHER_NAME, "фио отца, дата рождения")
+			, ColumnInfo(COLUMN_MOTHER_NAME, "фио матери, дата рождения")
+			, ColumnInfo(COLUMN_SIBLINGS_NAME, "фио братьев/сестер, дата рождения")
+			, ColumnInfo(COLUMN_SPOUSE_NAME, "фио жены/мужа, дата рождения")
+			, ColumnInfo(COLUMN_FATHER_ADDRESS, "Адрес проживания отца")
+			, ColumnInfo(COLUMN_MOTHER_ADDRESS, "Адрес проживания матери")
+			, ColumnInfo(COLUMN_SIBLINGS_ADDRESS, "Адрес проживания братьев/сестер")
+			, ColumnInfo(COLUMN_SPOUSE_ADDRESS, "Адрес проживания жены/мужа")
+			, ColumnInfo(COLUMN_FATHER_PHONE, "Номер телефона отца")
+			, ColumnInfo(COLUMN_MOTHER_PHONE, "Номер телефона матери")
+			, ColumnInfo(COLUMN_SIBLINGS_PHONE, "Номер телефона братьев/сестер")
+			, ColumnInfo(COLUMN_SPOUSE_PHONE, "Номер телефона жены/мужа")
 		]
 
 		return ExcelDocMetadata(full_path, self.personnel_details_excel_sheet_name, cols, 200)
