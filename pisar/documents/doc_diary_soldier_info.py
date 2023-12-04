@@ -64,10 +64,10 @@ class DocDiarySoldierInfo(DocumentInReport):
 		row_data = [
 			["Отец:", rep_settings["father_name"]]
 			, ["Мать:", rep_settings["mother_name"]]
-			, ["Брат:", rep_settings["siblings"]]
+			, ["Брат:", rep_settings["siblings_name"]]
 			, ["Сестра:", ""]
 			, ["Другие ближайшие родственники:", ""]
-			, ["Жена (Девушка):", rep_settings["spouse"]]
+			, ["Жена (Девушка):", rep_settings["spouse_name"]]
 			, ["Прочие:", ""]
 		]
 		self.add_table(captions, row_data, table_settings)

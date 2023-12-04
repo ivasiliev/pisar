@@ -24,7 +24,7 @@ sys.path.append(helpers_path)
 
 from runner import run_generation, OFFICIAL_PROCEEDING_BATCH, DESERT_UNIT_BATCH, MASS_HR_INFO_BATCH, \
 	MASS_PERFORMANCE_CHARACTERISTICS_BATCH, UTILITY_BIRTHDAYS, UTILITY_PERSONNEL_DETAILS_CHECK, \
-	UTILITY_PERSONNEL_DETAILS_SORTING, DIARY
+	UTILITY_PERSONNEL_DETAILS_SORTING, DIARY, QUEST_ARRIVAL
 
 
 # 0 -- pointer, 1 -- clock
@@ -77,20 +77,13 @@ group_official_proceeding = RunInfo()
 group_official_proceeding.group_number = 0
 group_official_proceeding.group_text = "Служебное разбирательство по факту грубого дисциплинарного проступка"
 group_official_proceeding.batch_name = OFFICIAL_PROCEEDING_BATCH
-group_official_proceeding.docs_list = [
-										"Служебное разбирательство (сам документ), Протокол о ГДП",
-										"Акт о невозможности получения копии протокола о ГДП",
-										"Акт о невозможности взять объяснение, Служебная характеристика"
-										]
+group_official_proceeding.docs_list = []
 
 group_desert_unit = RunInfo()
 group_desert_unit.group_number = 1
 group_desert_unit.group_text = "Служебное разбирательство по факту cамовольного оставления части"
 group_desert_unit.batch_name = DESERT_UNIT_BATCH
-group_desert_unit.docs_list = [
-								"Административное расследование по факту самовольного оставления части, Служебная характеристика, Справка",
-								"Лист согласования, Письмо родственникам, Ориентировка, Приказ, Приказ Копия, Служебная карточка"
-								]
+group_desert_unit.docs_list = []
 
 group_mass_hr_info_unit = RunInfo()
 group_mass_hr_info_unit.group_number = 2
@@ -126,10 +119,16 @@ group_diary = RunInfo()
 group_diary.group_number = 7
 group_diary.group_text = "Дневник психолого-педагогических наблюдений"
 group_diary.batch_name = DIARY
-group_diary.docs_list = ["Индивидуальные данные военнослужащего (для каждого), Дни рождения, Нарушение воинской дисциплины"]
+group_diary.docs_list = []
+
+group_quest_arrival = RunInfo()
+group_quest_arrival.group_number = 8
+group_quest_arrival.group_text = "Анкета прибывшего в зону СВО"
+group_quest_arrival.batch_name = QUEST_ARRIVAL
+group_quest_arrival.docs_list = []
 
 
-batch_groups = [group_official_proceeding, group_desert_unit, group_mass_hr_info_unit, group_mass_perf_char_unit, group_utils_birthdays, group_utils_pers_det_check, group_utils_pers_det_sorting, group_diary]
+batch_groups = [group_official_proceeding, group_desert_unit, group_mass_hr_info_unit, group_mass_perf_char_unit, group_utils_birthdays, group_utils_pers_det_check, group_utils_pers_det_sorting, group_diary, group_quest_arrival]
 
 layout = [
 	[sg.Button(key=update_button_key, button_text="Обновить программу"),
