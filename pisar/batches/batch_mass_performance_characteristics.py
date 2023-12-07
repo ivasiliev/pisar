@@ -7,6 +7,7 @@ class BatchMassPerformanceCharacteristics(BatchPrototype):
 		return "Служебная характеристика (массовая генерация)"
 
 	def render(self):
+		self.clear_docs()
 		self.subfolder_name = self.get_name()
 		self.add_document(DocPerformanceCharacteristics(self.data_model))
 		super().render()

@@ -7,6 +7,7 @@ class BatchMassHrInfo(BatchPrototype):
 		return "Справка (массовая генерация)"
 
 	def render(self):
+		self.clear_docs()
 		self.subfolder_name = self.get_name()
 		self.add_document(DocSoldierHrCard(self.data_model))
 		super().render()

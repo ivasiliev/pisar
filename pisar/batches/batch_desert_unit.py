@@ -15,6 +15,7 @@ class BatchDesertUnit(BatchPrototype):
 		return "Самовольное оставление части (группа документов)"
 
 	def render(self):
+		self.clear_docs()
 		self.add_document(DocAdministrativeInvestigation(self.data_model))
 		self.add_document(DocApprovalSheet(self.data_model))
 		self.add_document(DocLetterParents(self.data_model))
