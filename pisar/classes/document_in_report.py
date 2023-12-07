@@ -260,7 +260,7 @@ class DocumentInReport(DocumentPrototype):
 					cell.text = c_data
 				else:
 					p = cell.paragraphs[0]
-					runner = p.add_run(c_data)
+					runner = p.add_run(str(c_data))
 					runner.font.size = font_size
 				col_ind = col_ind + 1
 			num_row = num_row + 1
