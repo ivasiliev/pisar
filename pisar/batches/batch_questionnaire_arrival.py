@@ -8,6 +8,7 @@ class BatchQuestArrival(BatchPrototype):
 		return doc.get_name()
 
 	def render(self):
+		self.clear_docs()
 		self.add_document(DocQuestArrival(self.data_model))
 		super().render()
 

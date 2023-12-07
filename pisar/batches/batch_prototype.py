@@ -43,3 +43,7 @@ class BatchPrototype(DocumentPrototype):
 			return None
 		return self.docs[0].get_commander_company_full_str(0)
 
+	def clear_docs(self):
+		self.docs = []
+		self.singletons = []
+

@@ -9,6 +9,7 @@ class BatchDiary(BatchPrototype):
 		return "Дневник психолого-педагогических наблюдений (группа документов)"
 
 	def render(self):
+		self.clear_docs()
 		self.subfolder_name = self.get_name()
 
 		self.add_document(DocDiarySoldierInfo(self.data_model))
