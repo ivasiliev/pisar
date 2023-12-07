@@ -86,7 +86,7 @@ def get_month_string(month_num):
 
 # for a phrase contains several words
 def get_words_declension(morph, txt, declension_type):
-	tokens = txt.split(" ")
+	tokens = str(txt).split(" ")
 	result = ""
 	for t in tokens:
 		result = result + get_word_declension(morph, t, declension_type) + " "
