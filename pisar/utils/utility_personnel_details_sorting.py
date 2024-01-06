@@ -25,6 +25,7 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 		ls_hash = self.prepare_hash_list(persons_ls)
 		# reading LS document
 		all_ls_rows = pers_storage.read_excel_file(EXCEL_DOCUMENT_LS)
+		print(f"Количество в ШР: {len(persons_sr)}; Количество в ЛС: {len(persons_ls)}; Всего строк в ЛС: {len(all_ls_rows)};")
 		new_ls_rows = []
 		# header of LS document
 		row_header = pers_storage.read_excel_header(EXCEL_DOCUMENT_LS)
@@ -37,19 +38,23 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 			# skip persons that doesn't exist in LS
 			if sr_hash_item not in ls_hash:
 				continue
-			index_in_sr = sr_hash[sr_hash_item]
 			index_in_ls = ls_hash[sr_hash_item]
 			row_in_ls = all_ls_rows[index_in_ls]
 			new_ls_rows.append(row_in_ls)
 			used_ls_indexes.append(index_in_ls)
+		print(f"Сведено ЛС > ШР {len(used_ls_indexes)} человек(а)")
 
 		# put all rows from LS that weren't touched by sorting in the end of the document
 		if len(used_ls_indexes) < len(all_ls_rows):
+			added_persons = 0
+			print(f"Добавляем остальных людей из ЛС, которых не было в ШР ({len(used_ls_indexes)} < {len(all_ls_rows)})")
 			index = -1
 			for r in all_ls_rows:
 				index = index + 1
 				if index not in used_ls_indexes:
 					new_ls_rows.append(r)
+					added_persons = added_persons + 1
+			print(f"Добавлено людей: {added_persons}")
 
 		# check that all rows are onboarded
 		if len(new_ls_rows) != len(all_ls_rows):
@@ -74,6 +79,7 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 			index = index + 1
 			hsh = p.get_hash()
 			if hsh is None:
+				print(f"Не могу определить hash для {p.full_name}")
 				continue
 			result[hsh] = index
 		return result
