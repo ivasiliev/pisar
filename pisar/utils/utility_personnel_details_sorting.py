@@ -79,7 +79,10 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 			index = index + 1
 			hsh = p.get_hash()
 			if hsh is None:
-				print(f"Не могу определить hash для {p.full_name}")
+				p_name = p.full_name
+				if p_name is None or len(p_name) == 0:
+					p_name = "<пусто>"
+				print(f"Не могу определить hash для имени '{p_name}'; личный номер='{p.unique}'; номер строки={index};")
 				continue
 			result[hsh] = index
 		return result

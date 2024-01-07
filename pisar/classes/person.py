@@ -51,9 +51,8 @@ class Person:
 		else:
 			if self.full_name is not None and len(self.full_name) > 0:
 				un = self.full_name
-			else:
-				print("Can't define hash for this person")
 		if un is None:
+			print("Can't define hash for this person")
 			return None
 		else:
 			return int(hashlib.md5(un.encode("utf-8")).hexdigest(), 16)
