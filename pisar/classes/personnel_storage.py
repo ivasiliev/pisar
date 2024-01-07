@@ -271,7 +271,7 @@ class PersonnelStorage:
 			, ColumnInfo(COLUMN_UNIQUE_KEY, "личный номер")
 		]
 
-		return ExcelDocMetadata(full_path, self.personnel_excel_sheet_name, cols, 20)
+		return ExcelDocMetadata(full_path, self.personnel_excel_sheet_name, cols, 200)
 
 	def create_metadata_for_pers_details(self, full_path):
 		cols = [
