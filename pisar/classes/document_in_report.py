@@ -492,7 +492,7 @@ class DocumentInReport(DocumentPrototype):
 
 		if found:
 			commander = rep_settings[settings_key]
-			c_name = commander["name"]
+			c_name = self.get_person_name_declension(commander["name"], declension_type)
 			if is_short_name:
 				c_name = self.get_person_name_short_format_1(c_name)
 			c_rank = commander["rank"]

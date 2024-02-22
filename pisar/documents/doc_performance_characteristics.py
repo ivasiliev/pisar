@@ -22,7 +22,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		line_spacing = 0.96
 
 		paragraph_settings = ParagraphSettings()
-		paragraph_settings.font_size = Pt(16)
+		paragraph_settings.font_size = Pt(14)
 		paragraph_settings.is_bold = True
 		paragraph_settings.align_center = True
 
@@ -38,7 +38,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		nationality = get_word_gent(self.get_morph(), rep_settings["nationality"])
 		education = rep_settings["education"]
 		yss = self.get_service_started_str_year()
-		txt = f"на {sold_str}, {nationality}, образование {education}, в ВС ДНР с {yss} года."
+		txt = f"На {sold_str}, {nationality}, образование {education}, в ВС РФ с {yss} года."
 		self.add_paragraph(txt, paragraph_settings)
 
 		self.add_empty_paragraphs_spacing(1, line_spacing)  # 2
@@ -91,7 +91,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 
 		self.add_commander(rep_settings["commander_2_level"], par_set_center, par_set_right)
 
-		self.add_paragraph("С характеристикой ознакомлен, согласен:", self.align_justify_settings)
+		self.add_paragraph("Подпись командира батальона заверяю:", self.align_justify_settings)
 		self.add_empty_paragraphs_spacing(1, line_spacing)
 
 		comm3 = rep_settings["commander_3_level"]
@@ -100,7 +100,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		comm3["position"] = comm3_pos
 		self.add_commander(comm3, par_set_center, par_set_right)
 
-		self.add_paragraph("«___» _________ 2023 г.", self.bold_justify_settings)
+		self.add_paragraph("«___» _________ 2024 г.", self.bold_justify_settings)
 
 		super().render()
 

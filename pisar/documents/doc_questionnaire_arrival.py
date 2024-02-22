@@ -78,7 +78,7 @@ class DocQuestArrival(DocumentInReport):
 		self.add_paragraph("Анкету оформил: __________________________________________________________________", left_10)
 		self.add_paragraph("__________________________________________________________________________________", left_10)
 		self.add_paragraph("(должность, в/звание, подпись, ФИО должностного лица)", center_8)
-		self.add_paragraph("«___»____________2023 г.", left_10)
+		self.add_paragraph("«___»____________2024 г.", left_10)
 
 		self.word_document.add_page_break()
 

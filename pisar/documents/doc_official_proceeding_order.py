@@ -28,7 +28,7 @@ class DocOfficialProceedingOrder(DocumentInReport):
 
 		self.add_paragraph("П Р И К А З", self.bold_title)
 		self.add_paragraph(f"КОМАНДИРА ВОЙСКОВОЙ ЧАСТИ {military_unit}", self.bold_center_settings)
-		self.add_paragraph("«___» _________ 2023 г.  № ___", self.align_center_settings)
+		self.add_paragraph("«___» _________ 2024 г.  № ___", self.align_center_settings)
 		self.add_paragraph("г. Донецк", self.align_center_settings)
 		self.add_empty_paragraphs(1)
 

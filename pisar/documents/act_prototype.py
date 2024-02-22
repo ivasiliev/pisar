@@ -14,19 +14,18 @@ class ActPrototype(DocumentInReport):
 
 		paragraph_settings = ParagraphSettings()
 		paragraph_settings.left_indent = Mm(115)
-		paragraph_settings.is_bold = True
-		self.add_paragraph("УТВЕРЖДАЮ", paragraph_settings)
-		self.add_paragraph(f"Командир войсковой части {rep_settings['military_unit']}", self.bold_right_settings)
+		self.add_paragraph("«УТВЕРЖДАЮ»", paragraph_settings)
+		self.add_empty_paragraphs(1)
+		self.add_paragraph(f"Командир войсковой части {rep_settings['military_unit']}", self.align_right_settings)
 
 		paragraph_settings = ParagraphSettings()
 		paragraph_settings.right_indent = Mm(31)
 		paragraph_settings.align_right = True
-		paragraph_settings.is_bold = True
 		comm_3 = self.get_commander_generic("commander_3_level", "КОМАНДИРА", 0, True)
 		self.add_paragraph(comm_3["rank"], paragraph_settings)
-		self.add_paragraph(comm_3["name"], self.bold_right_settings)
+		self.add_paragraph(comm_3["name"], self.align_right_settings)
 		self.add_empty_paragraphs(1)
-		self.add_paragraph("«___»____________2023 г.", self.bold_right_settings)
+		self.add_paragraph("«___»____________2024 г.", self.align_right_settings)
 		self.add_empty_paragraphs(3)
 		self.add_paragraph("АКТ", self.bold_center_settings)
 		self.add_paragraph(self.data_model[ACT_TITLE], self.bold_center_settings)
@@ -34,16 +33,17 @@ class ActPrototype(DocumentInReport):
 
 		self.add_paragraph(self.data_model[ACT_TEXT], self.ident_align_justify_settings)
 		self.add_empty_paragraphs(2)
-		self.add_paragraph("«___»____________2023 г.", self.align_left_settings)
+		self.add_paragraph("«___»____________2024 г.", self.align_left_settings)
 		self.add_empty_paragraphs(2)
 
 		self.print_commander("commander_2_level")
 		self.add_empty_paragraphs(2)
-		self.print_commander("commander_1_level")
-		self.add_empty_paragraphs(1)
 
 		comm_company = self.get_commander_company()
 		self.print_commander_routines(comm_company["name"], comm_company["rank"], comm_company["position"])
+		self.add_empty_paragraphs(2)
+
+		self.print_commander("commander_1_level")
 
 		super().render()
 
