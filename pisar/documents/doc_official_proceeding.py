@@ -16,7 +16,7 @@ class DocOfficialProceeding(InvestigationPrototype):
 		self.doc_about = "По факту грубого дисциплинарного проступка, совершенного"
 
 		self.inventory_caption = "служебного разбирательства"
-		si = f"{self.get_person_rank(self.get_soldier_info().rank, 2)} {self.get_person_name_declension(self.get_soldier_info().full_name, 2)}"
+		si = f"{self.get_person_rank(self.get_soldier_info().rank, 2)} {self.get_person_name_declension(self.get_person_name_short_format_1(self.get_soldier_info().full_name), 2)}"
 		rows_content = ["Протокол о грубом дисциплинарном проступке", f"Акт о невозможности дачи объяснений {si}", "Служебная характеристика", "Справка по форме ГУК МО РФ от 04.12.2006 г.", "Заключение служебного разбирательства"]
 		self.add_inventory_list(rows_content)
 
@@ -27,7 +27,7 @@ class DocOfficialProceeding(InvestigationPrototype):
 
 		self.conclusion_materials = "служебного разбирательства"
 		self.conclusion_fact = "грубого дисциплинарного проступка"
-		self.conclusion_action_performed = "служебное разбирательство по факту грубого дисциплинарного проступка"
+		self.conclusion_action_performed = "служебное разбирательство по факту грубого дисциплинарного проступка, совершенного"
 		self.conclusion_p2_action = "отсутствовал в месте несения военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени, тем самым совершил грубый дисциплинарный проступок"
 		self.conclusion_punishment = "отсутствовал в месте несения военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени, что в соответствии с Приложением 7 к Дисциплинарному уставу Вооруженных Сил Российской Федерации является грубым дисциплинарным проступком"
 

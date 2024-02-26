@@ -27,7 +27,7 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 		runs = self.add_paragraph_left_right("«     » _________ 2024 г.", "населенный пункт г.Донецк")
 		runs[1].underline = True
 
-		commander1_full_str = self.get_commander_generic_full_str("commander_1_level", 0, "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ]")
+		commander1_full_str = self.get_commander_generic_full_str("commander_1_level", 0)
 		self.add_paragraph_with_underline(commander1_full_str)
 		self.add_paragraph("воинская должность, звание, ФИО лица составившего протокол", small_underline)
 

@@ -48,7 +48,7 @@ class InvestigationPrototype(DocumentInReport):
 		self.word_document.add_page_break()
 		self.conclusion_page()
 		self.word_document.add_page_break()
-		self.summary_page()
+		# self.summary_page()
 
 		super().render()
 
@@ -201,16 +201,18 @@ class InvestigationPrototype(DocumentInReport):
 		      "особенностей всех военнослужащих роты, постоянного проведения с ними индивидуальной работы по воинскому " \
 		      "воспитанию"
 
-		commander_company_text1 = self.get_commander_company_full_str(2)
-
+		commander_company_text1 = self.get_commander_company_full_str(2, False)
 		self.add_paragraph(f"{txt} {commander_company_text1};", paragraph_settings)
 
 		# TODO use dynamic part
 		commander_platoon = self.get_commander_platoon_full_str(2)
 		txt = "невыполнение требований статьи 152, 153 Устава Внутренней Службы Вооруженных Сил Российской Федерации в " \
 		      "части, касающейся воспитания, поддержания воинской дисциплины, морально–психологического состояния во " \
-		      f"взводе командиром {commander_platoon};"
+		      f"взводе {commander_platoon};"
+		self.add_paragraph(txt, paragraph_settings)
 
+		commander_squad = self.get_commander_generic_full_str("commander_squad", 2, False)
+		txt = f"невыполнение требований статей 156, 157 Устава Внутренней Службы Вооружённых Сил Российской Федерации, в части касающейся воспитания, поддержания воинской дисциплины, укрепления морально-политического и психологического состояния подчиненного личного состава взводе {commander_squad};"
 		self.add_paragraph(txt, paragraph_settings)
 
 		settings = PersFullNameSettings(1, False, False, True, False, True, False)
@@ -228,8 +230,8 @@ class InvestigationPrototype(DocumentInReport):
 		runner = p1.add_run("ПРЕДЛАГАЮ:")
 		runner.bold = True
 
-		txt1 = "За невыполнение требований  статей 144, 145 Устава внутренней службы Вооруженных Сил Российской Федерации, в части касающейся организации и проведения им работы по повседневному воспитанию, поддержанию воинской дисциплины, укреплению морально политического и психологического состояния подчиненного личного состава "
-		commander_company_text2 = self.get_commander_company_full_str(3)
+		txt1 = "За невыполнение требований  статей 144, 145 Устава внутренней службы Вооруженных Сил Российской Федерации, в части касающейся организации и проведения им работы по повседневному воспитанию, поддержанию воинской дисциплины, укреплению морально политического и психологического состояния подчиненного личного состава"
+		commander_company_text2 = self.get_commander_company_full_str(3, False)
 		txt2 = "провести дополнительные занятия в роте по ознакомлению со статьями УК РФ и наказаниями за их нарушение."
 		self.add_paragraph(f"1. {txt1} {commander_company_text2} {txt2}", paragraph_settings)
 
@@ -239,9 +241,10 @@ class InvestigationPrototype(DocumentInReport):
 		txt2 = ", строго указать на исполнение служебных и должностных обязанностей"
 		self.add_paragraph(f"2. {txt1} {commander_platoon_text}{txt2}", paragraph_settings)
 
+		commander_squad = self.get_commander_generic_full_str("commander_squad", 3, False)
 		txt1 = "За невыполнение требований статей 156, 157 Устава Внутренней Службы Вооружённых Сил Российской Федерации, в части касающейся воспитания, поддержания воинской дисциплины, укрепления морально-политического и психологического состояния подчиненного личного состава взвода"
 		txt2 = ", строго указать на низкую дисциплину в отделении."
-		self.add_paragraph(f"3. {txt1} {commander_company_text1}{txt2}", paragraph_settings)
+		self.add_paragraph(f"3. {txt1} {commander_squad}{txt2}", paragraph_settings)
 
 		for prg in self.conclusion_punishment_points:
 			self.add_paragraph(prg, paragraph_settings)
@@ -258,9 +261,12 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_empty_paragraphs(1)
 		self.officer_report_footer("commander_1_level")
 
-	def officer_report_footer(self, key):
+	def officer_report_footer(self, key, need_capitalize=False):
 		commander = self.get_commander_generic(key, "КОМАНДИРА", 0, True)
-		self.add_paragraph(commander["position"], self.align_center_settings)
+		pos = commander["position"]
+		if need_capitalize:
+			pos = commander["position"].capitalize()
+		self.add_paragraph(pos, self.align_center_settings)
 		self.add_paragraph(commander["rank"], self.align_center_settings)
 		self.add_paragraph_left_right(f"{self.get_date_of_event()} г.", commander["name"])
 

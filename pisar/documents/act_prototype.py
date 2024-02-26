@@ -15,15 +15,19 @@ class ActPrototype(DocumentInReport):
 		paragraph_settings = ParagraphSettings()
 		paragraph_settings.left_indent = Mm(115)
 		self.add_paragraph("«УТВЕРЖДАЮ»", paragraph_settings)
+
+		paragraph_settings = ParagraphSettings()
+		paragraph_settings.left_indent = Mm(95)
 		self.add_empty_paragraphs(1)
-		self.add_paragraph(f"Командир войсковой части {rep_settings['military_unit']}", self.align_right_settings)
+		self.add_paragraph(f"Командир 2 стрелкового батальона", paragraph_settings)
+		self.add_paragraph(f"войсковой части {rep_settings['military_unit']}",	paragraph_settings)
 
 		paragraph_settings = ParagraphSettings()
 		paragraph_settings.right_indent = Mm(31)
-		paragraph_settings.align_right = True
-		comm_3 = self.get_commander_generic("commander_3_level", "КОМАНДИРА", 0, True)
-		self.add_paragraph(comm_3["rank"], paragraph_settings)
-		self.add_paragraph(comm_3["name"], self.align_right_settings)
+		paragraph_settings.align_left = True
+		comm_2 = self.get_commander_generic("commander_2_level", "КОМАНДИРА", 0, True)
+		self.add_paragraph(comm_2["rank"], self.align_right_settings)
+		self.add_paragraph(comm_2["name"], self.align_right_settings)
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("«___»____________2024 г.", self.align_right_settings)
 		self.add_empty_paragraphs(3)
@@ -32,15 +36,14 @@ class ActPrototype(DocumentInReport):
 		self.add_empty_paragraphs(1)
 
 		self.add_paragraph(self.data_model[ACT_TEXT], self.ident_align_justify_settings)
-		self.add_empty_paragraphs(2)
-		self.add_paragraph("«___»____________2024 г.", self.align_left_settings)
+		self.add_empty_paragraphs(3)
+		# self.add_paragraph("«___»____________2024 г.", self.align_left_settings)
+		# self.add_empty_paragraphs(2)
+
+		self.print_commander("commander_company_deputy_1")
 		self.add_empty_paragraphs(2)
 
-		self.print_commander("commander_2_level")
-		self.add_empty_paragraphs(2)
-
-		comm_company = self.get_commander_company()
-		self.print_commander_routines(comm_company["name"], comm_company["rank"], comm_company["position"])
+		self.print_commander("commander_company")
 		self.add_empty_paragraphs(2)
 
 		self.print_commander("commander_1_level")
@@ -49,9 +52,9 @@ class ActPrototype(DocumentInReport):
 
 	def print_commander(self, key):
 		comm = self.get_commander_generic(key, "КОМАНДИРА", 0, True)
-		self.print_commander_routines(comm["name"],	comm["rank"], comm["position"])
+		self.add_paragraph(comm["position"].capitalize(), self.align_center_settings)
+		self.add_paragraph(comm["rank"], self.align_center_settings)
+		self.add_paragraph(comm["name"], self.align_right_settings)
 
-	def print_commander_routines(self, c_name, c_rank, c_position):
-		self.add_paragraph(c_position, self.align_center_settings)
-		self.add_paragraph(c_rank, self.align_center_settings)
-		self.add_paragraph(c_name, self.align_right_settings)
+
+

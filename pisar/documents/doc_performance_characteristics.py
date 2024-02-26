@@ -33,7 +33,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		paragraph_settings.left_indent = Mm(65)
 		paragraph_settings.align_justify = True
 		paragraph_settings.line_spacing = line_spacing
-		settings = PersFullNameSettings(1, False, False, True, True, False, True)
+		settings = PersFullNameSettings(1, False, False, True, True, False, False)
 		sold_str = self.get_person_full_str(settings)
 		nationality = get_word_gent(self.get_morph(), rep_settings["nationality"])
 		education = rep_settings["education"]
