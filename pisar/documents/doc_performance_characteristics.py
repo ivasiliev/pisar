@@ -94,11 +94,10 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		self.add_paragraph("Подпись командира батальона заверяю:", self.align_justify_settings)
 		self.add_empty_paragraphs_spacing(1, line_spacing)
 
-		comm3 = rep_settings["commander_3_level"]
-		comm3_pos = comm3["position"]
-		comm3_pos = comm3_pos + " " + rep_settings["military_unit"]
-		comm3["position"] = comm3_pos
-		self.add_commander(comm3, par_set_center, par_set_right)
+		# TODO check if correct
+		#comm3 = rep_settings["commander_3_level"]
+		#comm3_pos = comm3["position"] + " " + self.get_military_unit()
+		self.add_commander(rep_settings["commander_3_level"], par_set_center, par_set_right)
 
 		self.add_paragraph("«___» _________ 2024 г.", self.bold_justify_settings)
 
@@ -109,7 +108,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		c_rank = commander_info["rank"]
 		if self.get_report_settings()["is_guard"]:
 			c_rank = "гвардии " + c_rank
-		c_position = commander_info["position"]
+		c_position = f"{commander_info['position']} войсковой части {self.get_military_unit()}"
 		self.add_paragraph(c_position.upper(), self.bold_center_settings)
 		self.add_paragraph(c_rank, par_set_center)
 		self.add_paragraph(c_name, par_set_right)

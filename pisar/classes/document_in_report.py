@@ -433,10 +433,9 @@ class DocumentInReport(DocumentPrototype):
 
 	def get_commander_company_full_str(self, declension_type, need_capitalize=True):
 		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ РОТЫ]"
-		rep_settings = self.get_report_settings()
 		commander_info = self.get_commander_generic("commander_company", "КОМАНДИРА РОТЫ", declension_type, False)
 		if commander_info["found"]:
-			m_unit = rep_settings["military_unit"]
+			m_unit = self.get_military_unit()
 			pos = commander_info['position']
 			if need_capitalize:
 				pos = pos.capitalize()
@@ -450,12 +449,10 @@ class DocumentInReport(DocumentPrototype):
 	def get_commander_platoon_full_str(self, declension_type):
 		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ ВЗВОДА]"
 		commander_info = self.get_commander_generic("commander_platoon", "КОМАНДИРА ВЗВОДА", declension_type, False)
-		rep_settings = self.get_report_settings()
 		if commander_info["found"]:
-			m_unit = rep_settings["military_unit"]
 			# TODO need to use a property from commander_info
 			# platoon = get_words_declension(self.get_morph(), self.get_soldier_info().platoon, 1)
-			text = f"{commander_info['position']} войсковой части {m_unit} {commander_info['rank']} {commander_info['name']}"
+			text = f"{commander_info['position']} войсковой части {self.get_military_unit()} {commander_info['rank']} {commander_info['name']}"
 		return text
 
 	# TODO refactor this method
@@ -466,13 +463,11 @@ class DocumentInReport(DocumentPrototype):
 		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ]"
 
 		commander_info = self.get_commander_generic(settings_key, text, declension_type, False)
-		rep_settings = self.get_report_settings()
 		if commander_info["found"]:
-			m_unit = rep_settings["military_unit"]
 			pos = commander_info['position']
 			if needCapitalize:
 				pos = pos.capitalize()
-			text = f"{pos} войсковой части {m_unit} {commander_info['rank']} {commander_info['name']}"
+			text = f"{pos} войсковой части {self.get_military_unit()} {commander_info['rank']} {commander_info['name']}"
 		return text
 
 	def get_military_unit(self):

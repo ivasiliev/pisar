@@ -50,7 +50,7 @@ class DocQuestArrival(DocumentInReport):
 			, ["1.", "Фамилия Имя Отчество", s_info.full_name]
 			, ["2.", "Дата рождения", s_info.get_dob()]
 			, ["3.", "Место рождения", rep_settings["place_of_birth"]]
-			, ["4.", "Условное наименование воинской части (места службы)", rep_settings["military_unit"]]
+			, ["4.", "Условное наименование воинской части (места службы)", self.get_military_unit()]
 			, ["5.", "Воинское звание", rep_settings["rank"]]
 			, ["6.", "Воинская должность", rep_settings["position"]]
 			, ["7.", "Документы удостоверяющие личность (серия, номер, дата выдачи и кем выдан)", passport_info]
