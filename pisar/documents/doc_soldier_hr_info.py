@@ -17,7 +17,6 @@ class DocSoldierHrCard(DocumentInReport):
 		s_info = self.get_soldier_info()
 
 		self.add_paragraph("С П Р А В К А", self.bold_center_settings)
-		self.add_empty_paragraphs(1)
 		# TODO same code goes to helper
 		tokens = s_info.full_name.split(" ")
 		name = ""
@@ -30,7 +29,6 @@ class DocSoldierHrCard(DocumentInReport):
 					s = s.upper()
 				name = name + " " + s
 		self.add_paragraph(name.strip(), self.bold_center_settings)
-		self.add_empty_paragraphs(1)
 
 		settings = PersFullNameSettings(0, False, False, True, False, True, False, False, False)
 		sold_str = self.get_person_full_str(settings)

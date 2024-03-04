@@ -1,4 +1,5 @@
 from docx.shared import Mm
+from pandas.util import capitalize_first_letter
 
 from classes.document_in_report import DocumentInReport
 from classes.paragraph_settings import ParagraphSettings
@@ -18,7 +19,7 @@ class DocOfficialProceedingOrder(DocumentInReport):
 		date_of_event = self.get_date_format_1(rep_settings["date_of_event"])
 
 		self.add_paragraph("Для служебного пользования", self.align_right_settings)
-		self.add_paragraph("(п. 55; приказ МО РФ №22 от 17.01.2022)", self.align_right_settings)
+		self.add_paragraph("(п. 648 Перечня сведений ВС)", self.align_right_settings)
 
 		paragraph_settings = ParagraphSettings()
 		paragraph_settings.align_right = True
@@ -116,15 +117,15 @@ class DocOfficialProceedingOrder(DocumentInReport):
 		self.add_paragraph(txt, self.ident_align_justify_settings)
 
 		settings = PersFullNameSettings(3, False, False, True, False, True, False)
-		sold_str = self.get_person_full_str(settings).capitalize()
+		sold_str = capitalize_first_letter(self.get_person_full_str(settings))
 		txt = (f"4. {sold_str} за грубый дисциплинарный проступок, отсутствие на месте несения службы без уважительных "
 		       f"причин более 4 (четырех) часов подряд в течении установленного ежедневного служебного времени, "
 		       f"объявить СТРОГИЙ ВЫГОВОР.")
 		self.add_paragraph(txt, self.ident_align_justify_settings)
 
-		self.add_paragraph(f"4. Контроль за исполнением настоящего приказа возложить на начальника штаба - заместителя командира войсковой части {self.get_military_unit()}.", self.ident_align_justify_settings)
+		self.add_paragraph(f"5. Контроль за исполнением настоящего приказа возложить на начальника штаба - заместителя командира войсковой части {self.get_military_unit()}.", self.ident_align_justify_settings)
 
-		self.add_paragraph(f"5. Приказ довести до личного состава в части касающейся.", self.ident_align_justify_settings)
+		self.add_paragraph(f"6. Приказ довести до личного состава в части касающейся.", self.ident_align_justify_settings)
 
 		self.add_empty_paragraphs(3)
 

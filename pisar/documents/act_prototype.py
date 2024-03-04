@@ -20,13 +20,14 @@ class ActPrototype(DocumentInReport):
 		paragraph_settings.left_indent = Mm(95)
 		self.add_empty_paragraphs(1)
 		self.add_paragraph(f"Командир 2 стрелкового батальона", paragraph_settings)
-		self.add_paragraph(f"войсковой части {rep_settings['military_unit']}",	paragraph_settings)
+		self.add_paragraph(f"войсковой части {rep_settings['military_unit']}", paragraph_settings)
+
+		comm_2 = self.get_commander_generic("commander_2_level", "КОМАНДИРА", 0, True)
+		self.add_paragraph(comm_2["rank"], paragraph_settings)
 
 		paragraph_settings = ParagraphSettings()
 		paragraph_settings.right_indent = Mm(31)
 		paragraph_settings.align_left = True
-		comm_2 = self.get_commander_generic("commander_2_level", "КОМАНДИРА", 0, True)
-		self.add_paragraph(comm_2["rank"], self.align_right_settings)
 		self.add_paragraph(comm_2["name"], self.align_right_settings)
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("«___»____________2024 г.", self.align_right_settings)
@@ -36,7 +37,7 @@ class ActPrototype(DocumentInReport):
 		self.add_empty_paragraphs(1)
 
 		self.add_paragraph(self.data_model[ACT_TEXT], self.ident_align_justify_settings)
-		self.add_empty_paragraphs(3)
+		self.add_empty_paragraphs(2)
 		# self.add_paragraph("«___»____________2024 г.", self.align_left_settings)
 		# self.add_empty_paragraphs(2)
 
@@ -46,15 +47,20 @@ class ActPrototype(DocumentInReport):
 		self.print_commander("commander_company")
 		self.add_empty_paragraphs(2)
 
-		self.print_commander("commander_1_level")
+		self.print_commander("commander_1_level", "по военно")
 
 		super().render()
 
-	def print_commander(self, key):
+	def print_commander(self, key, breaker: str = ""):
 		comm = self.get_commander_generic(key, "КОМАНДИРА", 0, True)
-		self.add_paragraph(comm["position"].capitalize(), self.align_center_settings)
+		pos = comm["position"].capitalize()
+		if len(breaker) > 0 and breaker in pos:
+			ind = pos.index(breaker)
+			pos1 = pos[0:ind].strip()
+			pos2 = pos[ind:].strip()
+			self.add_paragraph(pos1, self.align_center_settings)
+			self.add_paragraph(pos2, self.align_center_settings)
+		else:
+			self.add_paragraph(pos, self.align_center_settings)
 		self.add_paragraph(comm["rank"], self.align_center_settings)
 		self.add_paragraph(comm["name"], self.align_right_settings)
-
-
-

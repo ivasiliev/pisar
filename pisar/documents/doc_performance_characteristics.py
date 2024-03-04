@@ -69,11 +69,6 @@ class DocPerformanceCharacteristics(DocumentInReport):
 
 		self.add_empty_paragraphs_spacing(1, line_spacing)
 
-		cc_info = self.get_commander_company()
-		c_name = cc_info["name"]
-		c_rank = cc_info["rank"]
-		c_position = cc_info["position"]
-
 		par_set_center = ParagraphSettings()
 		par_set_center.is_bold = True
 		par_set_center.align_center = True
@@ -84,15 +79,13 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		par_set_right.is_bold = True
 		par_set_right.line_spacing = line_spacing
 
-		self.add_paragraph(c_position.upper(), par_set_center)
-		self.add_paragraph(c_rank, par_set_center)
-		self.add_paragraph(c_name, par_set_right)
+		self.add_commander(self.get_commander_company(), par_set_center, par_set_right)
 		self.add_empty_paragraphs_spacing(1, line_spacing)
 
 		self.add_commander(rep_settings["commander_2_level"], par_set_center, par_set_right)
 
 		self.add_paragraph("Подпись командира батальона заверяю:", self.align_justify_settings)
-		self.add_empty_paragraphs_spacing(1, line_spacing)
+		# self.add_empty_paragraphs_spacing(1, line_spacing)
 
 		# TODO check if correct
 		#comm3 = rep_settings["commander_3_level"]
@@ -106,7 +99,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 	def add_commander(self, commander_info, par_set_center, par_set_right):
 		c_name = self.get_person_name_short_format_1(commander_info["name"])
 		c_rank = commander_info["rank"]
-		if self.get_report_settings()["is_guard"]:
+		if self.get_report_settings()["is_guard"] and not "гвардии" in c_rank:
 			c_rank = "гвардии " + c_rank
 		c_position = f"{commander_info['position']} войсковой части {self.get_military_unit()}"
 		self.add_paragraph(c_position.upper(), self.bold_center_settings)
