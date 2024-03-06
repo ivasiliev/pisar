@@ -127,8 +127,9 @@ group_quest_arrival.group_text = "Анкета прибывшего в зону 
 group_quest_arrival.batch_name = QUEST_ARRIVAL
 group_quest_arrival.docs_list = []
 
-
-batch_groups = [group_official_proceeding, group_desert_unit, group_mass_hr_info_unit, group_mass_perf_char_unit, group_utils_birthdays, group_utils_pers_det_check, group_utils_pers_det_sorting, group_diary, group_quest_arrival]
+batch_groups = [group_official_proceeding, group_desert_unit, group_mass_hr_info_unit, group_mass_perf_char_unit,
+                group_utils_birthdays, group_utils_pers_det_check, group_utils_pers_det_sorting, group_diary,
+                group_quest_arrival]
 
 layout = [
 	[sg.Button(key=update_button_key, button_text="Обновить программу"),

@@ -1,5 +1,7 @@
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.shared import Pt
 
+from classes.custom_margins import CustomMargins
 from classes.document_in_report import DocumentInReport
 from classes.paragraph_settings import ParagraphSettings
 
@@ -15,7 +17,7 @@ class ApprovalSheetPrototype(DocumentInReport):
 	def get_name_for_file(self):
 		return f"Лист согласования ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 
@@ -42,7 +44,14 @@ class ApprovalSheetPrototype(DocumentInReport):
 		self.add_paragraph(f"{rank} {name}»", self.align_center_settings)
 		self.add_empty_paragraphs(1)
 
-		self.add_approval_table()
+		# approval table
+		f_caption = ParagraphSettings()
+		f_caption.font_size = Pt(12)
+		table_settings = {"ps": f_caption, "cols_width": [150, 50]}
+		captions = ["Воинское звание, инициалы, фамилия, и занимаемая должность лица, с которым согласовывался приказ",
+		            "Подпись должностного лица и дата согласования"]
+		rows = self.add_empty_rows(4)
+		self.add_table(captions, rows, table_settings)
 		self.add_empty_paragraphs(1)
 
 		self.add_commander(rep_settings["commander_3_level"], self.get_military_unit(), par_set_center, par_set_right)
@@ -51,7 +60,12 @@ class ApprovalSheetPrototype(DocumentInReport):
 
 		self.add_paragraph("ЛИСТ ДОВЕДЕНИЯ", self.bold_center_settings)
 		self.add_paragraph(f"приказа командира войсковой части {self.get_military_unit()}", self.align_center_settings)
-		self.add_informed_table()
+
+		# informed table
+		captions = ["Воинское звание, инициалы, фамилия, и занимаемая должность лица, которым доводился приказ",
+		            "Подпись должностного лица и дата ознакомления с приказом"]
+		rows = self.add_empty_rows(8)
+		self.add_table(captions, rows, table_settings)
 		self.add_empty_paragraphs(1)
 
 		self.add_commander(rep_settings["commander_3_level"], self.get_military_unit(), par_set_center, par_set_right)
@@ -65,25 +79,13 @@ class ApprovalSheetPrototype(DocumentInReport):
 		self.add_paragraph(f"Исп. {cmd['rank']} {cmd['name']}", ps)
 		self.add_paragraph("   т. АТС ID 856-23", ps)
 
-		super().render()
+		super().render(CustomMargins(20, 20, 10, 30))
 
 	def add_empty_rows(self, how_many):
 		arr = []
 		for i in range(0, how_many):
 			arr.append(["", ""])
 		return arr
-
-	def add_approval_table(self):
-		captions = ["Воинское звание, инициалы, фамилия, и занимаемая должность лица, с которым согласовывался приказ",
-		            "Подпись должностного лица и дата согласования"]
-		rows = self.add_empty_rows(3)
-		self.add_table(captions, rows)
-
-	def add_informed_table(self):
-		captions = ["Воинское звание, инициалы, фамилия, и занимаемая должность лица, которым доводился приказ",
-		            "Подпись должностного лица и дата ознакомления с приказом"]
-		rows = self.add_empty_rows(8)
-		self.add_table(captions, rows)
 
 	def add_commander(self, commander_info, military_unit, par_set_center, par_set_right):
 		c_name = self.get_person_name_short_format_1(commander_info["name"])

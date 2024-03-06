@@ -9,7 +9,7 @@ ACT_TEXT = "act_text"
 
 # base class for Acts. Don't use it directly.
 class ActPrototype(DocumentInReport):
-	def render(self):
+	def render(self, custom_margins=None):
 		rep_settings = self.get_report_settings()
 
 		paragraph_settings = ParagraphSettings()

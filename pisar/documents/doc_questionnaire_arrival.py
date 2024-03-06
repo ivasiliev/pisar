@@ -13,7 +13,7 @@ class DocQuestArrival(DocumentInReport):
 	def get_name_for_file(self):
 		return f"{self.get_name()} ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		right_10 = ParagraphSettings()
 		right_10.font_size = Pt(10)
 		right_10.align_right = True

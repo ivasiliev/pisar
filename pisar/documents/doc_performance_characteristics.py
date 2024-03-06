@@ -16,7 +16,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 	def get_name_for_file(self):
 		return f"{self.get_name()} ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 		line_spacing = 0.96

@@ -46,4 +46,3 @@ class BatchPrototype(DocumentPrototype):
 	def clear_docs(self):
 		self.docs = []
 		self.singletons = []
-

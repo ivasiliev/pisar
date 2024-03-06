@@ -12,7 +12,7 @@ class DocSoldierHrCard(DocumentInReport):
 	def get_name_for_file(self):
 		return f"Справка ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		rep_settings = self.get_report_settings()
 		s_info = self.get_soldier_info()
 

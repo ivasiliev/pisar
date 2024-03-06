@@ -23,5 +23,3 @@ class UtilityPrototype(DocumentPrototype):
 		if dt is None:
 			dt = date.today()
 		return f"{dt.day}.{dt.month}.{dt.year}"
-
-

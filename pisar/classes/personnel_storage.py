@@ -46,6 +46,7 @@ COLUMN_MOTHER_PHONE = "COLUMN_MOTHER_PHONE"
 COLUMN_SIBLINGS_PHONE = "COLUMN_SIBLINGS_PHONE"
 COLUMN_SPOUSE_PHONE = "COLUMN_SPOUSE_PHONE"
 
+
 class PersonnelStorage:
 	def __init__(self, data_model):
 		# TODO to app_settings?
@@ -204,7 +205,7 @@ class PersonnelStorage:
 						, ["pass_rf_issued", COLUMN_PASS_RF_ISSUED]
 						, ["pass_foreign", COLUMN_PASS_FOREIGN]
 						, ["pass_ukr", COLUMN_PASS_UKR]
-						#relatives
+						# relatives
 						, ["father_name", COLUMN_FATHER_NAME]
 						, ["mother_name", COLUMN_MOTHER_NAME]
 						, ["siblings_name", COLUMN_SIBLINGS_NAME]

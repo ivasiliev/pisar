@@ -11,7 +11,7 @@ class DocAdministrativeInvestigation(InvestigationPrototype):
 	def get_name_for_file(self):
 		return f"Административное расследование_СОЧ ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		self.doc_title = "АДМИНИСТРАТИВНОЕ РАССЛЕДОВАНИЕ"
 		self.doc_about = "по факту самовольного оставления части"
 
@@ -30,7 +30,7 @@ class DocAdministrativeInvestigation(InvestigationPrototype):
 		self.conclusion_action_performed = "административное расследование по факту самовольного оставления части"
 		self.conclusion_p2_action = "самовольно покинул расположение части, не уведомив вышестоящее командование"
 
-		self.conclusion_punishment = "самовольно покинул расположение части, за что в соответствии со статьей «337» Уголовного кодекса Российской Федерации предусматривается уголовная ответственность"
+		self.conclusion_punishment = "самовольно покинул расположение части, за что в соответствии со статьей «337» Уголовного кодекса Российской Федерации предусматривается уголовная ответственность"
 
 		settings = PersFullNameSettings(2, False, False, True, False, True, False)
 		sold_str = self.get_person_full_str(settings)

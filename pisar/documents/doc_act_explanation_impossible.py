@@ -9,7 +9,7 @@ class DocActExplanationImpossible(ActPrototype):
 	def get_name_for_file(self):
 		return f"{self.get_name()} ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		self.data_model[ACT_TITLE] = "о невозможности взять объяснения по факту действий совершенных военнослужащим, " \
 		                             "в которых усматривается преступления против военной службы."
 		settings = PersFullNameSettings(2, False, False, True, True, False, False)

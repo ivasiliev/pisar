@@ -1,4 +1,6 @@
 import PySimpleGUI as sg
+
+
 class RunInfo:
 	def __init__(self):
 		self.group_number = -1

@@ -13,7 +13,7 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 	def get_name_for_file(self):
 		return f"Протокол ГДП ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		sold = self.get_soldier_info()
 
 		small_underline = ParagraphSettings()

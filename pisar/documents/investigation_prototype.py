@@ -35,7 +35,7 @@ class InvestigationPrototype(DocumentInReport):
 		# 1 and 2 are constants; add here points from 3 and further
 		self.conclusion_punishment_points = []
 
-	def render(self):
+	def render(self, custom_margins=None):
 		self.render_page_title()
 		self.word_document.add_page_break()
 		self.inventory_page()
@@ -116,7 +116,7 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_empty_paragraphs(1)
 
 		ps = "Настоящим докладываю, что в ходе проведения розыскных мероприятий розыскной группой из числа " \
-		     "военнослужащих 2 стрелкового батальона под моим руководством место нахождения"
+		     "военнослужащих 2 стрелкового батальона под моим руководством место нахождения"
 
 		settings = PersFullNameSettings(1, False, False, True, False, False, False)
 		sold_str = self.get_person_full_str(settings)
@@ -153,7 +153,7 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_paragraph("ЗАКЛЮЧЕНИЕ", self.bold_center_settings)
 		self.add_paragraph(f"по материалам {self.conclusion_materials}", self.bold_center_settings)
 		self.add_paragraph(f"по факту {self.conclusion_fact}", self.bold_center_settings)
-		self.add_paragraph(f"военнослужащим 2 стрелкового батальона войсковой части {self.get_military_unit()}",
+		self.add_paragraph(f"военнослужащим 2 стрелкового батальона войсковой части {self.get_military_unit()}",
 		                   self.bold_center_settings)
 
 		self.add_paragraph(f"{self.get_person_rank(s_info.rank, 2)} {self.get_person_name_instr(s_info.full_name)}",
@@ -177,13 +177,13 @@ class InvestigationPrototype(DocumentInReport):
 		sold_str = self.get_person_full_str(settings)
 		self.add_paragraph(f"{txt} {sold_str}.", paragraph_settings)
 
-		txt = f"В ходе проведения {self.conclusion_materials} было установлено, что {self.get_date_format_1(self.get_date_of_event())}"
+		txt = f"В ходе проведения {self.conclusion_materials} было установлено, что {self.get_date_format_1(self.get_date_of_event())}"
 		settings = PersFullNameSettings(0, False, False, True, False, False, False)
 		sold_str = self.get_person_full_str(settings)
 		txt = f"{txt} {sold_str} {self.conclusion_p2_action}."
 		self.add_paragraph(txt, paragraph_settings)
 
-		txt = "Проведенные розыскные мероприятия, опрос сослуживцев, поиск в лечебных учреждениях, " \
+		txt = "Проведенные розыскные мероприятия, опрос сослуживцев, поиск в лечебных учреждениях, " \
 		      "военных комендатурах, а также отделениях полиции"
 		txt = f"{txt} {self.get_person_rank(s_info.rank, 1)} {self.get_person_name_gent(s_info.full_name)} результата не дали, установить причины " \
 		      f"отсутствия военнослужащего, а также его местонахождение не удалось."
@@ -197,7 +197,7 @@ class InvestigationPrototype(DocumentInReport):
 
 		txt = "невыполнение требований статьи 144, 145 Устава Внутренней Службы Вооруженных Сил Российской Федерации в " \
 		      "части, касающейся воспитания, поддержания воинской дисциплины, морально–психологического состояния " \
-		      "личного состава в роте, а также в части касающееся знаний деловых и морально–психологических качеств и " \
+		      "личного состава в роте, а также в части касающееся знаний деловых и морально–психологических качеств и " \
 		      "особенностей всех военнослужащих роты, постоянного проведения с ними индивидуальной работы по воинскому " \
 		      "воспитанию"
 
@@ -207,18 +207,18 @@ class InvestigationPrototype(DocumentInReport):
 		# TODO use dynamic part
 		commander_platoon = self.get_commander_platoon_full_str(2)
 		txt = "невыполнение требований статьи 152, 153 Устава Внутренней Службы Вооруженных Сил Российской Федерации в " \
-		      "части, касающейся воспитания, поддержания воинской дисциплины, морально–психологического состояния во " \
+		      "части, касающейся воспитания, поддержания воинской дисциплины, морально–психологического состояния во " \
 		      f"взводе {commander_platoon};"
 		self.add_paragraph(txt, paragraph_settings)
 
 		commander_squad = self.get_commander_generic_full_str("commander_squad", 2, False)
-		txt = f"невыполнение требований статей 156, 157 Устава Внутренней Службы Вооружённых Сил Российской Федерации, в части касающейся воспитания, поддержания воинской дисциплины, укрепления морально-политического и психологического состояния подчиненного личного состава взводе {commander_squad};"
+		txt = f"невыполнение требований статей 156, 157 Устава Внутренней Службы Вооружённых Сил Российской Федерации, в части касающейся воспитания, поддержания воинской дисциплины, укрепления морально-политического и психологического состояния подчиненного личного состава взводе {commander_squad};"
 		self.add_paragraph(txt, paragraph_settings)
 
 		settings = PersFullNameSettings(1, False, False, True, False, True, False)
 		sold_str = self.get_person_full_str(settings)
 		self.add_paragraph("невыполнение требований статьи 160, 161 Устава Внутренней Службы Вооруженных Сил "
-		                   "Российской Федерации в части, касающейся точного и своевременного исполнения возложенных "
+		                   "Российской Федерации в части, касающейся точного и своевременного исполнения возложенных "
 		                   f"на него обязанностей, поставленных задач и личная недисциплинированность {sold_str}.",
 		                   paragraph_settings)
 
@@ -230,19 +230,19 @@ class InvestigationPrototype(DocumentInReport):
 		runner = p1.add_run("ПРЕДЛАГАЮ:")
 		runner.bold = True
 
-		txt1 = "За невыполнение требований  статей 144, 145 Устава внутренней службы Вооруженных Сил Российской Федерации, в части касающейся организации и проведения им работы по повседневному воспитанию, поддержанию воинской дисциплины, укреплению морально политического и психологического состояния подчиненного личного состава"
+		txt1 = "За невыполнение требований  статей 144, 145 Устава внутренней службы Вооруженных Сил Российской Федерации, в части касающейся организации и проведения им работы по повседневному воспитанию, поддержанию воинской дисциплины, укреплению морально-политического и психологического состояния подчиненного личного состава"
 		commander_company_text2 = self.get_commander_company_full_str(3, False)
 		txt2 = "провести дополнительные занятия в роте по ознакомлению со статьями УК РФ и наказаниями за их нарушение."
 		self.add_paragraph(f"1. {txt1} {commander_company_text2} {txt2}", paragraph_settings)
 
 		# TODO dynamic
-		txt1 = "За невыполнение требований статей 152, 153 Устава внутренней службы Вооруженных Сил Российской Федерации, в части касающейся воспитания, поддержания воинской дисциплины, укрепления морально-политического и психологического состояния солдат подчиненного взвода,"
+		txt1 = "За невыполнение требований статей 152, 153 Устава внутренней службы Вооруженных Сил Российской Федерации, в части касающейся воспитания, поддержания воинской дисциплины, укрепления морально-политического и психологического состояния солдат подчиненного взвода,"
 		commander_platoon_text = self.get_commander_platoon_full_str(3)
 		txt2 = ", строго указать на исполнение служебных и должностных обязанностей"
 		self.add_paragraph(f"2. {txt1} {commander_platoon_text}{txt2}", paragraph_settings)
 
 		commander_squad = self.get_commander_generic_full_str("commander_squad", 3, False)
-		txt1 = "За невыполнение требований статей 156, 157 Устава Внутренней Службы Вооружённых Сил Российской Федерации, в части касающейся воспитания, поддержания воинской дисциплины, укрепления морально-политического и психологического состояния подчиненного личного состава взвода"
+		txt1 = "За невыполнение требований статей 156, 157 Устава Внутренней Службы Вооружённых Сил Российской Федерации, в части касающейся воспитания, поддержания воинской дисциплины, укрепления морально-политического и психологического состояния подчиненного личного состава взвода"
 		txt2 = ", строго указать на низкую дисциплину в отделении."
 		self.add_paragraph(f"3. {txt1} {commander_squad}{txt2}", paragraph_settings)
 

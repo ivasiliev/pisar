@@ -8,7 +8,7 @@ class ApprovalSheetOfficialProceeding(ApprovalSheetPrototype):
 	def get_name_for_file(self):
 		return f"Лист согласования_ГДП ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		self.title = "По факту грубого дисциплинарного проступка"
 
 		super().render()

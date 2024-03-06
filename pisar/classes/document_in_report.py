@@ -12,7 +12,8 @@ from pytrovich.enums import NamePart, Gender, Case
 
 from classes.paragraph_settings import ParagraphSettings
 from document_prototype import DocumentPrototype
-from helpers.text_helper import get_word_declension, get_words_declension, get_month_string
+from helpers.text_helper import get_word_declension, get_words_declension, get_month_string, replace_with_glue, \
+	glue_number_string
 
 MODEL_PERSONNEL_PATH = "personnel_path"
 MODEL_PERSONNEL_DETAILS_PATH = "personnel_details_path"
@@ -82,11 +83,11 @@ class DocumentInReport(DocumentPrototype):
 
 	# self.personnel_info = None
 	# if self.data_model is not None and self.data_model[MODEL_PERSONNEL_PATH] is not None:
-	#	self.personnel_info = PersonnelStorage(self.data_model[MODEL_PERSONNEL_PATH])
+	# self.personnel_info = PersonnelStorage(self.data_model[MODEL_PERSONNEL_PATH])
 
 	# creates MS Word document
-	def render(self):
-		self.apply_default_settings()
+	def render(self, custom_margins=None):
+		self.apply_default_settings(custom_margins)
 		if self.data_model is not None and self.data_model[MODEL_OUTPUT_FOLDER]:
 			full_path_folder = self.data_model[MODEL_OUTPUT_FOLDER]
 			# store files in a sub folder with the soldier name
@@ -173,13 +174,23 @@ class DocumentInReport(DocumentPrototype):
 			self.add_paragraph(" ", paragraph_settings)
 			num_row = num_row + 1
 
-	def apply_default_settings(self):
+	def apply_default_settings(self, custom_margins=None):
 		sections = self.word_document.sections
+		top_margin = 20
+		bottom_margin = 20
+		left_margin = 30
+		right_margin = 10
+		if custom_margins is not None:
+			top_margin = custom_margins.top_margin
+			bottom_margin = custom_margins.bottom_margin
+			left_margin = custom_margins.left_margin
+			right_margin = custom_margins.right_margin
+
 		for section in sections:
-			section.top_margin = Mm(20)
-			section.bottom_margin = Mm(20)  # 15 mm in original document
-			section.left_margin = Mm(30)
-			section.right_margin = Mm(10)
+			section.top_margin = Mm(top_margin)
+			section.bottom_margin = Mm(bottom_margin)  # 15 mm in original document
+			section.left_margin = Mm(left_margin)
+			section.right_margin = Mm(right_margin)
 			# settings for page as A4
 			section.page_height = Mm(297)
 			section.page_width = Mm(210)
@@ -379,7 +390,7 @@ class DocumentInReport(DocumentPrototype):
 		d = int(tokens[0])
 		m = int(tokens[1])
 		y = int(tokens[2])
-		return f"{d} {get_month_string(m)} {y} года"
+		return replace_with_glue(f"{d} {get_month_string(m)} {y} года")
 
 	# declension_type. 0 (without), 1 (gent), 2 (ablt), 3 (datv)
 	def get_person_full_str(self, settings):
@@ -398,7 +409,7 @@ class DocumentInReport(DocumentPrototype):
 		# TODO battalion must be a variable
 		address = ""
 		if settings.address_required:
-			address = "2 стрелкового батальона"
+			address = replace_with_glue("2 стрелкового батальона")
 			if settings.military_unit_required:
 				address = f"{address} войсковой части {self.get_military_unit()}"
 			if not settings.battalion_only:
@@ -418,7 +429,7 @@ class DocumentInReport(DocumentPrototype):
 			result = result + f" {full_name}"
 
 		if len(dob_str) > 0:
-			result = result + " " + dob_str
+			result = result + ", " + dob_str
 		return result.strip()
 
 	def get_person_rank(self, rnk, declension_type):
@@ -459,13 +470,13 @@ class DocumentInReport(DocumentPrototype):
 	def get_commander_generic_full_str(self,
 	                                   settings_key,
 	                                   declension_type,
-	                                   needCapitalize=True):
+	                                   need_сapitalize=True):
 		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ]"
 
 		commander_info = self.get_commander_generic(settings_key, text, declension_type, False)
 		if commander_info["found"]:
 			pos = commander_info['position']
-			if needCapitalize:
+			if need_сapitalize:
 				pos = pos.capitalize()
 			text = f"{pos} войсковой части {self.get_military_unit()} {commander_info['rank']} {commander_info['name']}"
 		return text
@@ -503,7 +514,7 @@ class DocumentInReport(DocumentPrototype):
 				c_rank = "гвардии " + c_rank_declension
 			else:
 				c_rank = c_rank_declension
-			c_position = commander["position"].lower()
+			c_position = glue_number_string(commander["position"].lower())
 			if "заместитель" in c_position:
 				c_position = self.word_replacement("заместитель", c_position, declension_type)
 			else:
@@ -515,7 +526,8 @@ class DocumentInReport(DocumentPrototype):
 
 	# TODO private
 	def word_replacement(self, word_to_replace, whole_string, declension_type):
-		return whole_string.replace(word_to_replace, get_word_declension(self.get_morph(), word_to_replace, declension_type))
+		return whole_string.replace(word_to_replace,
+		                            get_word_declension(self.get_morph(), word_to_replace, declension_type))
 
 	def get_current_year(self):
 		return datetime.date.today().year
@@ -536,7 +548,7 @@ class DocumentInReport(DocumentPrototype):
 
 	def get_soldier_address(self, declension_type):
 		s_info = self.get_soldier_info()
-		sq = get_words_declension(self.get_morph(), s_info.squad, declension_type).strip()
-		pl = get_words_declension(self.get_morph(), s_info.platoon, declension_type).strip()
-		cm = get_words_declension(self.get_morph(), s_info.company, declension_type).strip()
+		sq = replace_with_glue(get_words_declension(self.get_morph(), s_info.squad, declension_type).strip())
+		pl = replace_with_glue(get_words_declension(self.get_morph(), s_info.platoon, declension_type).strip())
+		cm = replace_with_glue(get_words_declension(self.get_morph(), s_info.company, declension_type).strip())
 		return f"{sq} {pl} {cm}"

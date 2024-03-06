@@ -75,14 +75,18 @@ def get_word_declension(morph, wrd, declension_type):
 
 	return result
 
+
 def parse_date_str(date_str):
 	tokens = date_str.split(".")
-	# TODO
+
+
+# TODO
 
 def get_month_string(month_num):
 	months = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября",
 	          "ноября", "декабря"]
 	return months[month_num - 1]
+
 
 # for a phrase contains several words
 def get_words_declension(morph, txt, declension_type):
@@ -92,10 +96,12 @@ def get_words_declension(morph, txt, declension_type):
 		result = result + get_word_declension(morph, t, declension_type) + " "
 	return result.rstrip()
 
+
 def get_date_str(dt):
 	if dt is None:
 		return ""
 	return f"{dt.day}.{dt.month}.{dt.year}"
+
 
 def get_date_str_format2(dt):
 	if dt is None:
@@ -105,5 +111,25 @@ def get_date_str_format2(dt):
 		yr = yr[2:]
 	return f"{dt.day}/{yr}"
 
+
 def not_empty(s):
 	return s is not None and len(s) > 0
+
+
+def replace_with_glue(s):
+	return s.replace(" ", " ", 1)
+
+
+def glue_number_string(s):
+	tokens = s.split(" ")
+	if len(tokens) == 1:
+		return s
+	index = 1
+	result = tokens[index - 1]
+	while index < len(tokens):
+		divider = " "
+		if str(tokens[index - 1]).isnumeric() and not str(tokens[index]).isnumeric():
+			divider = " "
+		result = result + divider + tokens[index]
+		index = index + 1
+	return result
