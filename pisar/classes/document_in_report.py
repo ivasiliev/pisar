@@ -275,7 +275,7 @@ class DocumentInReport(DocumentPrototype):
 				col_ind = col_ind + 1
 			num_row = num_row + 1
 
-	def add_paragraph_left_right(self, left_text: string, right_text: string, font_size=None, table_alignment=None):
+	def add_paragraph_left_right(self, left_text: string, right_text: string, font_size=None, table_alignment=None, is_bold=False):
 		table = self.word_document.add_table(rows=1, cols=2)
 		if table_alignment is None:
 			table_alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -290,6 +290,9 @@ class DocumentInReport(DocumentPrototype):
 		if font_size is not None:
 			r_left.font.size = font_size
 			r_right.font.size = font_size
+		if is_bold:
+			r_left.bold = True
+			r_right.bold = True
 
 		return r_left, r_right
 

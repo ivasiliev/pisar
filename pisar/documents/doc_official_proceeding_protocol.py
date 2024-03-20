@@ -23,8 +23,7 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 
 		self.add_paragraph("ПРОТОКОЛ", self.bold_center_settings)
 		self.add_paragraph("О ГРУБОМ ДИСЦИПЛИНАРНОМ ПРОСТУПКЕ", self.bold_center_settings)
-		self.add_empty_paragraphs(1)
-		runs = self.add_paragraph_left_right("«     » _________ 2024 г.", "населенный пункт г.Донецк")
+		runs = self.add_paragraph_left_right("«     » _________ 2024 г.", "населенный пункт г. Донецк", is_bold=True)
 		runs[1].underline = True
 
 		commander1_full_str = self.get_commander_generic_full_str("commander_1_level", 0)
