@@ -13,7 +13,7 @@ class DocDiaryViolationDiscipline(DocumentInReport):
 	def get_name_for_file(self):
 		return f"{self.get_name()}.docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		f_12_left = ParagraphSettings()
 		f_12_left.align_left = True
 		f_12_left.font_size = Pt(12)

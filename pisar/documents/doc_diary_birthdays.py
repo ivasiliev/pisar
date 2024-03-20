@@ -14,7 +14,7 @@ class DocDiaryBirthdays(DocumentInReport):
 	def get_name_for_file(self):
 		return f"{self.get_name()}.docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		f_12_left = ParagraphSettings()
 		f_12_left.align_left = True
 		f_12_left.font_size = Pt(12)
@@ -25,7 +25,8 @@ class DocDiaryBirthdays(DocumentInReport):
 		pers_storage = self.get_pers_storage()
 		all_persons = pers_storage.get_all_persons(EXCEL_DOCUMENT_SR)
 
-		captions = ["Фамилия и инициалы военнослужащего", "январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"]
+		captions = ["Фамилия и инициалы военнослужащего", "январь", "февраль", "март", "апрель", "май", "июнь", "июль",
+		            "август", "сентябрь", "октябрь", "ноябрь", "декабрь"]
 		table_settings = {"cols_width": [100], "ps": f_caption, "alignment": WD_PARAGRAPH_ALIGNMENT.LEFT,
 		                  "font_size": Pt(8)}
 		for r in range(1, 13):
@@ -43,7 +44,8 @@ class DocDiaryBirthdays(DocumentInReport):
 					pers_row.append("")
 			row_data.append(pers_row)
 
-		self.add_paragraph("6. Дополнительные сведения, необходимые для индивидуальной работы с военнослужащими", self.bold_center_settings)
+		self.add_paragraph("6. Дополнительные сведения, необходимые для индивидуальной работы с военнослужащими",
+		                   self.bold_center_settings)
 		self.add_paragraph("1) Дни рождения военнослужащих", f_12_left)
 		self.add_table(captions, row_data, table_settings)
 		self.word_document.add_page_break()

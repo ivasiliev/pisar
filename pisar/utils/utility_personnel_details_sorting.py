@@ -5,6 +5,7 @@ from openpyxl.workbook import Workbook
 from classes.personnel_storage import EXCEL_DOCUMENT_SR, EXCEL_DOCUMENT_LS
 from utils.utility_prototype import UtilityPrototype
 
+
 class UtilityPersonnelDetailsSorting(UtilityPrototype):
 	def __init__(self, data_model):
 		super().__init__(data_model)
@@ -25,7 +26,8 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 		ls_hash = self.prepare_hash_list(persons_ls)
 		# reading LS document
 		all_ls_rows = pers_storage.read_excel_file(EXCEL_DOCUMENT_LS)
-		print(f"Количество в ШР: {len(persons_sr)}; Количество в ЛС: {len(persons_ls)}; Всего строк в ЛС: {len(all_ls_rows)};")
+		print(
+			f"Количество в ШР: {len(persons_sr)}; Количество в ЛС: {len(persons_ls)}; Всего строк в ЛС: {len(all_ls_rows)};")
 		new_ls_rows = []
 		# header of LS document
 		row_header = pers_storage.read_excel_header(EXCEL_DOCUMENT_LS)
@@ -47,7 +49,8 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 		# put all rows from LS that weren't touched by sorting in the end of the document
 		if len(used_ls_indexes) < len(all_ls_rows):
 			added_persons = 0
-			print(f"Добавляем остальных людей из ЛС, которых не было в ШР ({len(used_ls_indexes)} < {len(all_ls_rows)})")
+			print(
+				f"Добавляем остальных людей из ЛС, которых не было в ШР ({len(used_ls_indexes)} < {len(all_ls_rows)})")
 			index = -1
 			for r in all_ls_rows:
 				index = index + 1

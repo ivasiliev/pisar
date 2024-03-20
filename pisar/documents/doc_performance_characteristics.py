@@ -16,13 +16,13 @@ class DocPerformanceCharacteristics(DocumentInReport):
 	def get_name_for_file(self):
 		return f"{self.get_name()} ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 		line_spacing = 0.96
 
 		paragraph_settings = ParagraphSettings()
-		paragraph_settings.font_size = Pt(16)
+		paragraph_settings.font_size = Pt(14)
 		paragraph_settings.is_bold = True
 		paragraph_settings.align_center = True
 
@@ -33,12 +33,12 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		paragraph_settings.left_indent = Mm(65)
 		paragraph_settings.align_justify = True
 		paragraph_settings.line_spacing = line_spacing
-		settings = PersFullNameSettings(1, False, False, True, True, False, True)
+		settings = PersFullNameSettings(1, False, False, True, True, False, False)
 		sold_str = self.get_person_full_str(settings)
 		nationality = get_word_gent(self.get_morph(), rep_settings["nationality"])
 		education = rep_settings["education"]
 		yss = self.get_service_started_str_year()
-		txt = f"на {sold_str}, {nationality}, образование {education}, в ВС ДНР с {yss} года."
+		txt = f"на {sold_str}, {nationality}, образование {education}, в ВС РФ с {yss} года."
 		self.add_paragraph(txt, paragraph_settings)
 
 		self.add_empty_paragraphs_spacing(1, line_spacing)  # 2
@@ -69,11 +69,6 @@ class DocPerformanceCharacteristics(DocumentInReport):
 
 		self.add_empty_paragraphs_spacing(1, line_spacing)
 
-		cc_info = self.get_commander_company()
-		c_name = cc_info["name"]
-		c_rank = cc_info["rank"]
-		c_position = cc_info["position"]
-
 		par_set_center = ParagraphSettings()
 		par_set_center.is_bold = True
 		par_set_center.align_center = True
@@ -84,32 +79,29 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		par_set_right.is_bold = True
 		par_set_right.line_spacing = line_spacing
 
-		self.add_paragraph(c_position.upper(), par_set_center)
-		self.add_paragraph(c_rank, par_set_center)
-		self.add_paragraph(c_name, par_set_right)
+		self.add_commander(self.get_commander_company(), par_set_center, par_set_right)
 		self.add_empty_paragraphs_spacing(1, line_spacing)
 
 		self.add_commander(rep_settings["commander_2_level"], par_set_center, par_set_right)
 
-		self.add_paragraph("С характеристикой ознакомлен, согласен:", self.align_justify_settings)
-		self.add_empty_paragraphs_spacing(1, line_spacing)
+		self.add_paragraph("Подпись командира батальона заверяю:", self.align_justify_settings)
+		# self.add_empty_paragraphs_spacing(1, line_spacing)
 
-		comm3 = rep_settings["commander_3_level"]
-		comm3_pos = comm3["position"]
-		comm3_pos = comm3_pos + " " + rep_settings["military_unit"]
-		comm3["position"] = comm3_pos
-		self.add_commander(comm3, par_set_center, par_set_right)
+		# TODO check if correct
+		#comm3 = rep_settings["commander_3_level"]
+		#comm3_pos = comm3["position"] + " " + self.get_military_unit()
+		self.add_commander(rep_settings["commander_3_level"], par_set_center, par_set_right)
 
-		self.add_paragraph("«___» _________ 2023 г.", self.bold_justify_settings)
+		self.add_paragraph("«___» _________ 2024 г.", self.bold_justify_settings)
 
 		super().render()
 
 	def add_commander(self, commander_info, par_set_center, par_set_right):
 		c_name = self.get_person_name_short_format_1(commander_info["name"])
 		c_rank = commander_info["rank"]
-		if self.get_report_settings()["is_guard"]:
+		if self.get_report_settings()["is_guard"] and not "гвардии" in c_rank:
 			c_rank = "гвардии " + c_rank
-		c_position = commander_info["position"]
+		c_position = f"{commander_info['position']} войсковой части {self.get_military_unit()}"
 		self.add_paragraph(c_position.upper(), self.bold_center_settings)
 		self.add_paragraph(c_rank, par_set_center)
 		self.add_paragraph(c_name, par_set_right)

@@ -13,7 +13,7 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 	def get_name_for_file(self):
 		return f"Протокол ГДП ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		sold = self.get_soldier_info()
 
 		small_underline = ParagraphSettings()
@@ -23,11 +23,10 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 
 		self.add_paragraph("ПРОТОКОЛ", self.bold_center_settings)
 		self.add_paragraph("О ГРУБОМ ДИСЦИПЛИНАРНОМ ПРОСТУПКЕ", self.bold_center_settings)
-		self.add_empty_paragraphs(1)
-		runs = self.add_paragraph_left_right("«     » _________ 2023 г.", "населенный пункт г.Донецк")
+		runs = self.add_paragraph_left_right("«     » _________ 2024 г.", "населенный пункт г. Донецк", is_bold=True)
 		runs[1].underline = True
 
-		commander1_full_str = self.get_commander_generic_full_str("commander_1_level", 0, "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ]")
+		commander1_full_str = self.get_commander_generic_full_str("commander_1_level", 0)
 		self.add_paragraph_with_underline(commander1_full_str)
 		self.add_paragraph("воинская должность, звание, ФИО лица составившего протокол", small_underline)
 
@@ -78,7 +77,7 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 		self.add_paragraph_with_underline(f"{date_event} {soldier_full_str}")
 		self.add_paragraph("воинская должность, звание", small_underline)
 
-		self.add_paragraph_with_underline("отсутствовал в месте военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени")
+		self.add_paragraph_with_underline("отсутствовал в месте военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени")
 		self.add_paragraph("дата, время, место и другие обстоятельства совершения грубого дисциплинарного проступка", small_underline)
 
 		self.add_paragraph("Доказательства, подтверждающие наличия события грубого дисциплинарного проступка и виновности военнослужащего:", self.align_justify_settings)
@@ -116,7 +115,7 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 		settings = PersFullNameSettings(1, False, True, True, False, True, False)
 		soldier_full_str = self.get_person_full_str(settings)
 		self.add_paragraph(f"Решение командира войсковой части {self.get_military_unit()}:", self.align_justify_settings)
-		resolution_text = f"За грубый дисциплинарный проступок отсутствие в месте военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени, {soldier_full_str}, ПРЕДУПРЕДИТЬ О НЕПОЛНОМ СЛУЖЕБНОМ СООТВЕТСТВИИ."
+		resolution_text = f"За грубый дисциплинарный проступок отсутствие в месте военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени, {soldier_full_str}, ПРЕДУПРЕДИТЬ О НЕПОЛНОМ СЛУЖЕБНОМ СООТВЕТСТВИИ."
 
 		paragraph_settings = ParagraphSettings()
 		paragraph_settings.align_justify = True
@@ -142,7 +141,7 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 
 	def render_date_placeholder(self):
 		self.add_empty_paragraphs(1)
-		self.add_paragraph("«     » _________ 2023 г.", self.align_justify_settings)
+		self.add_paragraph("«     » _________ 2024 г.", self.align_justify_settings)
 		self.add_empty_paragraphs(1)
 
 	def add_paragraph_with_underline(self, text):

@@ -8,7 +8,7 @@ class DocLetterParents(DocumentInReport):
 	def get_name_for_file(self):
 		return f"Письмо_родственникам_СОЧ ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		s_info = self.get_soldier_info()
 		rep_settings = self.get_report_settings()
 

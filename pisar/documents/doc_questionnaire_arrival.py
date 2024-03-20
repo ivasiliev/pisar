@@ -13,7 +13,7 @@ class DocQuestArrival(DocumentInReport):
 	def get_name_for_file(self):
 		return f"{self.get_name()} ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		right_10 = ParagraphSettings()
 		right_10.font_size = Pt(10)
 		right_10.align_right = True
@@ -50,7 +50,7 @@ class DocQuestArrival(DocumentInReport):
 			, ["1.", "Фамилия Имя Отчество", s_info.full_name]
 			, ["2.", "Дата рождения", s_info.get_dob()]
 			, ["3.", "Место рождения", rep_settings["place_of_birth"]]
-			, ["4.", "Условное наименование воинской части (места службы)", rep_settings["military_unit"]]
+			, ["4.", "Условное наименование воинской части (места службы)", self.get_military_unit()]
 			, ["5.", "Воинское звание", rep_settings["rank"]]
 			, ["6.", "Воинская должность", rep_settings["position"]]
 			, ["7.", "Документы удостоверяющие личность (серия, номер, дата выдачи и кем выдан)", passport_info]
@@ -78,7 +78,7 @@ class DocQuestArrival(DocumentInReport):
 		self.add_paragraph("Анкету оформил: __________________________________________________________________", left_10)
 		self.add_paragraph("__________________________________________________________________________________", left_10)
 		self.add_paragraph("(должность, в/звание, подпись, ФИО должностного лица)", center_8)
-		self.add_paragraph("«___»____________2023 г.", left_10)
+		self.add_paragraph("«___»____________2024 г.", left_10)
 
 		self.word_document.add_page_break()
 

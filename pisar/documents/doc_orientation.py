@@ -11,7 +11,7 @@ class DocOrientation(DocumentInReport):
 	def get_name_for_file(self):
 		return f"Ориентировка_СОЧ ({self.get_soldier_info().full_name}).docx"
 
-	def render(self):
+	def render(self, custom_margins=None):
 		ps_title = ParagraphSettings()
 		ps_title.font_size = Pt(36)
 		ps_title.align_center = True
