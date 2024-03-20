@@ -1,5 +1,5 @@
 from docx.shared import Mm
-from pandas.util import capitalize_first_letter
+from helpers.text_helper import capitalize_first_letter
 
 from classes.document_in_report import DocumentInReport
 from classes.paragraph_settings import ParagraphSettings
