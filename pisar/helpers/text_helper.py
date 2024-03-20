@@ -133,3 +133,8 @@ def glue_number_string(s):
 		result = result + divider + tokens[index]
 		index = index + 1
 	return result
+
+def capitalize_first_letter(s):
+    if len(s) == 0:
+        return s
+    return s[0].upper() + s[1:]
