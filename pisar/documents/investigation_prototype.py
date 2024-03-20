@@ -149,7 +149,7 @@ class InvestigationPrototype(DocumentInReport):
 		s_info = self.get_soldier_info()
 
 		self.add_paragraph(f"Командиру войсковой части {self.get_military_unit()}", self.align_right_settings)
-		self.add_empty_paragraphs(3)
+		self.add_empty_paragraphs(2)
 		self.add_paragraph("ЗАКЛЮЧЕНИЕ", self.bold_center_settings)
 		self.add_paragraph(f"по материалам {self.conclusion_materials}", self.bold_center_settings)
 		self.add_paragraph(f"по факту {self.conclusion_fact}", self.bold_center_settings)
@@ -165,7 +165,7 @@ class InvestigationPrototype(DocumentInReport):
 		paragraph_settings = ParagraphSettings()
 		paragraph_settings.first_line_indent = Mm(12.5)
 		paragraph_settings.align_justify = True
-		paragraph_settings.line_spacing = 0.85
+		paragraph_settings.line_spacing = 0.88
 
 		# TODO ВРИО -> временно исполняющим обязанности. long_position?
 		txt = f"Мной, командиром 2 стрелкового батальона войсковой части {self.get_military_unit()} "
@@ -249,7 +249,7 @@ class InvestigationPrototype(DocumentInReport):
 		for prg in self.conclusion_punishment_points:
 			self.add_paragraph(prg, paragraph_settings)
 
-		self.add_empty_paragraphs(2)
+		self.add_empty_paragraphs(1)
 
 		self.officer_report_footer("commander_2_level")
 

@@ -38,7 +38,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		nationality = get_word_gent(self.get_morph(), rep_settings["nationality"])
 		education = rep_settings["education"]
 		yss = self.get_service_started_str_year()
-		txt = f"На {sold_str}, {nationality}, образование {education}, в ВС РФ с {yss} года."
+		txt = f"на {sold_str}, {nationality}, образование {education}, в ВС РФ с {yss} года."
 		self.add_paragraph(txt, paragraph_settings)
 
 		self.add_empty_paragraphs_spacing(1, line_spacing)  # 2

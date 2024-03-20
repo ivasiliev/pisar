@@ -47,7 +47,7 @@ class ApprovalSheetPrototype(DocumentInReport):
 		# approval table
 		f_caption = ParagraphSettings()
 		f_caption.font_size = Pt(12)
-		table_settings = {"ps": f_caption, "cols_width": [150, 50]}
+		table_settings = {"ps": f_caption, "cols_width": [115, 50]}
 		captions = ["Воинское звание, инициалы, фамилия, и занимаемая должность лица, с которым согласовывался приказ",
 		            "Подпись должностного лица и дата согласования"]
 		rows = self.add_empty_rows(4)
@@ -69,7 +69,7 @@ class ApprovalSheetPrototype(DocumentInReport):
 		self.add_empty_paragraphs(1)
 
 		self.add_commander(rep_settings["commander_3_level"], self.get_military_unit(), par_set_center, par_set_right)
-		self.add_empty_paragraphs(3)
+		self.add_empty_paragraphs(5)
 
 		ps = ParagraphSettings()
 		ps.align_left = True

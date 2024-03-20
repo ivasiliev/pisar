@@ -30,7 +30,7 @@ class DocAdministrativeInvestigation(InvestigationPrototype):
 		self.conclusion_action_performed = "административное расследование по факту самовольного оставления части"
 		self.conclusion_p2_action = "самовольно покинул расположение части, не уведомив вышестоящее командование"
 
-		self.conclusion_punishment = "самовольно покинул расположение части, за что в соответствии со статьей «337» Уголовного кодекса Российской Федерации предусматривается уголовная ответственность"
+		self.conclusion_punishment = "самовольно покинул расположение части, за что в соответствии со статьей «337» Уголовного кодекса Российской Федерации предусматривается уголовная ответственность"
 
 		settings = PersFullNameSettings(2, False, False, True, False, True, False)
 		sold_str = self.get_person_full_str(settings)

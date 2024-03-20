@@ -78,7 +78,7 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 		self.add_paragraph_with_underline(f"{date_event} {soldier_full_str}")
 		self.add_paragraph("воинская должность, звание", small_underline)
 
-		self.add_paragraph_with_underline("отсутствовал в месте военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени")
+		self.add_paragraph_with_underline("отсутствовал в месте военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени")
 		self.add_paragraph("дата, время, место и другие обстоятельства совершения грубого дисциплинарного проступка", small_underline)
 
 		self.add_paragraph("Доказательства, подтверждающие наличия события грубого дисциплинарного проступка и виновности военнослужащего:", self.align_justify_settings)
@@ -116,7 +116,7 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 		settings = PersFullNameSettings(1, False, True, True, False, True, False)
 		soldier_full_str = self.get_person_full_str(settings)
 		self.add_paragraph(f"Решение командира войсковой части {self.get_military_unit()}:", self.align_justify_settings)
-		resolution_text = f"За грубый дисциплинарный проступок отсутствие в месте военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени, {soldier_full_str}, ПРЕДУПРЕДИТЬ О НЕПОЛНОМ СЛУЖЕБНОМ СООТВЕТСТВИИ."
+		resolution_text = f"За грубый дисциплинарный проступок отсутствие в месте военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени, {soldier_full_str}, ПРЕДУПРЕДИТЬ О НЕПОЛНОМ СЛУЖЕБНОМ СООТВЕТСТВИИ."
 
 		paragraph_settings = ParagraphSettings()
 		paragraph_settings.align_justify = True

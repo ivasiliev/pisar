@@ -68,10 +68,10 @@ class DocAdministrativeInvestigationOrder(DocumentInReport):
 
 		s_info = self.get_soldier_info()
 		self.add_paragraph(
-			f"Исходя из материала служебного разбирательства следует, что {self.get_person_rank(s_info.rank, 0)} {s_info.full_name} самовольно покинул расположение части, за что в соответствии со статьей «337» Уголовного кодекса Российской Федерации предусматривается уголовная ответственность.",
+			f"Исходя из материала служебного разбирательства следует, что {self.get_person_rank(s_info.rank, 0)} {s_info.full_name} самовольно покинул расположение части, за что в соответствии со статьей «337» Уголовного кодекса Российской Федерации предусматривается уголовная ответственность.",
 			self.ident_align_justify_settings)
 
-		p1 = self.add_paragraph("На основании вышеизложенного ", self.ident_align_justify_settings)
+		p1 = self.add_paragraph("На основании вышеизложенного, ", self.ident_align_justify_settings)
 		runner = p1.add_run("ПРИКАЗЫВАЮ:")
 		runner.bold = True
 

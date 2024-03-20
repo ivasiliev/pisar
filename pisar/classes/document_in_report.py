@@ -436,7 +436,7 @@ class DocumentInReport(DocumentPrototype):
 		if declension_type != 0:
 			rnk = get_word_declension(self.get_morph(), rnk, declension_type)
 		if self.get_report_settings()["is_guard"]:
-			rnk = "гвардии " + rnk
+			rnk = "гвардии " + rnk
 		return rnk
 
 	def get_commander_company(self):
