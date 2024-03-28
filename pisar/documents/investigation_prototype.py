@@ -46,6 +46,8 @@ class InvestigationPrototype(DocumentInReport):
 		self.word_document.add_page_break()
 		self.report3_page()
 		self.word_document.add_page_break()
+		if self.report4_page():
+			self.word_document.add_page_break()
 		self.conclusion_page()
 		self.word_document.add_page_break()
 		# self.summary_page()
@@ -275,3 +277,8 @@ class InvestigationPrototype(DocumentInReport):
 		for r in rows_content:
 			self.inventory_list.append([str(num_row), r, ""])
 			num_row = num_row + 1
+
+	def report4_page(self):
+		return False
+
+
