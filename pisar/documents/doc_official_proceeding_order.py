@@ -50,7 +50,7 @@ class DocOfficialProceedingOrder(DocumentInReport):
 		custom_ident_align_justify_settings = self.ident_align_justify_settings
 		custom_ident_align_justify_settings.line_spacing = line_spacing
 
-		txt =f"Несмотря на меры, принимаемые командованием войсковой части {self.get_military_unit()} по профилактике правонарушений, связанных с уклонением военнослужащих от исполнения служебных обязанностей и прохождения военной службы, продолжаются факты самовольного оставления воинской части или места несения службы военнослужащими войсковой части {self.get_military_unit()}."
+		txt =f"Несмотря на меры, принимаемые командованием войсковой части {self.get_military_unit()} по профилактике правонарушений, связанных с уклонением военнослужащих от исполнения служебных обязанностей и прохождения военной службы, продолжаются факты самовольного оставления воинской части или места несения службы военнослужащими войсковой части {self.get_military_unit()}."
 		self.add_paragraph(txt, custom_ident_align_justify_settings)
 
 		settings = PersFullNameSettings(0, False, False, True, False, True, False)
@@ -127,7 +127,7 @@ class DocOfficialProceedingOrder(DocumentInReport):
 		       f"объявить СТРОГИЙ ВЫГОВОР.")
 		self.add_paragraph(txt, custom_ident_align_justify_settings)
 
-		self.add_paragraph(f"5. Контроль за исполнением настоящего приказа возложить на начальника штаба - заместителя командира войсковой части {self.get_military_unit()}.", custom_ident_align_justify_settings)
+		self.add_paragraph(f"5. Контроль за исполнением настоящего приказа возложить на начальника штаба - заместителя командира войсковой части {self.get_military_unit()}.", custom_ident_align_justify_settings)
 
 		self.add_paragraph(f"6. Приказ довести до личного состава в части касающейся.", custom_ident_align_justify_settings)
 

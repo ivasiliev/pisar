@@ -13,5 +13,5 @@ class DocActCopyImpossible(ActPrototype):
 		self.data_model[ACT_TITLE] = "о невозможности получения копии протокола о грубом дисциплинарном проступке"
 		settings = PersFullNameSettings(2, False, False, True, False, False, False)
 		sold_str = self.get_person_full_str(settings)
-		self.data_model[ACT_TEXT] = f"Нижеподписавшиеся должностные лица войсковой части {self.get_military_unit()} составили настоящий акт по факту невозможности получения копии протокола о грубом дисциплинарном проступке {sold_str}."
+		self.data_model[ACT_TEXT] = f"Нижеподписавшиеся должностные лица войсковой части {self.get_military_unit()} составили настоящий акт по факту невозможности получения копии протокола о грубом дисциплинарном проступке {sold_str}."
 		super().render()

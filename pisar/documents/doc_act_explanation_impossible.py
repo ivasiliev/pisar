@@ -14,5 +14,5 @@ class DocActExplanationImpossible(ActPrototype):
 		                             "в которых усматривается преступления против военной службы."
 		settings = PersFullNameSettings(2, False, False, True, True, False, False)
 		sold_str = self.get_person_full_str(settings)
-		self.data_model[ACT_TEXT] = f"Нижеподписавшиеся должностные лица войсковой части {self.get_military_unit()} составили настоящий акт о невозможности дачи объяснений по факту самовольного оставления воинской части {sold_str}, в связи с его отсутствием."
+		self.data_model[ACT_TEXT] = f"Нижеподписавшиеся должностные лица войсковой части {self.get_military_unit()} составили настоящий акт о невозможности дачи объяснений по факту самовольного оставления воинской части {sold_str}, в связи с его отсутствием."
 		super().render()

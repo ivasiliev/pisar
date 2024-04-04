@@ -64,7 +64,7 @@ class DocSoldierHrCard(DocumentInReport):
 
 		hr_officer = self.get_commander_generic("hr_officer", "СПЕЦИАЛИСТА ОТДЕЛА КАДРОВ", 0, True)
 		self.add_paragraph(hr_officer["position"], self.align_center_settings)
-		self.add_paragraph(f"войсковой части {self.get_military_unit()}", self.align_center_settings)
+		self.add_paragraph(f"войсковой части {self.get_military_unit()}", self.align_center_settings)
 		self.add_paragraph(hr_officer["rank"], self.align_center_settings)
 		self.add_paragraph(hr_officer["name"], self.align_right_settings)
 

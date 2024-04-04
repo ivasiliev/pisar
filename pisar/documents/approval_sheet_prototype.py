@@ -36,7 +36,7 @@ class ApprovalSheetPrototype(DocumentInReport):
 
 		self.add_paragraph("ЛИСТ СОГЛАСОВАНИЯ", self.bold_center_settings)
 		self.add_paragraph(
-			f"приказа командира войсковой части {self.get_military_unit()}",
+			f"приказа командира войсковой части {self.get_military_unit()}",
 			self.align_center_settings)
 		rank = self.get_person_rank(s_info.rank, 2)
 		name = self.get_person_name_declension(s_info.full_name, 2)
@@ -59,7 +59,7 @@ class ApprovalSheetPrototype(DocumentInReport):
 		self.add_empty_paragraphs(3)
 
 		self.add_paragraph("ЛИСТ ДОВЕДЕНИЯ", self.bold_center_settings)
-		self.add_paragraph(f"приказа командира войсковой части {self.get_military_unit()}", self.align_center_settings)
+		self.add_paragraph(f"приказа командира войсковой части {self.get_military_unit()}", self.align_center_settings)
 
 		# informed table
 		captions = ["Воинское звание, инициалы, фамилия, и занимаемая должность лица, которым доводился приказ",

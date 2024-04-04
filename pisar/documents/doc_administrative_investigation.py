@@ -5,7 +5,6 @@ from docx.shared import Mm
 from classes.paragraph_settings import ParagraphSettings
 from classes.pers_full_name_settings import PersFullNameSettings
 from documents.investigation_prototype import InvestigationPrototype
-from helpers.text_helper import capitalize_first_letter
 
 
 class DocAdministrativeInvestigation(InvestigationPrototype):
@@ -29,7 +28,7 @@ class DocAdministrativeInvestigation(InvestigationPrototype):
 		self.doc_about = "по факту самовольного оставления части"
 
 		self.inventory_caption = "административного расследования"
-		rows_content = [f"Медицинская характеристика на {sold_str}", f"Копия служебной карточки на {sold_str}", f"Служебная характеристика на {sold_str}", "Справка по форме ГУК МО РФ от 04.12.2006 г.", "Копия ведомости закрепления оружия 6 СР", "Копия именного списка для вечерних поверок 6 СР", f"Копия ведомости об ознакомлении со статьями УК РФ {sold_str}", f"Выписки из приказов командира войсковой части {self.get_military_unit()} на {sold_str}", f"Акт о невозможности дачи объяснений {sold_str_2}", f"Копия паспорта {sold_str}", "Заключение служебного разбирательства"]
+		rows_content = [f"Медицинская характеристика на {sold_str}", f"Копия служебной карточки на {sold_str}", f"Служебная характеристика на {sold_str}", "Справка по форме ГУК МО РФ от 04.12.2006 г.", "Копия ведомости закрепления оружия <ПОДРАЗДЕЛЕНИЕ>", "Копия именного списка для вечерних поверок <ПОДРАЗДЕЛЕНИЕ>", f"Копия ведомости об ознакомлении со статьями УК РФ {sold_str}", f"Выписки из приказов командира войсковой части {self.get_military_unit()} на {sold_str}", f"Акт о невозможности дачи объяснений {sold_str_2}", f"Копия паспорта {sold_str}", "Заключение служебного разбирательства"]
 		self.add_inventory_list(rows_content)
 
 		self.report3_conclusion = "самовольно покинул расположение части, не уведомив вышестоящее командование"
@@ -65,11 +64,11 @@ class DocAdministrativeInvestigation(InvestigationPrototype):
 		self.add_paragraph(f"Командиру войсковой части {self.get_military_unit()}", self.align_right_settings)
 		self.add_empty_paragraphs(2)
 		self.add_paragraph("Рапорт", self.align_center_settings)
-		self.add_empty_paragraphs(1)
+		self.add_empty_paragraphs(2)
 		settings = PersFullNameSettings(2, False, False, True, True, False, False)
 		sold_str = self.get_person_full_str(settings)
 		date_str = self.get_date_format_1(self.get_date_of_event())
-		self.add_paragraph(f"Настоящим докладываю, что {date_str} во время утренней поверки в <ПОДРАЗДЕЛЕНИЕ> 2 стрелкового батальона был выявлен факт самовольного оставления части {sold_str}.", self.ident_align_justify_settings)
+		self.add_paragraph(f"Настоящим докладываю, что {date_str} во время утренней поверки в <ПОДРАЗДЕЛЕНИЕ> 2 стрелкового батальона был выявлен факт самовольного оставления части {sold_str}.", self.ident_align_justify_settings)
 
 		self.add_paragraph(
 			f"Проведена поисковая работа, однако к должному результату данные мероприятия не привели.",
@@ -86,7 +85,7 @@ class DocAdministrativeInvestigation(InvestigationPrototype):
 		self.add_paragraph("Командиру 2 стрелкового батальона", self.align_right_settings)
 		self.add_empty_paragraphs(2)
 		self.add_paragraph("Рапорт", self.align_center_settings)
-		self.add_empty_paragraphs(1)
+		self.add_empty_paragraphs(2)
 
 		date_str = self.get_date_format_1(self.get_date_of_event())
 		settings = PersFullNameSettings(2, False, False, True, True, False, False)
@@ -100,7 +99,7 @@ class DocAdministrativeInvestigation(InvestigationPrototype):
 			self.ident_align_justify_settings)
 
 		self.add_empty_paragraphs(3)
-		self.officer_report_footer("commander_1_level", True)
+		self.officer_report_footer("commander_1_level", True, "по")
 
 	def report4_page(self):
 		self.add_paragraph(f"Командиру <РОТА>", self.align_right_settings)
@@ -119,12 +118,12 @@ class DocAdministrativeInvestigation(InvestigationPrototype):
 	def conclusion_page(self):
 		s_info = self.get_soldier_info()
 
-		self.add_paragraph(f"Командиру войсковой части {self.get_military_unit()}", self.align_right_settings)
+		self.add_paragraph(f"Командиру войсковой части {self.get_military_unit()}", self.align_right_settings)
 		self.add_empty_paragraphs(2)
 		self.add_paragraph("ЗАКЛЮЧЕНИЕ", self.bold_center_settings)
 		self.add_paragraph(f"по материалам {self.conclusion_materials}", self.bold_center_settings)
 		self.add_paragraph(f"по факту {self.conclusion_fact}", self.bold_center_settings)
-		self.add_paragraph(f"военнослужащим 2 стрелкового батальона войсковой части {self.get_military_unit()}",
+		self.add_paragraph(f"военнослужащим 2 стрелкового батальона войсковой части {self.get_military_unit()}",
 		                   self.bold_center_settings)
 
 		self.add_paragraph(f"{self.get_person_rank(s_info.rank, 2)} {self.get_person_name_instr(s_info.full_name)}",
@@ -142,7 +141,7 @@ class DocAdministrativeInvestigation(InvestigationPrototype):
 		commander = self.get_commander_generic("commander_2_level", "КОМАНДИРА", 2, False)
 		settings = PersFullNameSettings(2, False, False, True, True, True, False)
 		sold_str = self.get_person_full_str(settings)
-		self.add_paragraph(f"Мной, командиром 2 стрелкового батальона войсковой части {self.get_military_unit()} {commander['rank']} {commander['name']}, проведено административное расследование по факту самовольного оставления воинской части {sold_str}.", paragraph_settings)
+		self.add_paragraph(f"Мной, командиром 2 стрелкового батальона войсковой части {self.get_military_unit()} {commander['rank']} {commander['name']}, проведено административное расследование по факту самовольного оставления воинской части {sold_str}.", paragraph_settings)
 
 		settings = PersFullNameSettings(0, False, False, True, False, True, False)
 		sold_str = self.get_person_full_str(settings)
@@ -188,27 +187,27 @@ class DocAdministrativeInvestigation(InvestigationPrototype):
 		sold_str = self.get_person_full_str(settings)
 		self.add_paragraph(f"Таким образом, {sold_str}, из-за личной недисциплинированности, без каких-либо уважительных причин, в результате ненадлежащего контроля за подчиненными и эффективной работы по их воспитанию со стороны должностных лиц 2 стрелкового батальона, {date_str} совершил самовольное оставление части в военное время либо в условиях вооруженного конфликта или ведения боевых действий, то есть действия по признакам преступления, предусмотренного в соответствии с требованием статьи 337 Уголовного кодекса Российской Федерации.", paragraph_settings)
 
-		p1 = self.add_paragraph("В целях недопущения правонарушений, связанных с уклонением военнослужащих от исполнения обязанностей военной службы и самовольным оставлением части в дальнейшем, привлечением к ответственности виновных должностных лиц ", paragraph_settings)
+		p1 = self.add_paragraph("В целях недопущения правонарушений, связанных с уклонением военнослужащих от исполнения обязанностей военной службы и самовольным оставлением части в дальнейшем, привлечением к ответственности виновных должностных лиц, ", paragraph_settings)
 		runner = p1.add_run("ПРЕДЛАГАЮ:")
 		runner.bold = True
 
-		self.add_paragraph(f"1. Командирам подразделений 2 стрелкового батальона организовать доведения до всего личного состава сведений об уголовной ответственностиза преступления, связанные с уклонением от исполнения обязанностей военной службы в условиях вооруженного конфликта или ведения боевых действий, в соответствии с требованием Уголовного кодекса Российской Федерации.", paragraph_settings)
+		self.add_paragraph(f"1. Командирам подразделений 2 стрелкового батальона организовать доведения до всего личного состава сведений об уголовной ответственностиза преступления, связанные с уклонением от исполнения обязанностей военной службы в условиях вооруженного конфликта или ведения боевых действий, в соответствии с требованием Уголовного кодекса Российской Федерации.", paragraph_settings)
 
 		txt1 = "За невыполнение требований  статей 144, 145 Устава внутренней службы Вооруженных Сил Российской Федерации, в части касающейся организации и проведения им работы по повседневному воспитанию, поддержанию воинской дисциплины, укреплению морально-политического и психологического состояния подчиненного личного состава"
 		commander_company_text2 = self.get_commander_company_full_str(3, False)
 		txt2 = "провести дополнительные занятия в роте по ознакомлению со статьями УК РФ и наказаниями за их нарушение."
-		self.add_paragraph(f"2. {txt1} {commander_company_text2} {txt2}", paragraph_settings)
+		self.add_paragraph(f"2. {txt1} {commander_company_text2} {txt2}", paragraph_settings)
 
 		# TODO dynamic
 		txt1 = "За невыполнение требований статей 152, 153 Устава внутренней службы Вооруженных Сил Российской Федерации, в части касающейся воспитания, поддержания воинской дисциплины, укрепления морально-политического и психологического состояния солдат подчиненного взвода,"
 		commander_platoon_text = self.get_commander_platoon_full_str(3)
 		txt2 = ", строго указать на исполнение служебных и должностных обязанностей"
-		self.add_paragraph(f"3. {txt1} {commander_platoon_text}{txt2}", paragraph_settings)
+		self.add_paragraph(f"3. {txt1} {commander_platoon_text}{txt2}", paragraph_settings)
 
 		commander_squad = self.get_commander_generic_full_str("commander_squad", 3, False)
 		txt1 = "За невыполнение требований статей 156, 157 Устава Внутренней Службы Вооружённых Сил Российской Федерации, в части касающейся воспитания, поддержания воинской дисциплины, укрепления морально-политического и психологического состояния подчиненного личного состава взвода"
 		txt2 = ", строго указать на низкую дисциплину в отделении."
-		self.add_paragraph(f"4. {txt1} {commander_squad}{txt2}", paragraph_settings)
+		self.add_paragraph(f"4. {txt1} {commander_squad}{txt2}", paragraph_settings)
 
 		settings = PersFullNameSettings(2, False, False, True, False, False, False)
 		sold_str = self.get_person_full_str(settings)

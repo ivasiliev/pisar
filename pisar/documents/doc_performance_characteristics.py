@@ -101,7 +101,7 @@ class DocPerformanceCharacteristics(DocumentInReport):
 		c_rank = commander_info["rank"]
 		if self.get_report_settings()["is_guard"] and not "гвардии" in c_rank:
 			c_rank = "гвардии " + c_rank
-		c_position = f"{commander_info['position']} войсковой части {self.get_military_unit()}"
+		c_position = f"{commander_info['position']} войсковой части {self.get_military_unit()}"
 		self.add_paragraph(c_position.upper(), self.bold_center_settings)
 		self.add_paragraph(c_rank, par_set_center)
 		self.add_paragraph(c_name, par_set_right)

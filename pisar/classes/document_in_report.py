@@ -393,7 +393,7 @@ class DocumentInReport(DocumentPrototype):
 		d = int(tokens[0])
 		m = int(tokens[1])
 		y = int(tokens[2])
-		return replace_with_glue(f"{d} {get_month_string(m)} {y} года")
+		return replace_with_glue(f"{d} {get_month_string(m)} {y} года")
 
 	# declension_type. 0 (without), 1 (gent), 2 (ablt), 3 (datv)
 	def get_person_full_str(self, settings):
@@ -414,7 +414,7 @@ class DocumentInReport(DocumentPrototype):
 		if settings.address_required:
 			address = replace_with_glue("2 стрелкового батальона")
 			if settings.military_unit_required:
-				address = f"{address} войсковой части {self.get_military_unit()}"
+				address = f"{address} войсковой части {self.get_military_unit()}"
 			if not settings.battalion_only:
 				address = f"{self.get_soldier_address(1)} {address}"
 		# address = f"{s_info.squad} стрелкового отделения {s_info.platoon} стрелкового взвода {s_info.company} стрелковой роты " + address
@@ -422,7 +422,7 @@ class DocumentInReport(DocumentPrototype):
 		dob_str = ""
 		if settings.dob_required:
 			if settings.is_dob_short:
-				dob_str = s_info.get_dob() + " г.р."
+				dob_str = s_info.get_dob() + " г.р."
 			else:
 				dob_str = self.get_date_format_1(s_info.get_dob()) + " рождения"
 
@@ -449,12 +449,11 @@ class DocumentInReport(DocumentPrototype):
 		text = "[ВСТАВЬТЕ СВЕДЕНИЯ О КОМАНДИРЕ РОТЫ]"
 		commander_info = self.get_commander_generic("commander_company", "КОМАНДИРА РОТЫ", declension_type, False)
 		if commander_info["found"]:
-			m_unit = self.get_military_unit()
 			pos = commander_info['position']
 			if need_capitalize:
 				pos = pos.capitalize()
 
-			text = f"{pos} войсковой части {m_unit} {commander_info['rank']} {commander_info['name']}"
+			text = f"{pos} войсковой части {self.get_military_unit()} {commander_info['rank']} {commander_info['name']}"
 		return text
 
 	def get_morph(self):
@@ -466,7 +465,7 @@ class DocumentInReport(DocumentPrototype):
 		if commander_info["found"]:
 			# TODO need to use a property from commander_info
 			# platoon = get_words_declension(self.get_morph(), self.get_soldier_info().platoon, 1)
-			text = f"{commander_info['position']} войсковой части {self.get_military_unit()} {commander_info['rank']} {commander_info['name']}"
+			text = f"{commander_info['position']} войсковой части {self.get_military_unit()} {commander_info['rank']} {commander_info['name']}"
 		return text
 
 	# TODO refactor this method
@@ -481,7 +480,7 @@ class DocumentInReport(DocumentPrototype):
 			pos = commander_info['position']
 			if need_сapitalize:
 				pos = pos.capitalize()
-			text = f"{pos} войсковой части {self.get_military_unit()} {commander_info['rank']} {commander_info['name']}"
+			text = f"{pos} войсковой части {self.get_military_unit()} {commander_info['rank']} {commander_info['name']}"
 		return text
 
 	def get_military_unit(self):
