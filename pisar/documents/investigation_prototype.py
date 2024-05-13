@@ -89,7 +89,7 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("Опись составил:", self.align_left_settings)
 		self.add_empty_paragraphs(1)
-		self.officer_report_footer("commander_1_level")
+		self.officer_report_footer("commander_1_level", True, "по")
 
 	# Рапорт 1 (стр 3)
 	def report1_page(self):
