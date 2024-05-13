@@ -22,15 +22,18 @@ class UtilityPersonnelDetailsCheck(UtilityPrototype):
 			rl = self.get_row_limit()
 			rl_rep = str(rl)
 		print(f"Анализ ШР. Ограничение по строкам: {rl_rep}.")
-		persons_limited = pers_storage.get_all_persons(EXCEL_DOCUMENT_SR, rl)
+		persons_sr_limited = pers_storage.get_all_persons(EXCEL_DOCUMENT_SR, rl)
 
 		print(f"Анализ ЛС. Ограничения по строкам нет.")
-		persons_details = pers_storage.get_all_persons(EXCEL_DOCUMENT_LS)
+		persons_ls = pers_storage.get_all_persons(EXCEL_DOCUMENT_LS)
+
+		persons_ls_clean, persons_ls_empty_unique = self.clean_pers_list(persons_ls)
+		persons_sr_clean, persons_sr_empty_unique = self.clean_pers_list(persons_sr_limited)
 
 		# есть в ЛС, нет в ШР
-		pers_group_1 = self.prepare_pers_group(persons_details, persons_limited)
+		pers_group_1 = self.prepare_pers_group(persons_ls_clean, persons_sr_clean)
 		# есть в ШР, нет в ЛС
-		pers_group_2 = self.prepare_pers_group(persons_limited, persons_details)
+		pers_group_2 = self.prepare_pers_group(persons_sr_clean, persons_ls_clean)
 
 		wb = Workbook()
 		ws = wb.active
@@ -39,13 +42,15 @@ class UtilityPersonnelDetailsCheck(UtilityPrototype):
 		ws.column_dimensions["B"].width = 30
 
 		num_row = self.print_persons_in_wb(ws, 1, "есть в ШР, нет в ЛС", pers_group_2)
-		self.print_persons_in_wb(ws, num_row + 2, "есть в ЛС, нет в ШР", pers_group_1)
+		num_row = self.print_persons_in_wb(ws, num_row + 2, "есть в ЛС, нет в ШР", pers_group_1)
+		num_row = self.print_persons_in_wb(ws, num_row + 2, "ЛС. Нет Личного номера", persons_ls_empty_unique)
+		self.print_persons_in_wb(ws, num_row + 2, "ШР. Нет Личного номера", persons_sr_empty_unique)
 
 		self.save_workbook(wb)
 
 		super().render()
 
-	def pers_in_list(self, pers, pers_list):
+	def is_pers_in_list(self, pers, pers_list):
 		found = False
 		for p in pers_list:
 			if p.unique is None or len(p.unique) == 0:
@@ -59,9 +64,7 @@ class UtilityPersonnelDetailsCheck(UtilityPrototype):
 	def prepare_pers_group(self, persons1, persons2):
 		pers_group = []
 		for p_sr in persons1:
-			if p_sr.unique is None:
-				continue
-			if not self.pers_in_list(p_sr, persons2):
+			if not self.is_pers_in_list(p_sr, persons2):
 				pers_group.append(p_sr)
 
 		pers_group.sort(key=lambda x: x.full_name, reverse=False)
@@ -89,3 +92,13 @@ class UtilityPersonnelDetailsCheck(UtilityPrototype):
 			ws.cell(row=num_row, column=1, value="<никого>")
 
 		return num_row
+
+	def clean_pers_list(self, pers_list):
+		clean_list = []
+		empty_unique = []
+		for pers in pers_list:
+			if pers.unique is None or len(pers.unique) == 0:
+				empty_unique.append(pers)
+			else:
+				clean_list.append(pers)
+		return clean_list, empty_unique

@@ -36,8 +36,9 @@ class InvestigationPrototype(DocumentInReport):
 		self.conclusion_punishment_points = []
 
 	def render(self, custom_margins=None):
+		# TODO remake inventory page to return this breaker
 		self.render_page_title()
-		self.word_document.add_page_break()
+		# self.word_document.add_page_break()
 		self.inventory_page()
 		self.word_document.add_page_break()
 		self.report1_page()
@@ -46,6 +47,8 @@ class InvestigationPrototype(DocumentInReport):
 		self.word_document.add_page_break()
 		self.report3_page()
 		self.word_document.add_page_break()
+		if self.report4_page():
+			self.word_document.add_page_break()
 		self.conclusion_page()
 		self.word_document.add_page_break()
 		# self.summary_page()
@@ -65,7 +68,7 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_paragraph(
 			sold_str,
 			self.bold_center_settings)
-		self.add_empty_paragraphs(18)
+		self.add_empty_paragraphs(19)
 
 		current_year = self.get_current_year()
 
@@ -86,14 +89,14 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_empty_paragraphs(1)
 		self.add_paragraph("Опись составил:", self.align_left_settings)
 		self.add_empty_paragraphs(1)
-		self.officer_report_footer("commander_1_level")
+		self.officer_report_footer("commander_1_level", True, "по")
 
 	# Рапорт 1 (стр 3)
 	def report1_page(self):
 		self.add_paragraph(f"Командиру войсковой части {self.get_military_unit()}", self.align_right_settings)
 		self.add_empty_paragraphs(2)
 		self.add_paragraph("Рапорт", self.align_center_settings)
-		self.add_empty_paragraphs(1)
+		self.add_empty_paragraphs(2)
 		ps = "Настоящим докладываю, что"
 		ps = f"{ps} {self.get_date_format_1(self.get_date_of_event())} "
 
@@ -113,7 +116,7 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_paragraph("Командиру 2 стрелкового батальона", self.align_right_settings)
 		self.add_empty_paragraphs(2)
 		self.add_paragraph("Рапорт", self.align_center_settings)
-		self.add_empty_paragraphs(1)
+		self.add_empty_paragraphs(2)
 
 		ps = "Настоящим докладываю, что в ходе проведения розыскных мероприятий розыскной группой из числа " \
 		     "военнослужащих 2 стрелкового батальона под моим руководством место нахождения"
@@ -134,13 +137,13 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_paragraph("Командиру 2 стрелкового батальона", self.align_right_settings)
 		self.add_empty_paragraphs(2)
 		self.add_paragraph("Рапорт", self.align_center_settings)
-		self.add_empty_paragraphs(1)
+		self.add_empty_paragraphs(2)
 
 		ps = f"Настоящим докладываю, что {self.get_date_format_1(self.get_date_of_event())}"
 		settings = PersFullNameSettings(0, False, False, True, False, False, False)
 		sold_str = self.get_person_full_str(settings)
 		self.add_paragraph(f"{ps} {sold_str} {self.report3_conclusion}.", self.ident_align_justify_settings)
-		self.add_empty_paragraphs(2)
+		self.add_empty_paragraphs(3)
 
 		self.officer_report_footer("commander_company")
 
@@ -153,7 +156,7 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_paragraph("ЗАКЛЮЧЕНИЕ", self.bold_center_settings)
 		self.add_paragraph(f"по материалам {self.conclusion_materials}", self.bold_center_settings)
 		self.add_paragraph(f"по факту {self.conclusion_fact}", self.bold_center_settings)
-		self.add_paragraph(f"военнослужащим 2 стрелкового батальона войсковой части {self.get_military_unit()}",
+		self.add_paragraph(f"военнослужащим 2 стрелкового батальона войсковой части {self.get_military_unit()}",
 		                   self.bold_center_settings)
 
 		self.add_paragraph(f"{self.get_person_rank(s_info.rank, 2)} {self.get_person_name_instr(s_info.full_name)}",
@@ -168,7 +171,7 @@ class InvestigationPrototype(DocumentInReport):
 		paragraph_settings.line_spacing = 0.88
 
 		# TODO ВРИО -> временно исполняющим обязанности. long_position?
-		txt = f"Мной, командиром 2 стрелкового батальона войсковой части {self.get_military_unit()} "
+		txt = f"Мной, командиром 2 стрелкового батальона войсковой части {self.get_military_unit()} "
 
 		commander = self.get_commander_generic("commander_2_level", "КОМАНДИРА", 2, False)
 		txt = txt + f"{commander['rank']} {commander['name']},"
@@ -226,7 +229,7 @@ class InvestigationPrototype(DocumentInReport):
 			f"Исходя из материала служебного разбирательства следует, что {self.get_person_rank(s_info.rank, 0)} {s_info.full_name} {self.conclusion_punishment}.",
 			paragraph_settings)
 
-		p1 = self.add_paragraph("На основании вышеизложенного ", self.ident_align_justify_settings)
+		p1 = self.add_paragraph("На основании вышеизложенного, ", self.ident_align_justify_settings)
 		runner = p1.add_run("ПРЕДЛАГАЮ:")
 		runner.bold = True
 
@@ -261,12 +264,21 @@ class InvestigationPrototype(DocumentInReport):
 		self.add_empty_paragraphs(1)
 		self.officer_report_footer("commander_1_level")
 
-	def officer_report_footer(self, key, need_capitalize=False):
+	def officer_report_footer(self, key, need_capitalize=False, split_from_word=""):
 		commander = self.get_commander_generic(key, "КОМАНДИРА", 0, True)
 		pos = commander["position"]
 		if need_capitalize:
 			pos = commander["position"].capitalize()
-		self.add_paragraph(pos, self.align_center_settings)
+		if len(split_from_word) == 0:
+			self.add_paragraph(pos, self.align_center_settings)
+		else:
+			ind = pos.index(split_from_word)
+			if ind > 0:
+				self.add_paragraph(pos[0:ind], self.align_center_settings)
+				self.add_paragraph(pos[ind:], self.align_center_settings)
+			else:
+				self.add_paragraph(pos, self.align_center_settings)
+
 		self.add_paragraph(commander["rank"], self.align_center_settings)
 		self.add_paragraph_left_right(f"{self.get_date_of_event()} г.", commander["name"])
 
@@ -275,3 +287,8 @@ class InvestigationPrototype(DocumentInReport):
 		for r in rows_content:
 			self.inventory_list.append([str(num_row), r, ""])
 			num_row = num_row + 1
+
+	def report4_page(self):
+		return False
+
+

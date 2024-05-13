@@ -20,7 +20,7 @@ class ActPrototype(DocumentInReport):
 		paragraph_settings.left_indent = Mm(95)
 		self.add_empty_paragraphs(1)
 		self.add_paragraph(f"Командир 2 стрелкового батальона", paragraph_settings)
-		self.add_paragraph(f"войсковой части {rep_settings['military_unit']}", paragraph_settings)
+		self.add_paragraph(f"войсковой части {self.get_military_unit()}", paragraph_settings)
 
 		comm_2 = self.get_commander_generic("commander_2_level", "КОМАНДИРА", 0, True)
 		self.add_paragraph(comm_2["rank"], paragraph_settings)

@@ -15,7 +15,7 @@ class BatchOfficialProceeding(BatchPrototype):
 	def render(self):
 		self.clear_docs()
 		self.add_document(DocOfficialProceeding(self.data_model))
-		self.add_document(DocOfficialProceedingProtocol(self.data_model))
+		# self.add_document(DocOfficialProceedingProtocol(self.data_model))
 		# self.add_document(DocActCopyImpossible(self.data_model))
 		self.add_document(DocActExplanationImpossible(self.data_model))
 		self.add_document(DocPerformanceCharacteristics(self.data_model))

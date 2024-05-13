@@ -114,7 +114,7 @@ class DocOfficialProceedingProtocol(DocumentInReport):
 
 		settings = PersFullNameSettings(1, False, True, True, False, True, False)
 		soldier_full_str = self.get_person_full_str(settings)
-		self.add_paragraph(f"Решение командира войсковой части {self.get_military_unit()}:", self.align_justify_settings)
+		self.add_paragraph(f"Решение командира войсковой части {self.get_military_unit()}:", self.align_justify_settings)
 		resolution_text = f"За грубый дисциплинарный проступок отсутствие в месте военной службы без уважительных причин более 4 (четырех) часов подряд в течение установленного ежедневного служебного времени, {soldier_full_str}, ПРЕДУПРЕДИТЬ О НЕПОЛНОМ СЛУЖЕБНОМ СООТВЕТСТВИИ."
 
 		paragraph_settings = ParagraphSettings()

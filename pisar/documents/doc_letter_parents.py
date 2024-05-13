@@ -37,10 +37,10 @@ class DocLetterParents(DocumentInReport):
 		rank = self.get_person_rank(s_info.rank, 0)
 		name = self.get_person_name_declension(s_info.full_name, 0)
 
-		self.add_paragraph(f"Командование войсковой части {self.get_military_unit()} сообщает Вам, что Ваш сын {rank} {name}, {self.get_date_format_1(self.get_date_of_event())} самовольно покинул расположение части, не уведомив вышестоящее командование.", self.ident_align_justify_settings)
+		self.add_paragraph(f"Командование войсковой части {self.get_military_unit()} сообщает Вам, что Ваш сын {rank} {name}, {self.get_date_format_1(self.get_date_of_event())} самовольно покинул расположение части, не уведомив вышестоящее командование.", self.ident_align_justify_settings)
 		# TODO what if this is a lady?
 		self.add_paragraph("Проведенные розыскные мероприятия, опрос сослуживцев вашего сына результата не дали, установить причины его отсутствия, а также его местонахождение не удалось.", self.ident_align_justify_settings)
-		self.add_paragraph(f"Командование войсковой части {self.get_military_unit()} информирует Вас, что самовольное оставление части военнослужащим является уголовно наказуемым дисциплинарным проступком и влечет за собой уголовную ответственность по ст.337 УК РФ.", self.ident_align_justify_settings)
+		self.add_paragraph(f"Командование войсковой части {self.get_military_unit()} информирует Вас, что самовольное оставление части военнослужащим является уголовно наказуемым дисциплинарным проступком и влечет за собой уголовную ответственность по ст.337 УК РФ.", self.ident_align_justify_settings)
 		name = self.get_person_name_declension(s_info.full_name, 1)
 		self.add_paragraph(f"Просим Вас оказать содействие в поиске и возвращении Вашего сына {name} на место службы. В случае его появления просим сообщить по телефону: {rep_settings['phone_contact_to_report']}", self.ident_align_justify_settings)
 		self.add_empty_paragraphs(2)
