@@ -7,11 +7,12 @@ from pathlib import Path
 import PySimpleGUI as sg
 
 from classes.run_info import RunInfo
+from helpers.log_helper import log
 
 current_path = Path(os.getcwd())
-print(f"current path={current_path}")
+log(f"current path={current_path}")
 root_path = current_path.parent.absolute()
-print(f"root path={root_path}")
+log(f"root path={root_path}")
 
 gui_path = os.path.join(root_path, "gui")
 documents_path = os.path.join(root_path, "documents")
@@ -46,7 +47,7 @@ def get_full_path(filename):
 		result = os.path.join(fld, filename)
 		if os.path.exists(result):
 			return result
-	print(f"Не удалось обнаружить файл: {filename}")
+	log(f"Не удалось обнаружить файл: {filename}")
 	return None
 
 
@@ -54,7 +55,7 @@ def read_app_config():
 	# app can be run in different ways
 	a_path = get_full_path("app_settings.json")
 	if a_path is None:
-		print("Не обнаружен файл настроек для приложения. Выполнение программы прекращено.")
+		log("Не обнаружен файл настроек для приложения. Выполнение программы прекращено.")
 		sys.exit()
 	return json.load(open(a_path, encoding='UTF8'))
 

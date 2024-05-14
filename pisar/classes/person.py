@@ -1,6 +1,8 @@
 import datetime
 import hashlib
 
+from helpers.log_helper import log
+
 
 class Person:
 	def __init__(self):
@@ -28,7 +30,7 @@ class Person:
 				return
 			tokens = dob_str.split(".")
 			if len(tokens) != 3:
-				print(f"Ошибка при разборе даты {dob_str}")
+				log(f"Ошибка при разборе даты {dob_str}")
 				return
 			self.dob = datetime.datetime(int(tokens[2]), int(tokens[1]), int(tokens[0]))
 
@@ -52,7 +54,7 @@ class Person:
 			if self.full_name is not None and len(self.full_name) > 0:
 				un = self.full_name
 		if un is None:
-			print("Can't define hash for this person")
+			log("Can't define hash for this person")
 			return None
 		else:
 			return int(hashlib.md5(un.encode("utf-8")).hexdigest(), 16)

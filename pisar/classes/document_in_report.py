@@ -12,6 +12,7 @@ from pytrovich.enums import NamePart, Gender, Case
 
 from classes.paragraph_settings import ParagraphSettings
 from document_prototype import DocumentPrototype
+from helpers.log_helper import log
 from helpers.text_helper import get_word_declension, get_words_declension, get_month_string, replace_with_glue, \
 	glue_number_string
 
@@ -103,7 +104,7 @@ class DocumentInReport(DocumentPrototype):
 				os.makedirs(full_path_folder)
 			full_path = os.path.join(full_path_folder, self.get_name_for_file())
 			self.word_document.save(full_path)
-			print(f"Создан документ {full_path}.")
+			log(f"Создан документ {full_path}.")
 
 	def add_paragraph(self, text, paragraph_settings):
 		if paragraph_settings is None:
@@ -305,7 +306,7 @@ class DocumentInReport(DocumentPrototype):
 	def get_person_name_routines(self, full_name, cs):
 		maker = self.data_model[MODEL_MORPHOLOGY_FOR_NAMES]
 		if maker is None:
-			print("Внутренняя ошибка. Морфоанализатор для имён не создан.")
+			log("Внутренняя ошибка. Морфоанализатор для имён не создан.")
 			return ""
 
 		if full_name is None or len(full_name) == 0:
@@ -358,7 +359,7 @@ class DocumentInReport(DocumentPrototype):
 	def get_person_name_short_format_1(self, full_name):
 		name_tokens = full_name.split(" ")
 		if len(name_tokens) < 2:
-			print(f"Не удалось преобразовать в нужный формат: {full_name}")
+			log(f"Не удалось преобразовать в нужный формат: {full_name}")
 			return full_name
 		surname = name_tokens[0]
 		first_name = name_tokens[1]

@@ -1,3 +1,6 @@
+from helpers.log_helper import log
+
+
 def decode_acronyms(morph, position, declension_type):
     if position is None or len(position) == 0:
         return ""
@@ -36,7 +39,7 @@ def decode_acronyms(morph, position, declension_type):
 
 def get_word_routines(morph, wrd, grm):
     if morph is None:
-        print("Внутренняя ошибка. Морфоанализатор не создан.")
+        log("Внутренняя ошибка. Морфоанализатор не создан.")
         return ""
     parsed = morph.parse(wrd)[0]
     gent_text = parsed.inflect({grm})

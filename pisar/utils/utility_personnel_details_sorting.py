@@ -3,6 +3,7 @@ from datetime import date
 from openpyxl.workbook import Workbook
 
 from classes.personnel_storage import EXCEL_DOCUMENT_SR, EXCEL_DOCUMENT_LS
+from helpers.log_helper import log
 from utils.utility_prototype import UtilityPrototype
 
 
@@ -26,7 +27,7 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 		ls_hash = self.prepare_hash_list(persons_ls)
 		# reading LS document
 		all_ls_rows = pers_storage.read_excel_file(EXCEL_DOCUMENT_LS)
-		print(
+		log(
 			f"Количество в ШР: {len(persons_sr)}; Количество в ЛС: {len(persons_ls)}; Всего строк в ЛС: {len(all_ls_rows)};")
 		new_ls_rows = []
 		# header of LS document
@@ -44,12 +45,12 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 			row_in_ls = all_ls_rows[index_in_ls]
 			new_ls_rows.append(row_in_ls)
 			used_ls_indexes.append(index_in_ls)
-		print(f"Сведено ЛС > ШР {len(used_ls_indexes)} человек(а)")
+		log(f"Сведено ЛС > ШР {len(used_ls_indexes)} человек(а)")
 
 		# put all rows from LS that weren't touched by sorting in the end of the document
 		if len(used_ls_indexes) < len(all_ls_rows):
 			added_persons = 0
-			print(
+			log(
 				f"Добавляем остальных людей из ЛС, которых не было в ШР ({len(used_ls_indexes)} < {len(all_ls_rows)})")
 			index = -1
 			for r in all_ls_rows:
@@ -57,11 +58,11 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 				if index not in used_ls_indexes:
 					new_ls_rows.append(r)
 					added_persons = added_persons + 1
-			print(f"Добавлено людей: {added_persons}")
+			log(f"Добавлено людей: {added_persons}")
 
 		# check that all rows are onboarded
 		if len(new_ls_rows) != len(all_ls_rows):
-			print("Внутренняя ошибка. Не все строки перемещены в новый документ.")
+			log("Внутренняя ошибка. Не все строки перемещены в новый документ.")
 		new_ls_rows.insert(0, row_header)
 		list_of_rows = self.convert_rows_to_lists(new_ls_rows)
 
@@ -85,7 +86,7 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 				p_name = p.full_name
 				if p_name is None or len(p_name) == 0:
 					p_name = "<пусто>"
-				print(f"Не могу определить hash для имени '{p_name}'; личный номер='{p.unique}'; номер строки={index};")
+				log(f"Не могу определить hash для имени '{p_name}'; личный номер='{p.unique}'; номер строки={index};")
 				continue
 			result[hsh] = index
 		return result

@@ -4,6 +4,8 @@ from classes.document_in_report import MODEL_OUTPUT_FOLDER, MODEL_JSON_OBJECT
 from document_prototype import DocumentPrototype
 from datetime import date
 
+from helpers.log_helper import log
+
 
 class UtilityPrototype(DocumentPrototype):
 	def is_utility(self):
@@ -17,7 +19,7 @@ class UtilityPrototype(DocumentPrototype):
 			full_path_folder = self.data_model[MODEL_OUTPUT_FOLDER]
 			full_path = os.path.join(full_path_folder, self.get_name_for_file())
 			wb.save(full_path)
-			print(f"Создан документ {full_path}.")
+			log(f"Создан документ {full_path}.")
 
 	def get_date_string(self, dt=None):
 		if dt is None:

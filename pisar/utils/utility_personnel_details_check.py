@@ -2,6 +2,7 @@ from openpyxl.styles import Font
 from openpyxl.workbook import Workbook
 
 from classes.personnel_storage import EXCEL_DOCUMENT_SR, EXCEL_DOCUMENT_LS
+from helpers.log_helper import log
 from utils.utility_prototype import UtilityPrototype
 
 
@@ -21,10 +22,10 @@ class UtilityPersonnelDetailsCheck(UtilityPrototype):
 		if self.get_row_limit() > 0:
 			rl = self.get_row_limit()
 			rl_rep = str(rl)
-		print(f"Анализ ШР. Ограничение по строкам: {rl_rep}.")
+		log(f"Анализ ШР. Ограничение по строкам: {rl_rep}.")
 		persons_sr_limited = pers_storage.get_all_persons(EXCEL_DOCUMENT_SR, rl)
 
-		print(f"Анализ ЛС. Ограничения по строкам нет.")
+		log(f"Анализ ЛС. Ограничения по строкам нет.")
 		persons_ls = pers_storage.get_all_persons(EXCEL_DOCUMENT_LS)
 
 		persons_ls_clean, persons_ls_empty_unique = self.clean_pers_list(persons_ls)

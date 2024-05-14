@@ -1,5 +1,7 @@
 import datetime
 
+from helpers.log_helper import log
+
 
 class PerformanceHelper:
 	def __init__(self):
@@ -13,4 +15,4 @@ class PerformanceHelper:
 			return
 		time_finish = datetime.datetime.now()
 		delta = time_finish - self.time_start
-		print(f"Операция заняла {delta}")
+		log(f"Операция заняла {delta}")

@@ -36,7 +36,7 @@ class DocSoldierCard(DocumentInReport):
 		rank = self.get_person_rank(s_info.rank, 0)
 		tokens = s_info.full_name.split(" ")
 		if len(tokens) != 3:
-			print(f"Неверный формат ФИО военнослужащего '{s_info.full_name}'. Создание документа прервано.")
+			log(f"Неверный формат ФИО военнослужащего '{s_info.full_name}'. Создание документа прервано.")
 			return
 		surname = tokens[0]
 		name = tokens[1]
