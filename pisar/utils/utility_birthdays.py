@@ -6,6 +6,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.workbook import Workbook
 
 from classes.personnel_storage import EXCEL_DOCUMENT_SR, EXCEL_DOCUMENT_LS
+from helpers.log_helper import log
 from helpers.text_helper import get_month_string, get_date_str
 from utils.utility_prototype import UtilityPrototype
 
@@ -33,7 +34,7 @@ class UtilityBirthday(UtilityPrototype):
 		self.date_left = datetime.date(y_left, m_left, 1)
 		self.date_right = datetime.date(y_right, m_right, 1)
 
-		print(f"Расчёт дней рождения на период [{get_date_str(self.date_left)} - {get_date_str(self.date_right)}]")
+		log(f"Расчёт дней рождения на период [{get_date_str(self.date_left)} - {get_date_str(self.date_right)}]")
 
 	def get_name(self):
 		return "Дни рождения"
@@ -64,7 +65,7 @@ class UtilityBirthday(UtilityPrototype):
 							break
 				persons.append(pers)
 
-		print(f"Найдено {len(persons)} человек(а)")
+		log(f"Найдено {len(persons)} человек(а)")
 		persons.sort(key=lambda x: x.age, reverse=False)
 
 		captions = [

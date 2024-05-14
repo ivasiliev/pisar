@@ -5,6 +5,7 @@ from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_PERSONNEL_PATH, 
 from classes.excel_doc_metadata import ExcelDocMetadata
 from classes.person import Person
 from helpers.file_helper import get_file_size_info
+from helpers.log_helper import log
 from helpers.performance_helper import PerformanceHelper
 from helpers.text_helper import not_empty
 
@@ -68,14 +69,14 @@ class PersonnelStorage:
 
 		for md in self.excel_docs:
 			workbook = openpyxl.load_workbook(md.full_path)
-			print(f"--- Сведения о файле Excel {md.full_path} ---")
-			print(f"Размер: {get_file_size_info(md.full_path)}")
-			print(f"Всего листов: {len(workbook.sheetnames)}")
-			print("Список листов:")
-			print(workbook.sheetnames)
-			print("------------------------------")
+			log(f"--- Сведения о файле Excel {md.full_path} ---")
+			log(f"Размер: {get_file_size_info(md.full_path)}")
+			log(f"Всего листов: {len(workbook.sheetnames)}")
+			log("Список листов:")
+			log(workbook.sheetnames)
+			log("------------------------------")
 			if md.sheet_name not in workbook.sheetnames:
-				print(
+				log(
 					f"В Excel-документе отсутствует лист '{md.sheet_name}'.")
 				self.is_valid = False
 			else:
@@ -102,7 +103,7 @@ class PersonnelStorage:
 				# validation
 				for col_info in md.cols:
 					if not col_info.is_found():
-						print(f"Столбец '{col_info.get_name()}' не найден!")
+						log(f"Столбец '{col_info.get_name()}' не найден!")
 						self.is_valid = False
 
 	def find_person_by_id(self, id_person):
@@ -118,7 +119,7 @@ class PersonnelStorage:
 		person = None
 		iteration_count_to_find_person = 0
 		count_for_report = 50
-		print("Поиск военнослужащего в ШР. Пожалуйста, подождите...")
+		log("Поиск военнослужащего в ШР. Пожалуйста, подождите...")
 		for row in sh.iter_rows(min_row=2, min_col=1, max_row=2001, max_col=self.MAX_COLUMNS_COUNT):
 			person_row = None
 			for cell in row:
@@ -129,23 +130,23 @@ class PersonnelStorage:
 					person_row = row
 					break
 				if iteration_count_to_find_person % count_for_report == 0:
-					print(f"Обработано {iteration_count_to_find_person} строк...")
+					log(f"Обработано {iteration_count_to_find_person} строк...")
 				break
 			if person_row is not None:
 				person = self.create_person_from_row(pers_list_excel_doc, person_row)
 				break
 
-		print(f"Количество итераций для поиска военнослужащего: {iteration_count_to_find_person}")
+		log(f"Количество итераций для поиска военнослужащего: {iteration_count_to_find_person}")
 		performance.stop_and_print()
 
 		# check on mandatory fields
 		if person is not None and person.unique is None:
-			print(f"Не задан личный номер для {person.full_name}! Продолжение работы невозможно.")
+			log(f"Не задан личный номер для {person.full_name}! Продолжение работы невозможно.")
 			person = None
 
 		# let's find info in the auxiliary Excel document and replace Report Info about him
 		if person is not None:
-			print(
+			log(
 				f"Поиск военнослужащего личный номер {person.unique} в файле Информация о личном составе. Пожалуйста, подождите...")
 			performance = PerformanceHelper()
 			performance.start()
@@ -167,7 +168,7 @@ class PersonnelStorage:
 						person_row = row
 						break
 					if iteration_count_to_find_person % count_for_report == 0:
-						print(f"Обработано {iteration_count_to_find_person} строк...")
+						log(f"Обработано {iteration_count_to_find_person} строк...")
 					break
 
 				if person_row is not None:
@@ -244,7 +245,7 @@ class PersonnelStorage:
 						else:
 							if not_empty(dm["pass_dnr"]):
 								dm["passport"] = f"паспорт Украины {dm['pass_ukr']}"
-					print(f"Количество итераций для поиска военнослужащего: {iteration_count_to_find_person}")
+					log(f"Количество итераций для поиска военнослужащего: {iteration_count_to_find_person}")
 					performance.stop_and_print()
 					break
 
@@ -393,7 +394,7 @@ class PersonnelStorage:
 		performance.start()
 		iteration_count = 0
 		count_for_report = 50
-		print("Просмотр списка военнослужащих. Пожалуйста, подождите...")
+		log("Просмотр списка военнослужащих. Пожалуйста, подождите...")
 		max_row_value = 2001
 		if row_limit is not None:
 			max_row_value = row_limit
@@ -405,10 +406,10 @@ class PersonnelStorage:
 
 			iteration_count = iteration_count + 1
 			if iteration_count % count_for_report == 0:
-				print(f"Обработано {iteration_count} строк...")
+				log(f"Обработано {iteration_count} строк...")
 
-		print(f"Количество итераций для просмотра списка: {iteration_count}")
-		print(f"Обнаружено военнослужащих: {len(all_rows)}")
+		log(f"Количество итераций для просмотра списка: {iteration_count}")
+		log(f"Обнаружено военнослужащих: {len(all_rows)}")
 		performance.stop_and_print()
 
 		return all_rows

@@ -1,13 +1,13 @@
 {
-	"personnel_path": "c:\\pisar_data\\personnel-demo.xlsx",
-	"personnel_details_path": "c:\\pisar_data\\personnel-details-demo.xlsx",
+	"personnel_path": "c:\\pisar_data\\personnel-demo-massive.xlsx",
+	"personnel_details_path": "c:\\pisar_data\\personnel-details-massive.xlsx",
 	"output_path": "c:\\pisar_output\\",
 	"military_unit": "42600",
 	"military_unit_address": "г.Донецк, ул.Лесная, 14",
 	"is_guard": true,
 	"battalion": "2 стрелковый батальон",
 	"phone_contact_to_report": "+7-999-111-22-33",
-	"row_limit": 393,
+	"row_limit": 3,
 	"hr_officer": {
 		"name": "Поспелова Ирина Ивановна",
 		"rank": "старший лейтенант",

@@ -1,4 +1,5 @@
 from document_prototype import DocumentPrototype
+from helpers.log_helper import log
 
 
 class BatchPrototype(DocumentPrototype):
@@ -24,12 +25,12 @@ class BatchPrototype(DocumentPrototype):
 	def render(self):
 		for doc in self.docs:
 			doc.subfolder_name = self.subfolder_name
-			print(f"{doc.get_name()}...")
+			log(f"{doc.get_name()}...")
 			doc.render()
 		if not self.singletons_executed:
 			for doc in self.singletons:
 				doc.subfolder_name = self.subfolder_name
-				print(f"{doc.get_name()}...")
+				log(f"{doc.get_name()}...")
 				doc.render()
 			self.singletons_executed = True
 
