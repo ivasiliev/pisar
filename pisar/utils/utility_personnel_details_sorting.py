@@ -23,12 +23,13 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 		# prepare hashes for search
 		persons_sr = pers_storage.get_all_persons(EXCEL_DOCUMENT_SR)
 		persons_ls = pers_storage.get_all_persons(EXCEL_DOCUMENT_LS)
-		sr_hash = self.prepare_hash_list(persons_sr)
-		ls_hash = self.prepare_hash_list(persons_ls)
+		sr_hash, sr_empty_unique = self.prepare_hash_list(persons_sr)
+		ls_hash, ls_empty_unique = self.prepare_hash_list(persons_ls)
 		# reading LS document
 		all_ls_rows = pers_storage.read_excel_file(EXCEL_DOCUMENT_LS)
-		log(
-			f"Количество в ШР: {len(persons_sr)}; Количество в ЛС: {len(persons_ls)}; Всего строк в ЛС: {len(all_ls_rows)};")
+		log(f"Количество в ШР: {len(persons_sr)}; Количество в ЛС: {len(persons_ls)}; Всего строк в ЛС: {len(all_ls_rows)};")
+		log(f"Количество людей с пустыми личными номерами в ШР: {len(sr_empty_unique)};")
+		log(f"Количество людей с пустыми личными номерами в ЛС: {len(ls_empty_unique)};")
 		new_ls_rows = []
 		# header of LS document
 		row_header = pers_storage.read_excel_header(EXCEL_DOCUMENT_LS)
@@ -79,17 +80,16 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 	def prepare_hash_list(self, pers_list):
 		index = -1
 		result = {}
+		empty_unique = []
 		for p in pers_list:
 			index = index + 1
 			hsh = p.get_hash()
 			if hsh is None:
-				p_name = p.full_name
-				if p_name is None or len(p_name) == 0:
-					p_name = "<пусто>"
-				log(f"Не могу определить hash для имени '{p_name}'; личный номер='{p.unique}'; номер строки={index};")
-				continue
-			result[hsh] = index
-		return result
+				log(f"Не могу определить hash для имени '{p.full_name}'; личный номер='{p.unique}'; номер строки={index};")
+				empty_unique.append(index)
+			else:
+				result[hsh] = index
+		return result, empty_unique
 
 	def convert_rows_to_lists(self, rows):
 		all_rows = []
