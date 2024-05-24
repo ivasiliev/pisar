@@ -35,6 +35,8 @@ class TemplateProcessor:
         for paragraph in document.paragraphs:
             if len(paragraph.runs) < 2:
                 continue
+
+            # merge runs, prepare them for replacement operations
             run_anchor = None
             for index in range(1, len(paragraph.runs)):
                 # on start
@@ -51,12 +53,18 @@ class TemplateProcessor:
                 else:
                     run_anchor = paragraph.runs[index]
 
-            # replacement
+            # replacement routines
             for run in paragraph.runs:
+                if len(run.text) == 0:
+                    continue
                 replacement_result = self.replace_placeholder(run.text)
                 if replacement_result is not None:
                     run.text = replacement_result
 
     def replace_placeholder(self, run_text):
+        while True:
+            was_replacement = False
+            #if
+
         result = None
         return result
