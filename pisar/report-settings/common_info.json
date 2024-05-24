@@ -1,6 +1,7 @@
 {
-	"personnel_path": "c:\\pisar_data\\personnel-demo-massive.xlsx",
-	"personnel_details_path": "c:\\pisar_data\\personnel-details-massive.xlsx",
+	"personnel_path": "c:\\pisar_data\\personnel-demo.xlsx",
+	"personnel_details_path": "c:\\pisar_data\\personnel-details-demo.xlsx",
+	"box_path": "c:\\pisar_data\\box\\",
 	"output_path": "c:\\pisar_output\\",
 	"military_unit": "42600",
 	"military_unit_address": "г.Донецк, ул.Лесная, 14",
