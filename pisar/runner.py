@@ -99,55 +99,48 @@ def run_generation(common_config_file, soldier_config_file, report_type):
         log("Неверная структура Штатного расписания/Информации о личном составе. Выполнение программы прервано.")
         return
 
-    if report_type == BOX_PROCESSING:
-        run_box_processing(data_model, pers_storage)
-    else:
-        if doc is None:
-            log("Не удалось определить тип документа. Выполнение программы прервано.")
-            return
+    is_box = report_type == BOX_PROCESSING
 
-        doc.data_model["pers_storage"] = pers_storage
+    if doc is None and not is_box:
+        log("Не удалось определить тип документа. Выполнение программы прервано.")
+        return
 
-        log(f"Выполняется: {doc.get_name()}.")
-        if doc.is_utility():
-            doc.render()
+    sold_ids = data_model[MODEL_JSON_OBJECT]["soldier_ids"].split(",")
+    soldiers = []
+    for sld in sold_ids:
+        if "-" in sld:
+            tkn = sld.split("-")
+            if len(tkn) == 2:
+                for i in range(int(tkn[0]), int(tkn[1]) + 1):
+                    soldiers.append(i)
         else:
-            sold_ids = data_model[MODEL_JSON_OBJECT]["soldier_ids"].split(",")
-            soldiers = []
-            for sld in sold_ids:
-                if "-" in sld:
-                    tkn = sld.split("-")
-                    if len(tkn) == 2:
-                        for i in range(int(tkn[0]), int(tkn[1]) + 1):
-                            soldiers.append(i)
-                else:
-                    soldiers.append(int(sld))
+            soldiers.append(int(sld))
+    if len(soldiers) == 0:
+        log(f"Не заданы номера военнослужащих. В настроечном файле в поле 'soldier_ids' внесите их номера из "
+            f"штатного расписания (первый столбец). Выполнение программы прервано.")
+        return
 
-            if len(soldiers) == 0:
-                log(f"Не заданы номера военнослужащих. В настроечном файле в поле 'soldier_ids' внесите их номера из "
-                    f"штатного расписания (первый столбец). Выполнение программы прервано.")
+    if doc is not None:
+        doc.data_model["pers_storage"] = pers_storage
+        log(f"Выполняется: {doc.get_name()}.")
+
+    if not is_box and doc.is_utility():
+        doc.render()
+    else:
+        for sld in soldiers:
+            current_soldier = pers_storage.find_person_by_id(sld)
+            if current_soldier is None:
+                log(f"Не удалось найти военнослужащего под номером '{str(sld)}'")
+                continue
+
+            data_model[MODEL_CURRENT_SOLDIER] = current_soldier
+            log(f"Документ для военнослужащего: {current_soldier.full_name}")
+            if is_box:
+                processor = TemplateProcessor(data_model, pers_storage)
+                processor.process()
             else:
-                if doc.is_utility():
-                    doc.data_model["pers_storage"] = pers_storage
-                    doc.render()
-                else:
-                    if not pers_storage.is_valid:
-                        log(
-                            "Неверная структура Штатного расписания/Информации о личном составе. Выполнение программы прервано.")
-                        return
-                    for sld in soldiers:
-                        current_soldier = pers_storage.find_person_by_id(sld)
-                        if current_soldier is None:
-                            log(f"Не удалось найти военнослужащего под номером '{str(sld)}'")
-                            continue
+                doc.render()
 
-                        data_model[MODEL_CURRENT_SOLDIER] = current_soldier
-                        log(f"Документ для военнослужащего: {current_soldier.full_name}")
-
-                        # print_commander(doc.get_commander_company(), "ротный:")
-                        # print_commander(doc.get_commander_platoon(), "взводный:")
-
-                        doc.render()
     log("Писарь завершил работу")
 
 
@@ -158,13 +151,6 @@ def add_fields_json(js):
               "mother_name"]
     for f in fields:
         js[f] = ""
-
-
-def run_box_processing(data_model, pers_storage):
-    # обработка документов в Коробке
-    processor = TemplateProcessor(data_model, pers_storage)
-    processor.process()
-
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:

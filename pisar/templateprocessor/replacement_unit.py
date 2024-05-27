@@ -1,5 +1,5 @@
-from classes.document_in_report import MODEL_CURRENT_SOLDIER
-from helpers.text_helper import replace_with_glue, get_month_string
+from classes.document_in_report import MODEL_CURRENT_SOLDIER, MODEL_JSON_OBJECT, MODEL_MORPHOLOGY
+from helpers.log_helper import log
 
 
 class ReplacementUnit:
@@ -11,23 +11,53 @@ class ReplacementUnit:
     def get_soldier_info(self):
         return self.data_model[MODEL_CURRENT_SOLDIER]
 
-    def find(self, text):
-        result = ""
-        if self.placeholder in text:
-            # TODO find first occurrence and replace it only
-            result = self.replace(text)
-        return result
+    def get_report_settings(self):
+        return self.data_model[MODEL_JSON_OBJECT]
 
-    def replace(self, text):
+    def find(self, text):
+        current_text = ""
+        # падежи Именительный, Родительный, Творительный
+        suffixes = ["И", "Р", "Т"]
+        placeholders_to_check = []
+        if self.placeholder.endswith("}"):
+            placeholders_to_check.append(self.placeholder)
+        else:
+            for suffix in suffixes:
+                placeholders_to_check.append(f"{self.placeholder}{suffix}}}")
+
+        for placeholder in placeholders_to_check:
+            if placeholder in text:
+                if len(current_text) == 0:
+                    current_text = text
+                current_text = self.replace(placeholder, current_text)
+
+        # returns updated string
+        return current_text
+
+    def replace(self, actual_placeholder, text):
         pass
 
-    # TODO put in helper
-    def get_date_format_1(self, date_str):
-        tokens = date_str.split(".")
-        if len(tokens) != 3:
-            return date_str
-        # print(f"Не удалось определить формат даты {date_str}")
-        d = int(tokens[0])
-        m = int(tokens[1])
-        y = int(tokens[2])
-        return replace_with_glue(f"{d} {get_month_string(m)} {y} года")
+    def extract_declension(self, actual_placeholder):
+        tokens = actual_placeholder.split(";")
+        if len(tokens) != 2:
+            log(f"placeholder {actual_placeholder} is incorrect")
+            return None
+        declension_str = tokens[1].replace("}", "")
+        if len(declension_str) != 1:
+            log(f"can't define declension_str ({tokens[1]})")
+            return None
+        result = -1
+        if declension_str == "И":
+            result = 0
+        if declension_str == "Р":
+            result = 1
+        if declension_str == "Т":
+            result = 2
+        if result == -1:
+            log(f"can't define declension ({declension_str})")
+            return None
+        else:
+            return result
+
+    def get_morph(self):
+        return self.data_model[MODEL_MORPHOLOGY]

@@ -2,9 +2,13 @@ import os
 
 from docx import Document
 
-from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_OUTPUT_FOLDER
+from classes.document_in_report import MODEL_OUTPUT_FOLDER, MODEL_CURRENT_SOLDIER
 from helpers.log_helper import log
 from templateprocessor.ru_dob import RuDob
+from templateprocessor.ru_sold_fio import RuSoldFio
+from templateprocessor.ru_sold_position import RuSoldPosition
+from templateprocessor.ru_sold_rank import RuSoldRank
+from templateprocessor.ru_sold_sr import RuSoldSr
 
 MODEL_BOX_FOLDER = "box_path"
 
@@ -27,11 +31,14 @@ class TemplateProcessor:
         for file_name in os.listdir(self.box_folder):
             if not file_name.endswith(".docx"):
                 continue
-            full_path = os.path.join(self.box_folder, file_name)
-            self.process_document(full_path)
+            full_path_input = os.path.join(self.box_folder, file_name)
+            s_info = self.data_model[MODEL_CURRENT_SOLDIER]
+            fn = file_name.replace(".docx", "") + f" ({s_info.full_name}).docx"
+            full_path_output = os.path.join(self.output_folder, fn)
+            self.process_document(full_path_input, full_path_output)
 
-    def process_document(self, full_path):
-        f = open(full_path, "rb")
+    def process_document(self, full_path_input, full_path_output):
+        f = open(full_path_input, "rb")
         document = Document(f)
         f.close()
 
@@ -58,29 +65,34 @@ class TemplateProcessor:
 
             # replacement routines
             for run in paragraph.runs:
-                if len(run.text) == 0:
-                    continue
-                replacement_result = self.replace_placeholder(run.text)
-                if len(replacement_result) > 0:
-                    run.text = replacement_result
+                ln = len(str(run.text))
+                if ln > 0:
+                    replacement_result = self.replace_all_placeholders(run.text)
+                    if replacement_result != run.text:
+                        run.text = replacement_result
 
-    def replace_placeholder(self, run_text):
-        repl_count = -1
-        replacement_result = ""
-        while repl_count != 0:
-            repl_count = 0
+        document.save(full_path_output)
+        log(f"Документ сохранен: {full_path_output}")
+
+    def replace_all_placeholders(self, run_text):
+        current_text = ""
+        has_changed = True
+        while has_changed:
             for repl in self.replacements:
-                repl_text = repl.find(run_text)
-                repl_count = repl_count + len(repl_text)
-                if len(replacement_result) == 0:
-                    replacement_result = run_text
-                replacement_result = replacement_result.replace(repl_text, run_text)
+                if len(current_text) == 0:
+                    current_text = run_text
+                repl_text = repl.find(current_text)
+                has_changed = len(repl_text) > 0
+                if has_changed:
+                    current_text = repl_text
 
-        return replacement_result
+        return current_text
 
     def get_replacements(self):
         result = []
         result.append(RuDob(self.data_model, self.pers_storage, "{СОЛД-ДР-ПОЛН}"))
-
-
+        result.append(RuSoldFio(self.data_model, self.pers_storage, "{СОЛД-ФИО;"))
+        result.append(RuSoldRank(self.data_model, self.pers_storage, "{СОЛД-ЗВАНИЕ;"))
+        result.append(RuSoldSr(self.data_model, self.pers_storage, "{СОЛД-ШР;"))
+        result.append(RuSoldPosition(self.data_model, self.pers_storage, "{СОЛД-ДОЛЖНОСТЬ;"))
         return result

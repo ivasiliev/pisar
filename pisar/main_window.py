@@ -25,7 +25,7 @@ sys.path.append(helpers_path)
 
 from runner import run_generation, OFFICIAL_PROCEEDING_BATCH, DESERT_UNIT_BATCH, MASS_HR_INFO_BATCH, \
     MASS_PERFORMANCE_CHARACTERISTICS_BATCH, UTILITY_BIRTHDAYS, UTILITY_PERSONNEL_DETAILS_CHECK, \
-    UTILITY_PERSONNEL_DETAILS_SORTING, DIARY, QUEST_ARRIVAL, run_box_processing, BOX_PROCESSING
+    UTILITY_PERSONNEL_DETAILS_SORTING, DIARY, QUEST_ARRIVAL, BOX_PROCESSING
 
 
 # 0 -- pointer, 1 -- clock
@@ -74,6 +74,14 @@ box_button_key = "box_button"
 
 common_config_file = "c:\\pisar_data\\common_info.json"
 soldier_config_file = "c:\\pisar_data\\soldier_info.json"
+box_folder_input = "c:\\pisar_data\\box"
+box_folder_output = "c:\\pisar_output\\box"
+
+if not os.path.exists(box_folder_input):
+    os.makedirs(box_folder_input)
+
+if not os.path.exists(box_folder_output):
+    os.makedirs(box_folder_output)
 
 group_official_proceeding = RunInfo()
 group_official_proceeding.group_number = 0
