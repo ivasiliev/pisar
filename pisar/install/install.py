@@ -3,7 +3,7 @@
 import os
 import shutil
 
-folders = ["c:\\pisar_data", "c:\\pisar_output"]
+folders = ["c:\\pisar_data", "c:\\pisar_output", "c:\\pisar_data\\box", "c:\\pisar_output\\box"]
 
 for folder in folders:
 	if not os.path.exists(folder):

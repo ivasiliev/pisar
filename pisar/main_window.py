@@ -24,40 +24,40 @@ sys.path.append(batches_path)
 sys.path.append(helpers_path)
 
 from runner import run_generation, OFFICIAL_PROCEEDING_BATCH, DESERT_UNIT_BATCH, MASS_HR_INFO_BATCH, \
-	MASS_PERFORMANCE_CHARACTERISTICS_BATCH, UTILITY_BIRTHDAYS, UTILITY_PERSONNEL_DETAILS_CHECK, \
-	UTILITY_PERSONNEL_DETAILS_SORTING, DIARY, QUEST_ARRIVAL
+    MASS_PERFORMANCE_CHARACTERISTICS_BATCH, UTILITY_BIRTHDAYS, UTILITY_PERSONNEL_DETAILS_CHECK, \
+    UTILITY_PERSONNEL_DETAILS_SORTING, DIARY, QUEST_ARRIVAL, BOX_PROCESSING
 
 
 # 0 -- pointer, 1 -- clock
 def set_cursor(ctrl_name, cursor_type):
-	curs_name = "arrow"
-	if cursor_type == 1:
-		curs_name = "circle"
-	window[ctrl_name].set_cursor(curs_name)
+    curs_name = "arrow"
+    if cursor_type == 1:
+        curs_name = "circle"
+    window[ctrl_name].set_cursor(curs_name)
 
 
 def get_full_path(filename):
-	folders_to_search = [
-		current_path
-		, root_path
-		, os.path.join(current_path, "install")
-		, os.path.join(root_path, "install")
-	]
-	for fld in folders_to_search:
-		result = os.path.join(fld, filename)
-		if os.path.exists(result):
-			return result
-	log(f"Не удалось обнаружить файл: {filename}")
-	return None
+    folders_to_search = [
+        current_path
+        , root_path
+        , os.path.join(current_path, "install")
+        , os.path.join(root_path, "install")
+    ]
+    for fld in folders_to_search:
+        result = os.path.join(fld, filename)
+        if os.path.exists(result):
+            return result
+    log(f"Не удалось обнаружить файл: {filename}")
+    return None
 
 
 def read_app_config():
-	# app can be run in different ways
-	a_path = get_full_path("app_settings.json")
-	if a_path is None:
-		log("Не обнаружен файл настроек для приложения. Выполнение программы прекращено.")
-		sys.exit()
-	return json.load(open(a_path, encoding='UTF8'))
+    # app can be run in different ways
+    a_path = get_full_path("app_settings.json")
+    if a_path is None:
+        log("Не обнаружен файл настроек для приложения. Выполнение программы прекращено.")
+        sys.exit()
+    return json.load(open(a_path, encoding='UTF8'))
 
 
 # check app settings
@@ -70,9 +70,18 @@ sg.theme('DarkGreen5')
 update_button_key = "update_app_button"
 edit_common_settings_key = "edit_common_settings_button"
 edit_soldier_settings_key = "edit_soldier_settings_button"
+box_button_key = "box_button"
 
 common_config_file = "c:\\pisar_data\\common_info.json"
 soldier_config_file = "c:\\pisar_data\\soldier_info.json"
+box_folder_input = "c:\\pisar_data\\box"
+box_folder_output = "c:\\pisar_output\\box"
+
+if not os.path.exists(box_folder_input):
+    os.makedirs(box_folder_input)
+
+if not os.path.exists(box_folder_output):
+    os.makedirs(box_folder_output)
 
 group_official_proceeding = RunInfo()
 group_official_proceeding.group_number = 0
@@ -133,53 +142,58 @@ batch_groups = [group_official_proceeding, group_desert_unit, group_mass_hr_info
                 group_quest_arrival]
 
 layout = [
-	[sg.Button(key=update_button_key, button_text="Обновить программу"),
-	 sg.Button(key=edit_common_settings_key, button_text="Войсковая часть"),
-	 sg.Button(key=edit_soldier_settings_key, button_text="Военнослужащий")
-	 ],
-	[sg.VPush()]
+    [sg.Button(key=update_button_key, button_text="Обновить программу"),
+     sg.Button(key=edit_common_settings_key, button_text="Войсковая часть"),
+     sg.Button(key=edit_soldier_settings_key, button_text="Военнослужащий"),
+     sg.Button(key=box_button_key, button_text="Коробка")
+     ],
+    [sg.VPush()]
 ]
 
 for grp in batch_groups:
-	# , size=(700, 160)
-	layout.append([sg.Frame("", grp.create_ui())])
+    # , size=(700, 160)
+    layout.append([sg.Frame("", grp.create_ui())])
 
 window = sg.Window(f"Писарь   {app_version} | {app_release_date}", layout)
 
 while True:
-	event, values = window.read()
-	if event == sg.WIN_CLOSED:
-		break
-	if event == update_button_key:
-		full_path_update = get_full_path("update.bat")
-		if full_path_update is None:
-			print(f"Не удалось найти запускаемый файл для обновлений.")
-		else:
-			print(f"Updater: {full_path_update}")
-			# full_path_run = os.path.join(current_path, "install", "pisar.bat")
-			set_cursor(update_button_key, 1)
-			subprocess.call([full_path_update])
+    event, values = window.read()
+    if event == sg.WIN_CLOSED:
+        break
+    if event == update_button_key:
+        full_path_update = get_full_path("update.bat")
+        if full_path_update is None:
+            print(f"Не удалось найти запускаемый файл для обновлений.")
+        else:
+            print(f"Updater: {full_path_update}")
+            # full_path_run = os.path.join(current_path, "install", "pisar.bat")
+            set_cursor(update_button_key, 1)
+            subprocess.call([full_path_update])
 
-			# if version changed, need to re-run app
-			app_settings = read_app_config()
-			print("Приложение обновлено. Требуется перезапуск!")
-			# if app_settings["app_version"] != app_version:
-			#	print("Требуется перезапуск!")
-			# TODO
-			# subprocess.Popen([full_path_run])
-			# sys.exit()
-			# break
+            # if version changed, need to re-run app
+            app_settings = read_app_config()
+            print("Приложение обновлено. Требуется перезапуск!")
+            # if app_settings["app_version"] != app_version:
+            #	print("Требуется перезапуск!")
+            # TODO
+            # subprocess.Popen([full_path_run])
+            # sys.exit()
+            # break
 
-			set_cursor(update_button_key, 0)
-	if event == edit_common_settings_key:
-		subprocess.call(["notepad", common_config_file])
-	if event == edit_soldier_settings_key:
-		subprocess.call(["notepad", soldier_config_file])
-	if event.endswith("_run"):
-		gr_num = int(event.replace("report_", "").replace("_run", ""))
-		gr = batch_groups[gr_num]
-		set_cursor(event, 1)
-		run_generation(common_config_file, soldier_config_file, gr.batch_name)
-		set_cursor(event, 0)
+            set_cursor(update_button_key, 0)
+    if event == edit_common_settings_key:
+        subprocess.call(["notepad", common_config_file])
+    if event == edit_soldier_settings_key:
+        subprocess.call(["notepad", soldier_config_file])
+    if event == box_button_key:
+        set_cursor(event, 1)
+        run_generation(common_config_file, soldier_config_file, BOX_PROCESSING)
+        set_cursor(event, 0)
+    if event.endswith("_run"):
+        gr_num = int(event.replace("report_", "").replace("_run", ""))
+        gr = batch_groups[gr_num]
+        set_cursor(event, 1)
+        run_generation(common_config_file, soldier_config_file, gr.batch_name)
+        set_cursor(event, 0)
 
 window.close()

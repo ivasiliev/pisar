@@ -7,6 +7,7 @@ from pytrovich.maker import PetrovichDeclinationMaker
 from classes.document_in_report import MODEL_PERSONNEL_PATH, MODEL_OUTPUT_FOLDER, MODEL_MORPHOLOGY, \
 	MODEL_JSON_OBJECT, MODEL_MORPHOLOGY_FOR_NAMES, MODEL_IS_VALID, MODEL_PERSONNEL_DETAILS_PATH
 from helpers.log_helper import log
+from templateprocessor.template_processor import MODEL_BOX_FOLDER
 
 
 def create_from_json(js_settings):
@@ -17,6 +18,7 @@ def create_from_json(js_settings):
 		MODEL_PERSONNEL_PATH: js_settings["personnel_path"]
 		, MODEL_PERSONNEL_DETAILS_PATH: js_settings["personnel_details_path"]
 		, MODEL_OUTPUT_FOLDER: js_settings["output_path"]
+		, MODEL_BOX_FOLDER: js_settings[MODEL_BOX_FOLDER]
 		, MODEL_MORPHOLOGY: morph
 		, MODEL_JSON_OBJECT: js_settings
 		, MODEL_MORPHOLOGY_FOR_NAMES: maker
