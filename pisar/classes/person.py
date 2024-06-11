@@ -30,7 +30,7 @@ class Person:
 				return
 			tokens = dob_str.split(".")
 			if len(tokens) != 3:
-				log(f"Ошибка при разборе даты {dob_str}")
+				log(f"Ошибка при разборе даты {dob_str}. Проверьте столбец с датами рождения!")
 				return
 			self.dob = datetime.datetime(int(tokens[2]), int(tokens[1]), int(tokens[0]))
 

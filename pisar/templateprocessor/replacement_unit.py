@@ -42,7 +42,7 @@ class ReplacementUnit:
         if len(tokens) != 2:
             log(f"placeholder {actual_placeholder} is incorrect")
             return None
-        declension_str = tokens[1].replace("}", "")
+        declension_str = tokens[1].replace("}", "").strip().upper()
         if len(declension_str) != 1:
             log(f"can't define declension_str ({tokens[1]})")
             return None
@@ -61,3 +61,14 @@ class ReplacementUnit:
 
     def get_morph(self):
         return self.data_model[MODEL_MORPHOLOGY]
+
+    def get_date_of_event(self):
+        return self.get_report_settings_by_name("date_of_event")
+
+    # TODO to helper
+    def get_report_settings_by_name(self, name):
+        rep_settings = self.get_report_settings()
+        if name in rep_settings:
+            return rep_settings[name]
+        else:
+            return ""
