@@ -7,11 +7,13 @@ from helpers.log_helper import log
 from templateprocessor.ru_date_event import RuDateEvent
 from templateprocessor.ru_date_event_short import RuDateEventShort
 from templateprocessor.ru_dob import RuDob
+from templateprocessor.ru_dob_short import RuDobShort
 from templateprocessor.ru_sold_fio import RuSoldFio
 from templateprocessor.ru_sold_fio_short1 import RuSoldFioShort1
 from templateprocessor.ru_sold_position import RuSoldPosition
 from templateprocessor.ru_sold_rank import RuSoldRank
 from templateprocessor.ru_sold_sr import RuSoldSr
+from templateprocessor.ru_sold_unique import RuSoldUnique
 
 MODEL_BOX_FOLDER = "box_path"
 
@@ -112,5 +114,7 @@ class TemplateProcessor:
                   RuDateEvent(self.data_model, self.pers_storage, "{ДАТА-СОБЫТИЯ}"),
                   RuDateEventShort(self.data_model, self.pers_storage, "{ДАТА-СОБЫТИЯ-КР}"),
                   RuSoldFioShort1(self.data_model, self.pers_storage, "{СОЛД-ИО-КР;"),
+                  RuDobShort(self.data_model, self.pers_storage, "{СОЛД-ДР-КР}"),
+                  RuSoldUnique(self.data_model, self.pers_storage, "{СОЛД-ЛН}")
                   ]
         return result

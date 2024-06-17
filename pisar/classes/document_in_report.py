@@ -25,6 +25,8 @@ MODEL_JSON_OBJECT = "json_settings"
 MODEL_MORPHOLOGY_FOR_NAMES = "petrovich"
 MODEL_IS_VALID = "is_valid"
 MODEL_CURRENT_SOLDIER = "current_soldier"
+# Личный номер военнослужащего
+MODEL_UNIQUE = "unique"
 
 
 class DocumentInReport(DocumentPrototype):
