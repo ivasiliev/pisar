@@ -4,11 +4,16 @@ from docx import Document
 
 from classes.document_in_report import MODEL_OUTPUT_FOLDER, MODEL_CURRENT_SOLDIER
 from helpers.log_helper import log
+from templateprocessor.ru_date_event import RuDateEvent
+from templateprocessor.ru_date_event_short import RuDateEventShort
 from templateprocessor.ru_dob import RuDob
+from templateprocessor.ru_dob_short import RuDobShort
 from templateprocessor.ru_sold_fio import RuSoldFio
+from templateprocessor.ru_sold_fio_short1 import RuSoldFioShort1
 from templateprocessor.ru_sold_position import RuSoldPosition
 from templateprocessor.ru_sold_rank import RuSoldRank
 from templateprocessor.ru_sold_sr import RuSoldSr
+from templateprocessor.ru_sold_unique import RuSoldUnique
 
 MODEL_BOX_FOLDER = "box_path"
 
@@ -42,6 +47,21 @@ class TemplateProcessor:
         document = Document(f)
         f.close()
 
+        self.process_document_runs(document)
+        self.process_document_tables(document)
+
+        document.save(full_path_output)
+        log(f"Документ сохранен: {full_path_output}")
+
+    def process_document_tables(self, document):
+        for table in document.tables:
+            for row in table.rows:
+                for cell in row.cells:
+                    replacement_result = self.replace_all_placeholders(cell.text)
+                    if replacement_result != cell.text:
+                        cell.text = replacement_result
+
+    def process_document_runs(self, document):
         for paragraph in document.paragraphs:
             if len(paragraph.runs) < 2:
                 continue
@@ -71,9 +91,6 @@ class TemplateProcessor:
                     if replacement_result != run.text:
                         run.text = replacement_result
 
-        document.save(full_path_output)
-        log(f"Документ сохранен: {full_path_output}")
-
     def replace_all_placeholders(self, run_text):
         current_text = ""
         has_changed = True
@@ -89,10 +106,15 @@ class TemplateProcessor:
         return current_text
 
     def get_replacements(self):
-        result = []
-        result.append(RuDob(self.data_model, self.pers_storage, "{СОЛД-ДР-ПОЛН}"))
-        result.append(RuSoldFio(self.data_model, self.pers_storage, "{СОЛД-ФИО;"))
-        result.append(RuSoldRank(self.data_model, self.pers_storage, "{СОЛД-ЗВАНИЕ;"))
-        result.append(RuSoldSr(self.data_model, self.pers_storage, "{СОЛД-ШР;"))
-        result.append(RuSoldPosition(self.data_model, self.pers_storage, "{СОЛД-ДОЛЖНОСТЬ;"))
+        result = [RuDob(self.data_model, self.pers_storage, "{СОЛД-ДР-ПОЛН}"),
+                  RuSoldFio(self.data_model, self.pers_storage, "{СОЛД-ФИО;"),
+                  RuSoldRank(self.data_model, self.pers_storage, "{СОЛД-ЗВАНИЕ;"),
+                  RuSoldSr(self.data_model, self.pers_storage, "{СОЛД-ШР;"),
+                  RuSoldPosition(self.data_model, self.pers_storage, "{СОЛД-ДОЛЖНОСТЬ;"),
+                  RuDateEvent(self.data_model, self.pers_storage, "{ДАТА-СОБЫТИЯ}"),
+                  RuDateEventShort(self.data_model, self.pers_storage, "{ДАТА-СОБЫТИЯ-КР}"),
+                  RuSoldFioShort1(self.data_model, self.pers_storage, "{СОЛД-ИО-КР;"),
+                  RuDobShort(self.data_model, self.pers_storage, "{СОЛД-ДР-КР}"),
+                  RuSoldUnique(self.data_model, self.pers_storage, "{СОЛД-ЛН}")
+                  ]
         return result
