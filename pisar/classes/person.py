@@ -6,7 +6,7 @@ from helpers.log_helper import log
 
 class Person:
 	def __init__(self):
-		self.id_sr = "" # id в ШР (первый столбец)
+		self.id_sr = ""  # id в ШР (первый столбец)
 		self.company = ""  # рота
 		self.platoon = ""  # взвод
 		self.squad = ""  # отделение
@@ -48,13 +48,20 @@ class Person:
 
 	def get_hash(self):
 		un = None
-		if self.unique is not None and len(self.unique) > 0:
-			un = self.unique
-		else:
-			if self.full_name is not None and len(self.full_name) > 0:
-				un = self.full_name
+		try:
+			if self.unique is not None:
+				v = str(self.unique)
+				if len(v) > 0:
+					un = self.unique
+			if un is None:
+				if self.full_name is not None and len(self.full_name) > 0:
+					v = str(self.full_name)
+					if len(v) > 0:
+						un = self.full_name
+			if un is not None:
+				un = int(hashlib.md5(un.encode("utf-8")).hexdigest(), 16)
+		except:
+			log("Exception! Can't define hash for this person")
 		if un is None:
 			log("Can't define hash for this person")
-			return None
-		else:
-			return int(hashlib.md5(un.encode("utf-8")).hexdigest(), 16)
+		return un
