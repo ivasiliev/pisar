@@ -140,14 +140,14 @@ class PersonnelStorage:
 		performance.stop_and_print()
 
 		# check on mandatory fields
-		if person is not None and person.unique is None:
+		if person is not None and not person.get_unique_is_not_empty():
 			log(f"Не задан личный номер для {person.full_name}! Продолжение работы невозможно.")
 			person = None
 
 		# let's find info in the auxiliary Excel document and replace Report Info about him
 		if person is not None:
 			log(
-				f"Поиск военнослужащего личный номер {person.unique} в файле Информация о личном составе. Пожалуйста, подождите...")
+				f"Поиск военнослужащего личный номер '{person.get_unique()}' в файле Информация о личном составе. Пожалуйста, подождите...")
 			performance = PerformanceHelper()
 			performance.start()
 			iteration_count_to_find_person = 0
@@ -156,6 +156,7 @@ class PersonnelStorage:
 			workbook = openpyxl.load_workbook(pers_details_excel_doc.full_path)
 			sh = workbook[pers_details_excel_doc.sheet_name]
 			person_row = None
+			person_unique = person.get_unique()
 			for row in sh.iter_rows(min_row=2, min_col=1, max_row=2001,
 			                        max_col=pers_details_excel_doc.column_count_to_search):
 				for cell in row:
@@ -164,7 +165,7 @@ class PersonnelStorage:
 						continue
 					if cell.value is None:
 						break
-					if str(cell.value) == person.unique:
+					if str(cell.value) == person_unique:
 						person_row = row
 						break
 					if iteration_count_to_find_person % count_for_report == 0:
@@ -360,7 +361,7 @@ class PersonnelStorage:
 		person.rank = self.find_value_in_row_by_index(person_row, col_rank)
 		person.full_name = self.find_value_in_row_by_index(person_row, col_full_name)
 		person.set_dob(self.find_value_in_row_by_index(person_row, col_dob))
-		person.unique = self.find_value_in_row_by_index(person_row, col_unique)
+		person.unique = str(self.find_value_in_row_by_index(person_row, col_unique))
 		person.phone = self.find_value_in_row_by_index(person_row, col_phone)
 
 		# normalization of a soldier name

@@ -57,10 +57,9 @@ class UtilityBirthday(UtilityPrototype):
 			if self.date_left <= nd <= self.date_right:
 				diff = nd - self.current_date
 				pers.age = diff.days
-				# TODO create function notEmpty
-				if pers.unique is not None and len(pers.unique) > 0:
+				if pers.get_unique_is_not_empty():
 					for p in all_details:
-						if p.unique is not None and len(p.unique) > 0 and p.unique == pers.unique:
+						if p.get_unique_is_not_empty() and p.get_unique() == pers.get_unique():
 							pers.phone = p.phone
 							break
 				persons.append(pers)
