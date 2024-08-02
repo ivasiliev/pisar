@@ -1,6 +1,7 @@
 from openpyxl.styles import Font
 from openpyxl.workbook import Workbook
 
+from classes.person import Person
 from classes.personnel_storage import EXCEL_DOCUMENT_SR, EXCEL_DOCUMENT_LS
 from helpers.log_helper import log
 from utils.utility_prototype import UtilityPrototype
@@ -51,12 +52,12 @@ class UtilityPersonnelDetailsCheck(UtilityPrototype):
 
 		super().render()
 
-	def is_pers_in_list(self, pers, pers_list):
+	def is_pers_in_list(self, pers: Person, pers_list):
 		found = False
 		for p in pers_list:
-			if p.unique is None or len(p.unique) == 0:
+			if not p.get_unique_is_not_empty():
 				continue
-			if pers.unique.casefold() == p.unique.casefold():
+			if pers.get_unique().casefold() == p.get_unique().casefold():
 				found = True
 				break
 
@@ -87,7 +88,7 @@ class UtilityPersonnelDetailsCheck(UtilityPrototype):
 		if len(pers_group) > 0:
 			for pers in pers_group:
 				ws.cell(row=num_row, column=1, value=pers.full_name)
-				ws.cell(row=num_row, column=2, value=pers.unique)
+				ws.cell(row=num_row, column=2, value=pers.get_unique())
 				num_row = num_row + 1
 		else:
 			ws.cell(row=num_row, column=1, value="<никого>")
@@ -98,8 +99,9 @@ class UtilityPersonnelDetailsCheck(UtilityPrototype):
 		clean_list = []
 		empty_unique = []
 		for pers in pers_list:
-			if pers.unique is None or len(pers.unique) == 0:
-				empty_unique.append(pers)
-			else:
+			if pers.get_unique_is_not_empty():
 				clean_list.append(pers)
+			else:
+				empty_unique.append(pers)
+
 		return clean_list, empty_unique

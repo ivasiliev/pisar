@@ -49,12 +49,11 @@ class Person:
 	def get_hash(self):
 		un = None
 		try:
-			if self.unique is not None:
-				v = str(self.unique)
-				if len(v) > 0:
-					un = self.unique
+			v = self.get_unique()
+			if len(v) > 0:
+				un = self.unique
 			if un is None:
-				if self.full_name is not None and len(self.full_name) > 0:
+				if self.full_name is not None:
 					v = str(self.full_name)
 					if len(v) > 0:
 						un = self.full_name
@@ -65,3 +64,12 @@ class Person:
 		if un is None:
 			log("Can't define hash for this person")
 		return un
+
+	def get_unique(self):
+		if self.unique is None:
+			return ""
+		else:
+			return str(self.unique)
+
+	def get_unique_is_not_empty(self):
+		return len(self.get_unique()) > 0
