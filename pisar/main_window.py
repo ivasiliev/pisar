@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 import PySimpleGUI as sg
+import openpyxl
 
 from classes.run_info import RunInfo
 from helpers.log_helper import log
@@ -13,6 +14,8 @@ current_path = Path(os.getcwd())
 log(f"current path={current_path}")
 root_path = current_path.parent.absolute()
 log(f"root path={root_path}")
+
+print(f"openpyxl version={openpyxl.__version__}")
 
 gui_path = os.path.join(root_path, "gui")
 documents_path = os.path.join(root_path, "documents")
