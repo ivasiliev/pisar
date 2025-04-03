@@ -8,6 +8,7 @@ from templateprocessor.ru_date_event import RuDateEvent
 from templateprocessor.ru_date_event_short import RuDateEventShort
 from templateprocessor.ru_dob import RuDob
 from templateprocessor.ru_dob_short import RuDobShort
+from templateprocessor.ru_sold_citizenship import RuSoldCitizenship
 from templateprocessor.ru_sold_education import RuSoldEducation
 from templateprocessor.ru_sold_father import RuSoldFather
 from templateprocessor.ru_sold_fio import RuSoldFio
@@ -128,7 +129,7 @@ class TemplateProcessor:
                   RuDobShort(self.data_model, self.pers_storage, "{СОЛД-ДР-КР}"),
                   RuSoldUnique(self.data_model, self.pers_storage, "{СОЛД-ЛН}"),
                   RuSoldRegistrationOffice(self.data_model, self.pers_storage, "{СОЛД-РВК}"),
-                  # TODO гражданство
+                  RuSoldCitizenship(self.data_model, self.pers_storage, "{СОЛД-ГРАЖДАНСТВО}"),
                   RuSoldEducation(self.data_model, self.pers_storage, "{СОЛД-ОБРАЗОВАНИЕ}"),
                   RuSoldMaritalStatus(self.data_model, self.pers_storage, "{СОЛД-СЕМ-ПОЛОЖЕНИЕ}"),
                   RuSoldFather(self.data_model, self.pers_storage, "{СОЛД-ОТЕЦ}"),

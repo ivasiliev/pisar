@@ -51,6 +51,7 @@ COLUMN_REGISTRATION_OFFICE = "COLUMN_REGISTRATION_OFFICE"
 # личные адреса
 COLUMN_HOME_ADDRESS = "COLUMN_HOME_ADDRESS"
 COLUMN_HOME_ADDRESS_REAL = "COLUMN_HOME_ADDRESS_REAL"
+COLUMN_CITIZENSHIP = "COLUMN_CITIZENSHIP"
 
 
 class PersonnelStorage:
@@ -227,6 +228,7 @@ class PersonnelStorage:
 						, ["siblings_phone", COLUMN_SIBLINGS_PHONE]
 						, ["spouse_phone", COLUMN_SPOUSE_PHONE]
 						, ["registration_office", COLUMN_REGISTRATION_OFFICE]
+						, ["citizenship", COLUMN_CITIZENSHIP]
 					]
 
 					for m in mapping:
@@ -336,6 +338,7 @@ class PersonnelStorage:
 			, ColumnInfo(COLUMN_SPOUSE_PHONE, "Номер телефона жены/мужа")
 			#
 			, ColumnInfo(COLUMN_REGISTRATION_OFFICE, "Каким военкоматом призван на службу")
+			, ColumnInfo(COLUMN_CITIZENSHIP, "Гражданство")
 		]
 
 		return ExcelDocMetadata(full_path, self.personnel_details_excel_sheet_name, cols, 200)
