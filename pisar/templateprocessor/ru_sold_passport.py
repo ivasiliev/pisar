@@ -6,5 +6,7 @@ class RuSoldPassport(ReplacementUnit):
 	def replace(self, actual_placeholder, text):
 		rep_settings = self.get_report_settings()
 		passport = rep_settings["passport"]
+		if len(passport) == 0:
+			passport = " "
 		log(f"{self.placeholder} заменен на {passport}")
 		return text.replace(self.placeholder, passport)

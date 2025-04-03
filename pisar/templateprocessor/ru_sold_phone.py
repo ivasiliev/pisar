@@ -6,5 +6,7 @@ class RuSoldPhone(ReplacementUnit):
 	def replace(self, actual_placeholder, text):
 		rep_settings = self.get_report_settings()
 		phone = rep_settings["phone"]
+		if len(phone) == 0:
+			phone = " "
 		log(f"{self.placeholder} заменен на {phone}")
 		return text.replace(self.placeholder, phone)

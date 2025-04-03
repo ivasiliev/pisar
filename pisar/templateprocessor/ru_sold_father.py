@@ -6,5 +6,7 @@ class RuSoldFather(ReplacementUnit):
 	def replace(self, actual_placeholder, text):
 		rep_settings = self.get_report_settings()
 		father_name = rep_settings["father_name"]
+		if len(father_name) == 0:
+			father_name = " "
 		log(f"{self.placeholder} заменен на {father_name}")
 		return text.replace(self.placeholder, father_name)
