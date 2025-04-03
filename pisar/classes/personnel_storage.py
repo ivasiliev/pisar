@@ -46,6 +46,12 @@ COLUMN_FATHER_PHONE = "COLUMN_FATHER_PHONE"
 COLUMN_MOTHER_PHONE = "COLUMN_MOTHER_PHONE"
 COLUMN_SIBLINGS_PHONE = "COLUMN_SIBLINGS_PHONE"
 COLUMN_SPOUSE_PHONE = "COLUMN_SPOUSE_PHONE"
+# военкомат
+COLUMN_REGISTRATION_OFFICE = "COLUMN_REGISTRATION_OFFICE"
+# личные адреса
+COLUMN_HOME_ADDRESS = "COLUMN_HOME_ADDRESS"
+COLUMN_HOME_ADDRESS_REAL = "COLUMN_HOME_ADDRESS_REAL"
+COLUMN_CITIZENSHIP = "COLUMN_CITIZENSHIP"
 
 
 class PersonnelStorage:
@@ -187,7 +193,8 @@ class PersonnelStorage:
 						, ["foreign_countries_visited", "COLUMN_FOREIGN_COUNTRIES_VISITED"]
 						, ["service_started", "COLUMN_SERVICE_STARTED"]
 						, ["place_of_birth", "COLUMN_PLACE_OF_BIRTH"]
-						, ["home_address", "COLUMN_HOME_ADDRESS"]
+						, ["home_address", COLUMN_HOME_ADDRESS]
+						, ["home_address_real", COLUMN_HOME_ADDRESS_REAL]
 						, ["marital_status", "COLUMN_MARITAL_STATUS"]
 						, ["criminal_status", "COLUMN_CRIMINAL_STATUS"]
 						, ["phone", COLUMN_PHONE]
@@ -220,6 +227,8 @@ class PersonnelStorage:
 						, ["mother_phone", COLUMN_MOTHER_PHONE]
 						, ["siblings_phone", COLUMN_SIBLINGS_PHONE]
 						, ["spouse_phone", COLUMN_SPOUSE_PHONE]
+						, ["registration_office", COLUMN_REGISTRATION_OFFICE]
+						, ["citizenship", COLUMN_CITIZENSHIP]
 					]
 
 					for m in mapping:
@@ -295,7 +304,8 @@ class PersonnelStorage:
 			, ColumnInfo("COLUMN_FOREIGN_COUNTRIES_VISITED", "какие страны посещал/посещала")
 			, ColumnInfo("COLUMN_SERVICE_STARTED", "дата подписания контракта")
 			, ColumnInfo("COLUMN_PLACE_OF_BIRTH", "место рождения")
-			, ColumnInfo("COLUMN_HOME_ADDRESS", "адрес прописки")
+			, ColumnInfo(COLUMN_HOME_ADDRESS, "адрес прописки")
+			, ColumnInfo(COLUMN_HOME_ADDRESS_REAL, "фактическое место проживания")
 			, ColumnInfo("COLUMN_MARITAL_STATUS", "семейное положение")
 			, ColumnInfo("COLUMN_CRIMINAL_STATUS", "наличие судимостей(погашены/нет)")
 			, ColumnInfo(COLUMN_PHONE, "номер телефона")
@@ -326,6 +336,9 @@ class PersonnelStorage:
 			, ColumnInfo(COLUMN_MOTHER_PHONE, "Номер телефона матери")
 			, ColumnInfo(COLUMN_SIBLINGS_PHONE, "Номер телефона братьев/сестер")
 			, ColumnInfo(COLUMN_SPOUSE_PHONE, "Номер телефона жены/мужа")
+			#
+			, ColumnInfo(COLUMN_REGISTRATION_OFFICE, "Каким военкоматом призван на службу")
+			, ColumnInfo(COLUMN_CITIZENSHIP, "Гражданство")
 		]
 
 		return ExcelDocMetadata(full_path, self.personnel_details_excel_sheet_name, cols, 200)

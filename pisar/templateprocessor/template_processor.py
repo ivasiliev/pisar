@@ -8,10 +8,22 @@ from templateprocessor.ru_date_event import RuDateEvent
 from templateprocessor.ru_date_event_short import RuDateEventShort
 from templateprocessor.ru_dob import RuDob
 from templateprocessor.ru_dob_short import RuDobShort
+from templateprocessor.ru_sold_citizenship import RuSoldCitizenship
+from templateprocessor.ru_sold_education import RuSoldEducation
+from templateprocessor.ru_sold_father import RuSoldFather
 from templateprocessor.ru_sold_fio import RuSoldFio
 from templateprocessor.ru_sold_fio_short1 import RuSoldFioShort1
+from templateprocessor.ru_sold_home_address import RuSoldHomeAddress
+from templateprocessor.ru_sold_home_address_real import RuSoldHomeAddressReal
+from templateprocessor.ru_sold_marital_status import RuSoldMaritalStatus
+from templateprocessor.ru_sold_mother import RuSoldMother
+from templateprocessor.ru_sold_passport import RuSoldPassport
+from templateprocessor.ru_sold_phone import RuSoldPhone
 from templateprocessor.ru_sold_position import RuSoldPosition
 from templateprocessor.ru_sold_rank import RuSoldRank
+from templateprocessor.ru_sold_registration_office import RuSoldRegistrationOffice
+from templateprocessor.ru_sold_siblings import RuSoldSiblings
+from templateprocessor.ru_sold_spouse import RuSoldSpouse
 from templateprocessor.ru_sold_sr import RuSoldSr
 from templateprocessor.ru_sold_unique import RuSoldUnique
 
@@ -115,6 +127,18 @@ class TemplateProcessor:
                   RuDateEventShort(self.data_model, self.pers_storage, "{ДАТА-СОБЫТИЯ-КР}"),
                   RuSoldFioShort1(self.data_model, self.pers_storage, "{СОЛД-ИО-КР;"),
                   RuDobShort(self.data_model, self.pers_storage, "{СОЛД-ДР-КР}"),
-                  RuSoldUnique(self.data_model, self.pers_storage, "{СОЛД-ЛН}")
+                  RuSoldUnique(self.data_model, self.pers_storage, "{СОЛД-ЛН}"),
+                  RuSoldRegistrationOffice(self.data_model, self.pers_storage, "{СОЛД-РВК}"),
+                  RuSoldCitizenship(self.data_model, self.pers_storage, "{СОЛД-ГРАЖДАНСТВО}"),
+                  RuSoldEducation(self.data_model, self.pers_storage, "{СОЛД-ОБРАЗОВАНИЕ}"),
+                  RuSoldMaritalStatus(self.data_model, self.pers_storage, "{СОЛД-СЕМ-ПОЛОЖЕНИЕ}"),
+                  RuSoldFather(self.data_model, self.pers_storage, "{СОЛД-ОТЕЦ}"),
+                  RuSoldMother(self.data_model, self.pers_storage, "{СОЛД-МАТЬ}"),
+                  RuSoldSpouse(self.data_model, self.pers_storage, "{СОЛД-ЖЕНА}"),
+                  RuSoldSiblings(self.data_model, self.pers_storage, "{СОЛД-БРАТ-СЕСТРА}"),
+                  RuSoldPassport(self.data_model, self.pers_storage, "{СОЛД-ПАСПОРТ}"),
+                  RuSoldHomeAddress(self.data_model, self.pers_storage, "{СОЛД-АДРЕС-ПРОПИСКИ}"),
+                  RuSoldHomeAddressReal(self.data_model, self.pers_storage, "{СОЛД-АДРЕС-ФАКТ}"),
+                  RuSoldPhone(self.data_model, self.pers_storage, "{СОЛД-ТЕЛЕФОН}"),
                   ]
         return result

@@ -29,6 +29,7 @@ class ReplacementUnit:
             if placeholder in text:
                 if len(current_text) == 0:
                     current_text = text
+                # here is actually replaces text
                 current_text = self.replace(placeholder, current_text)
 
         # returns updated string

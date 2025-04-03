@@ -1,0 +1,11 @@
+py -m pip uninstall openpyxl
+py -m pip install --force-reinstall -v "openpyxl==3.1.5"
+pip install openpyxl
+
+this one is correct:
+pip install --force-reinstall -v "openpyxl==3.1.5"
+
+pipenv uninstall openpyxl
+
+
+
