@@ -1,6 +1,7 @@
 rem pip install --upgrade pip
 
-pip install pysimplegui
+rem pip install pysimplegui
+python -m pip install --upgrade --extra-index-url https://PySimpleGUI.net/install PySimpleGUI
 pip install openpyxl
 pip install python-docx
 pip install pymorphy2
