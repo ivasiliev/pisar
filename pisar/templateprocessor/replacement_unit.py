@@ -73,3 +73,11 @@ class ReplacementUnit:
             return rep_settings[name]
         else:
             return ""
+
+    def replace_from_report_settings(self, text, field_name):
+        rep_settings = self.get_report_settings()
+        value = str(rep_settings[field_name])
+        if len(value) == 0:
+            value = " "
+        log(f"{self.placeholder} заменен на {value}")
+        return text.replace(self.placeholder, value)
