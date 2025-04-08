@@ -29,10 +29,14 @@ class Person:
 			if len(dob_str) == 0:
 				return
 			tokens = dob_str.split(".")
+			err_str = f"Ошибка при разборе даты {dob_str}. Правильный формат 'ДД.ММ.ГГГГ'. Проверьте столбец с датами рождения!"
 			if len(tokens) != 3:
-				log(f"Ошибка при разборе даты {dob_str}. Проверьте столбец с датами рождения!")
+				log(err_str)
 				return
-			self.dob = datetime.datetime(int(tokens[2]), int(tokens[1]), int(tokens[0]))
+			try:
+				self.dob = datetime.datetime(int(tokens[2]), int(tokens[1]), int(tokens[0]))
+			except:
+				log(err_str)
 
 	def get_dob(self):
 		if self.dob is None:

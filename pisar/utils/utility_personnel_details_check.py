@@ -8,7 +8,6 @@ from utils.utility_prototype import UtilityPrototype
 
 
 class UtilityPersonnelDetailsCheck(UtilityPrototype):
-
 	def get_name(self):
 		return "Сверка ШР и ЛС"
 
