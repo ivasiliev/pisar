@@ -9,6 +9,8 @@ from helpers.log_helper import log
 from helpers.performance_helper import PerformanceHelper
 from helpers.text_helper import not_empty
 
+openpyxl.reader.excel.warnings.simplefilter(action='ignore')
+
 # Штатное расписание (ШР)
 EXCEL_DOCUMENT_SR = 0
 # Личный состав (ЛС)
@@ -415,6 +417,7 @@ class PersonnelStorage:
 		all_rows = []
 		for row in sh.iter_rows(min_row=2, min_col=1, max_row=max_row_value, max_col=self.MAX_COLUMNS_COUNT):
 			if row[0].value is None:
+				log(f"На строке {iteration_count + 1} в первом столбце обнаружено пустое значение. Достигнут конец таблицы.")
 				break
 			all_rows.append(row)
 
