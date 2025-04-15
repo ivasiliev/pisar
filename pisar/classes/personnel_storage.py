@@ -54,7 +54,8 @@ COLUMN_REGISTRATION_OFFICE = "COLUMN_REGISTRATION_OFFICE"
 COLUMN_HOME_ADDRESS = "COLUMN_HOME_ADDRESS"
 COLUMN_HOME_ADDRESS_REAL = "COLUMN_HOME_ADDRESS_REAL"
 COLUMN_CITIZENSHIP = "COLUMN_CITIZENSHIP"
-
+#
+COLUMN_PLACE_OF_BIRTH = "COLUMN_PLACE_OF_BIRTH"
 
 class PersonnelStorage:
 	def __init__(self, data_model):
@@ -194,7 +195,7 @@ class PersonnelStorage:
 						, ["government_authority", "COLUMN_GOVERNMENT_AUTHORITY"]
 						, ["foreign_countries_visited", "COLUMN_FOREIGN_COUNTRIES_VISITED"]
 						, ["service_started", "COLUMN_SERVICE_STARTED"]
-						, ["place_of_birth", "COLUMN_PLACE_OF_BIRTH"]
+						, ["place_of_birth", COLUMN_PLACE_OF_BIRTH]
 						, ["home_address", COLUMN_HOME_ADDRESS]
 						, ["home_address_real", COLUMN_HOME_ADDRESS_REAL]
 						, ["marital_status", "COLUMN_MARITAL_STATUS"]
@@ -305,7 +306,7 @@ class PersonnelStorage:
 			, ColumnInfo("COLUMN_GOVERNMENT_AUTHORITY", "является ли депутатом")
 			, ColumnInfo("COLUMN_FOREIGN_COUNTRIES_VISITED", "какие страны посещал/посещала")
 			, ColumnInfo("COLUMN_SERVICE_STARTED", "дата подписания контракта")
-			, ColumnInfo("COLUMN_PLACE_OF_BIRTH", "место рождения")
+			, ColumnInfo(COLUMN_PLACE_OF_BIRTH, "место рождения")
 			, ColumnInfo(COLUMN_HOME_ADDRESS, "адрес прописки")
 			, ColumnInfo(COLUMN_HOME_ADDRESS_REAL, "фактическое место проживания")
 			, ColumnInfo("COLUMN_MARITAL_STATUS", "семейное положение")

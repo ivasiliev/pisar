@@ -8,6 +8,7 @@ from templateprocessor.ru_date_event import RuDateEvent
 from templateprocessor.ru_date_event_short import RuDateEventShort
 from templateprocessor.ru_dob import RuDob
 from templateprocessor.ru_dob_short import RuDobShort
+from templateprocessor.ru_sold_additional_attributes import RuSoldAdditionalAttributes
 from templateprocessor.ru_sold_citizenship import RuSoldCitizenship
 from templateprocessor.ru_sold_education import RuSoldEducation
 from templateprocessor.ru_sold_father import RuSoldFather
@@ -18,13 +19,17 @@ from templateprocessor.ru_sold_home_address_real import RuSoldHomeAddressReal
 from templateprocessor.ru_sold_marital_status import RuSoldMaritalStatus
 from templateprocessor.ru_sold_mother import RuSoldMother
 from templateprocessor.ru_sold_passport import RuSoldPassport
+from templateprocessor.ru_sold_personal_perks import RuSoldPersonalPerks
 from templateprocessor.ru_sold_phone import RuSoldPhone
+from templateprocessor.ru_sold_place_of_birth import RuSoldPlaceOfBirth
 from templateprocessor.ru_sold_position import RuSoldPosition
 from templateprocessor.ru_sold_rank import RuSoldRank
 from templateprocessor.ru_sold_registration_office import RuSoldRegistrationOffice
 from templateprocessor.ru_sold_siblings import RuSoldSiblings
+from templateprocessor.ru_sold_signs import RuSoldSigns
 from templateprocessor.ru_sold_spouse import RuSoldSpouse
 from templateprocessor.ru_sold_sr import RuSoldSr
+from templateprocessor.ru_sold_tatoo import RuSoldTatoo
 from templateprocessor.ru_sold_unique import RuSoldUnique
 
 MODEL_BOX_FOLDER = "box_path"
@@ -140,5 +145,10 @@ class TemplateProcessor:
                   RuSoldHomeAddress(self.data_model, self.pers_storage, "{СОЛД-АДРЕС-ПРОПИСКИ}"),
                   RuSoldHomeAddressReal(self.data_model, self.pers_storage, "{СОЛД-АДРЕС-ФАКТ}"),
                   RuSoldPhone(self.data_model, self.pers_storage, "{СОЛД-ТЕЛЕФОН}"),
+                  RuSoldPlaceOfBirth(self.data_model, self.pers_storage, "{СОЛД-МЕСТО-РЖ}"),
+                  RuSoldSigns(self.data_model, self.pers_storage, "{СОЛД-ПРИМЕТЫ}"),
+                  RuSoldTatoo(self.data_model, self.pers_storage, "{СОЛД-ТАТУ}"),
+                  RuSoldAdditionalAttributes(self.data_model, self.pers_storage, "{СОЛД-ПРИМЕТЫ-ДОП}"),
+                  RuSoldPersonalPerks(self.data_model, self.pers_storage, "{СОЛД-ОТЛИЧ-ЗНАКИ}"),
                   ]
         return result
