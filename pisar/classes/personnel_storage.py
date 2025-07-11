@@ -29,11 +29,20 @@ COLUMN_PERSONAL_PERKS = "COLUMN_PERSONAL_PERKS"
 COLUMN_RANK = "COLUMN_RANK"
 COLUMN_POSITION = "COLUMN_POSITION"
 # passports
+# DNR
 COLUMN_PASS_DNR = "COLUMN_PASS_DNR"
 COLUMN_PASS_DNR_ISSUED = "COLUMN_PASS_DNR_ISSUED"
-COLUMN_PASS_RF = "COLUMN_PASS_RF"
-COLUMN_PASS_RF_ISSUED = "COLUMN_PASS_RF_ISSUED"
+# RUSSIA
+COLUMN_PASS_RF_NUMBER = "COLUMN_PASS_RF_NUMBER"
+COLUMN_PASS_RF_ISSUE_DATE = "COLUMN_PASS_RF_ISSUE_DATE"
+# кем выдан
+COLUMN_PASS_RF_ISSUE_ORG = "COLUMN_PASS_RF_ISSUE_ORG"
+# подразделение
+COLUMN_PASS_RF_ISSUE_UNIT = "COLUMN_PASS_RF_ISSUE_UNIT"
+
+# FOREIGN
 COLUMN_PASS_FOREIGN = "COLUMN_PASS_FOREIGN"
+# UKR
 COLUMN_PASS_UKR = "COLUMN_PASS_UKR"
 # relatives
 COLUMN_FATHER_NAME = "COLUMN_FATHER_NAME"
@@ -213,8 +222,12 @@ class PersonnelStorage:
 						# passports
 						, ["pass_dnr", COLUMN_PASS_DNR]
 						, ["pass_dnr_issued", COLUMN_PASS_DNR_ISSUED]
-						, ["pass_rf", COLUMN_PASS_RF]
-						, ["pass_rf_issued", COLUMN_PASS_RF_ISSUED]
+
+						, ["pass_rf_number", COLUMN_PASS_RF_NUMBER]
+						, ["pass_rf_issue_date", COLUMN_PASS_RF_ISSUE_DATE]
+						, ["pass_rf_issue_org", COLUMN_PASS_RF_ISSUE_ORG]
+						, ["pass_rf_issue_unit", COLUMN_PASS_RF_ISSUE_UNIT]
+
 						, ["pass_foreign", COLUMN_PASS_FOREIGN]
 						, ["pass_ukr", COLUMN_PASS_UKR]
 						# relatives
@@ -250,8 +263,8 @@ class PersonnelStorage:
 					# select passport by priority
 					# паспорт ДНР, паспорт РФ, паспорт Украины
 					dm["passport"] = ""
-					if not_empty(dm["pass_rf"]):
-						dm["passport"] = f"паспорт РФ {dm['pass_rf']} {dm['pass_rf_issued']}"
+					if not_empty(dm["pass_rf_number"]):
+						dm["passport"] = f"паспорт РФ {dm['pass_rf_number']} {dm['pass_rf_issue_date']} {dm['pass_rf_issue_org']} {dm['pass_rf_issue_unit']}"
 					else:
 						if not_empty(dm["pass_dnr"]):
 							dm["passport"] = f"паспорт ДНР {dm['pass_dnr']} {dm['pass_dnr_issued']}"
@@ -322,8 +335,12 @@ class PersonnelStorage:
 			# passports
 			, ColumnInfo(COLUMN_PASS_DNR, "Паспорт ДНР")
 			, ColumnInfo(COLUMN_PASS_DNR_ISSUED, "Кем выдан")
-			, ColumnInfo(COLUMN_PASS_RF, "Паспорт РФ")
-			, ColumnInfo(COLUMN_PASS_RF_ISSUED, "Кем выдан2")
+
+			, ColumnInfo(COLUMN_PASS_RF_NUMBER, "Паспорт РФ (номер)")
+			, ColumnInfo(COLUMN_PASS_RF_ISSUE_DATE, "Паспорт РФ (когда выдан)")
+			, ColumnInfo(COLUMN_PASS_RF_ISSUE_ORG, "Паспорт РФ Кем выдан")
+			, ColumnInfo(COLUMN_PASS_RF_ISSUE_UNIT, "Подразделение")
+
 			, ColumnInfo(COLUMN_PASS_FOREIGN, "Загранпаспорт")
 			, ColumnInfo(COLUMN_PASS_UKR, "Паспорт Украины")
 			# relatives
@@ -340,7 +357,7 @@ class PersonnelStorage:
 			, ColumnInfo(COLUMN_SIBLINGS_PHONE, "Номер телефона братьев/сестер")
 			, ColumnInfo(COLUMN_SPOUSE_PHONE, "Номер телефона жены/мужа")
 			#
-			, ColumnInfo(COLUMN_REGISTRATION_OFFICE, "Каким военкоматом призван на службу")
+			, ColumnInfo(COLUMN_REGISTRATION_OFFICE, "Когда и каким военкоматом призван на службу")
 			, ColumnInfo(COLUMN_CITIZENSHIP, "Гражданство")
 		]
 
