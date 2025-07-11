@@ -1,0 +1,1 @@
+python C:\pisar\pisar\runner.py BOX_PROCESSING

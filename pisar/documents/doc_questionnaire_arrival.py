@@ -36,8 +36,8 @@ class DocQuestArrival(DocumentInReport):
 
 		# prepare passport info
 		passport_info = ""
-		if not_empty(rep_settings["pass_rf"]):
-			passport_info = f"паспорт РФ {rep_settings['pass_rf']} {rep_settings['pass_rf_issued']}"
+		if not_empty(rep_settings["pass_rf_number"]):
+			passport_info = f"паспорт РФ {rep_settings['pass_rf_number']} {rep_settings['pass_rf_issue_date']} {rep_settings['pass_rf_issue_org']} {rep_settings['pass_rf_issue_unit']}"
 		if not_empty(rep_settings["pass_dnr"]):
 			passport_info = f"{passport_info}\nпаспорт ДНР {rep_settings['pass_dnr']} {rep_settings['pass_dnr_issued']}"
 		if not_empty(rep_settings["pass_ukr"]):
