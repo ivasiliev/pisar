@@ -357,7 +357,7 @@ class PersonnelStorage:
 			, ColumnInfo(COLUMN_SIBLINGS_PHONE, "Номер телефона братьев/сестер")
 			, ColumnInfo(COLUMN_SPOUSE_PHONE, "Номер телефона жены/мужа")
 			#
-			, ColumnInfo(COLUMN_REGISTRATION_OFFICE, "Каким военкоматом призван на службу")
+			, ColumnInfo(COLUMN_REGISTRATION_OFFICE, "Когда и каким военкоматом призван на службу")
 			, ColumnInfo(COLUMN_CITIZENSHIP, "Гражданство")
 		]
 

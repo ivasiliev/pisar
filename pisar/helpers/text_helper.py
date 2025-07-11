@@ -116,7 +116,10 @@ def get_date_str_format2(dt):
 
 
 def not_empty(s):
-    return s is not None and len(s) > 0
+    if s:
+        return True
+    else:
+        return False
 
 
 def replace_with_glue(s):
