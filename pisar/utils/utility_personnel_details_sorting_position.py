@@ -38,9 +38,36 @@ class UtilityPersonnelDetailsSortingPosition(UtilityPrototype):
 		# create new LS document based on number of positions
 		# we don't know the total number of positions in advance, so, just go for as many of them as possible
 		number_position = 1
+		position_info = None
 		while number_position in ls_hash:
 			index_in_ls = ls_hash[number_position]
 			row_in_ls = all_ls_rows[index_in_ls]
+			# insert information about position
+			for cell in row_in_ls:
+				if cell.col_idx == 1:
+					id_pos = int(cell.value)
+					position_info = pers_storage.positions_list[id_pos]
+				if position_info is not None:
+					# TODO dynamically define columns indexes
+					if cell.col_idx == 5:
+						cell.value = position_info.full_position_name
+					if cell.col_idx == 7:
+						cell.value = position_info.short_position_name
+					if cell.col_idx == 8:
+						cell.value = position_info.position_name
+					if cell.col_idx == 9:
+						cell.value = position_info.unit
+					if cell.col_idx == 10:
+						cell.value = position_info.unit2
+					if cell.col_idx == 11:
+						cell.value = position_info.platoon
+					if cell.col_idx == 12:
+						cell.value = position_info.squad
+					if cell.col_idx == 13:
+						cell.value = position_info.military_position
+
+			position_info = None
+
 			new_ls_rows.append(row_in_ls)
 			used_ls_indexes.append(index_in_ls)
 			number_position = number_position + 1
