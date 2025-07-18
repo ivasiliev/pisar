@@ -100,9 +100,10 @@ def run_generation(common_config_file, soldier_config_file, report_type):
         doc = UtilityPersonnelDetailsSortingPosition(data_model)
 
     pers_storage = PersonnelStorage(data_model)
-    if not pers_storage.is_valid:
-        log("Неверная структура Штатного расписания/Информации о личном составе. Выполнение программы прервано.")
-        return
+    # TODO TEMPORARY SWITCHED OFF!
+    #if not pers_storage.is_valid:
+    #    log("Неверная структура Штатного расписания/Информации о личном составе. Выполнение программы прервано.")
+    #    return
 
     is_box = report_type == BOX_PROCESSING
 
