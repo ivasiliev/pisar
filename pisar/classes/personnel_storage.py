@@ -1,9 +1,13 @@
+import os
+
 import openpyxl
 
 from classes.column_info import ColumnInfo
 from classes.document_in_report import MODEL_JSON_OBJECT, MODEL_PERSONNEL_PATH, MODEL_PERSONNEL_DETAILS_PATH
 from classes.excel_doc_metadata import ExcelDocMetadata
 from classes.person import Person
+
+from classes.position import Position
 from helpers.file_helper import get_file_size_info
 from helpers.log_helper import log
 from helpers.performance_helper import PerformanceHelper
@@ -66,24 +70,47 @@ COLUMN_CITIZENSHIP = "COLUMN_CITIZENSHIP"
 #
 COLUMN_PLACE_OF_BIRTH = "COLUMN_PLACE_OF_BIRTH"
 
+# документ Должности
+# Полная должность
+COLUMN_FULL_POSITION_NAME = "COLUMN_FULL_POSITION_NAME"
+# Сокр. Должн.
+COLUMN_SHORT_POSITION_NAME = "COLUMN_SHORT_POSITION_NAME"
+# Должность
+COLUMN_POSITION_NAME = "COLUMN_POSITION_NAME"
+# Подразделение
+COLUMN_UNIT = "COLUMN_UNIT"
+# Подразделение 2
+COLUMN_UNIT2 = "COLUMN_UNIT2"
+# Взвод
+COLUMN_PLATOON = "COLUMN_PLATOON"
+# Отделение
+COLUMN_SQUAD = "COLUMN_SQUAD"
+# Воинская должность
+COLUMN_MILITARY_POSITION = "COLUMN_MILITARY_POSITION"
+
+
 class PersonnelStorage:
 	def __init__(self, data_model):
 		# TODO to app_settings?
 		self.personnel_excel_sheet_name = "ШДС"
 		self.personnel_details_excel_sheet_name = "ЛС"
+		self.positions_excel_sheet_name = "должности"
 		self.data_model = data_model
+		self.positions_list = []
+		# TODO change settings and left just one folder
 		self.personnel_list_full_path = data_model[MODEL_PERSONNEL_PATH]
 		self.personnel_details_full_path = data_model[MODEL_PERSONNEL_DETAILS_PATH]
+		# файл Должности в том же каталоге (hardcoded file name!)
+		self.positions_full_path = os.path.join(os.path.dirname(self.personnel_details_full_path), "должности.xlsx")
 
 		# TODO calculate it automatically
 		self.MAX_COLUMNS_COUNT = 150
 		self.is_valid = True
 
 		self.excel_docs = [
-			self.create_metadata_for_pers_list(self.personnel_list_full_path)
-			,
-			self.create_metadata_for_pers_details(self.personnel_details_full_path)
-		]
+			self.create_metadata_for_pers_list(self.personnel_list_full_path),
+			self.create_metadata_for_pers_details(self.personnel_details_full_path),
+			self.create_metadata_for_positions(self.positions_full_path)]
 
 		for md in self.excel_docs:
 			workbook = openpyxl.load_workbook(md.full_path)
@@ -264,7 +291,8 @@ class PersonnelStorage:
 					# паспорт ДНР, паспорт РФ, паспорт Украины
 					dm["passport"] = ""
 					if not_empty(dm["pass_rf_number"]):
-						dm["passport"] = f"паспорт РФ {dm['pass_rf_number']} {dm['pass_rf_issue_date']} {dm['pass_rf_issue_org']} {dm['pass_rf_issue_unit']}"
+						dm[
+							"passport"] = f"паспорт РФ {dm['pass_rf_number']} {dm['pass_rf_issue_date']} {dm['pass_rf_issue_org']} {dm['pass_rf_issue_unit']}"
 					else:
 						if not_empty(dm["pass_dnr"]):
 							dm["passport"] = f"паспорт ДНР {dm['pass_dnr']} {dm['pass_dnr_issued']}"
@@ -290,8 +318,8 @@ class PersonnelStorage:
 	def create_metadata_for_pers_list(self, full_path):
 		cols = [
 			ColumnInfo("COLUMN_COMPANY", "рота")
-			, ColumnInfo("COLUMN_PLATOON", "взвод")
-			, ColumnInfo("COLUMN_SQUAD", "отделение")
+			, ColumnInfo(COLUMN_PLATOON, "взвод")
+			, ColumnInfo(COLUMN_SQUAD, "отделение")
 			, ColumnInfo(COLUMN_POSITION, "воинская должность")
 			, ColumnInfo(COLUMN_RANK, "воинское звание фактическое")
 			, ColumnInfo(COLUMN_FULL_NAME, "фио")
@@ -363,6 +391,21 @@ class PersonnelStorage:
 
 		return ExcelDocMetadata(full_path, self.personnel_details_excel_sheet_name, cols, 200)
 
+	# файл Должности
+	def create_metadata_for_positions(self, full_path):
+		cols = [
+			ColumnInfo(COLUMN_FULL_POSITION_NAME, "Полная должность")
+			, ColumnInfo(COLUMN_SHORT_POSITION_NAME, "Сокр. Должн.")
+			, ColumnInfo(COLUMN_POSITION_NAME, "Должность")
+			, ColumnInfo(COLUMN_UNIT, "Подразделение")
+			, ColumnInfo(COLUMN_UNIT2, "Подразделение 2")
+			, ColumnInfo(COLUMN_PLATOON, "Взвод")
+			, ColumnInfo(COLUMN_SQUAD, "Отделение")
+			, ColumnInfo(COLUMN_MILITARY_POSITION, "Воинская должность")
+		]
+
+		return ExcelDocMetadata(full_path, self.positions_excel_sheet_name, cols, 200)
+
 	# what_file=0 (ШР),what_file=1 (ЛС)
 	def get_all_persons(self, what_file, row_limit=None):
 		all_rows = self.read_excel_file(what_file, row_limit)
@@ -375,8 +418,8 @@ class PersonnelStorage:
 
 	def create_person_from_row(self, excel_doc, person_row):
 		col_company = excel_doc.get_column_index("COLUMN_COMPANY")
-		col_platoon = excel_doc.get_column_index("COLUMN_PLATOON")
-		col_squad = excel_doc.get_column_index("COLUMN_SQUAD")
+		col_platoon = excel_doc.get_column_index(COLUMN_PLATOON)
+		col_squad = excel_doc.get_column_index(COLUMN_SQUAD)
 		col_position = excel_doc.get_column_index(COLUMN_POSITION)
 		col_rank = excel_doc.get_column_index(COLUMN_RANK)
 		col_full_name = excel_doc.get_column_index(COLUMN_FULL_NAME)
@@ -460,3 +503,52 @@ class PersonnelStorage:
 			break
 
 		return row_header
+
+	# чтение всех должностей из файла Должности
+	def read_positions(self):
+		positions_excel_doc = self.excel_docs[2]
+
+		# column indexes
+		c1 = positions_excel_doc.get_column_index(COLUMN_FULL_POSITION_NAME)
+		c2 = positions_excel_doc.get_column_index(COLUMN_SHORT_POSITION_NAME)
+		c3 = positions_excel_doc.get_column_index(COLUMN_POSITION_NAME)
+		c4 = positions_excel_doc.get_column_index(COLUMN_UNIT)
+		c5 = positions_excel_doc.get_column_index(COLUMN_UNIT2)
+		c6 = positions_excel_doc.get_column_index(COLUMN_PLATOON)
+		c7 = positions_excel_doc.get_column_index(COLUMN_SQUAD)
+		c8 = positions_excel_doc.get_column_index(COLUMN_MILITARY_POSITION)
+
+		workbook = openpyxl.load_workbook(positions_excel_doc.full_path)
+		sh = workbook[positions_excel_doc.sheet_name]
+		log("Чтение всех должностей. Это может занять время...")
+		end_of_data = False
+		for row in sh.iter_rows(min_row=2, min_col=1, max_row=2001, max_col=self.MAX_COLUMNS_COUNT):
+			pos = Position()
+			# all cells in each row
+			for cell in row:
+				if cell.col_idx == 1:
+					if cell.value is None:
+						end_of_data = True
+						break
+					else:
+						pos.id = str(cell.value)
+				if cell.col_idx == c1:
+					pos.full_position_name = str(cell.value)
+				if cell.col_idx == c2:
+					pos.short_position_name = str(cell.value)
+				if cell.col_idx == c3:
+					pos.position_name = str(cell.value)
+				if cell.col_idx == c4:
+					pos.unit = str(cell.value)
+				if cell.col_idx == c5:
+					pos.unit2 = str(cell.value)
+				if cell.col_idx == c6:
+					pos.platoon = str(cell.value)
+				if cell.col_idx == c7:
+					pos.squad = str(cell.value)
+				if cell.col_idx == c8:
+					pos.military_position = str(cell.value)
+			if end_of_data:
+				break
+			self.positions_list.append(pos)
+		log(f"Чтение должностей окончено. Количество = {len(self.positions_list)}")
