@@ -51,8 +51,7 @@ class UtilityPersonnelDetailsSorting(UtilityPrototype):
 		# put all rows from LS that weren't touched by sorting in the end of the document
 		if len(used_ls_indexes) < len(all_ls_rows):
 			added_persons = 0
-			log(
-				f"Добавляем остальных людей из ЛС, которых не было в ШР ({len(used_ls_indexes)} < {len(all_ls_rows)})")
+			log(f"Добавляем остальных людей из ЛС, которых не было в ШР ({len(used_ls_indexes)} < {len(all_ls_rows)})")
 			index = -1
 			for r in all_ls_rows:
 				index = index + 1
