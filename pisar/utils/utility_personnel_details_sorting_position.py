@@ -46,7 +46,8 @@ class UtilityPersonnelDetailsSortingPosition(UtilityPrototype):
 			for cell in row_in_ls:
 				if cell.col_idx == 1:
 					id_pos = int(cell.value)
-					position_info = pers_storage.positions_list[id_pos]
+					if 0 < id_pos < len(persons_ls):
+						position_info = pers_storage.positions_list[id_pos]
 				if position_info is not None:
 					# TODO dynamically define columns indexes
 					if cell.col_idx == 5:
@@ -73,6 +74,18 @@ class UtilityPersonnelDetailsSortingPosition(UtilityPrototype):
 			number_position = number_position + 1
 
 		log(f"Сведено ЛС > ШР {len(used_ls_indexes)} человек(а)")
+
+		if len(used_ls_indexes) < len(all_ls_rows):
+			added_persons = 0
+			log(f"Добавляем остальных людей из ЛС, которых не было в ШР ({len(used_ls_indexes)} < {len(all_ls_rows)})")
+			index = -1
+			for r in all_ls_rows:
+				index = index + 1
+				if index not in used_ls_indexes:
+					new_ls_rows.append(r)
+					added_persons = added_persons + 1
+			log(f"Добавлено людей: {added_persons}")
+
 
 		new_ls_rows.insert(0, row_header)
 		list_of_rows = self.convert_rows_to_lists(new_ls_rows)
