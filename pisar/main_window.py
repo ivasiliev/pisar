@@ -128,20 +128,26 @@ group_utils_pers_det_sorting.group_text = "Утилита 'Сортировка 
 group_utils_pers_det_sorting.batch_name = UTILITY_PERSONNEL_DETAILS_SORTING
 group_utils_pers_det_sorting.docs_list = []
 
+group_utils_position_sorting = RunInfo()
+group_utils_position_sorting.group_number = 7
+group_utils_position_sorting.group_text = "Утилита 'Сортировка ЛС по должностям'"
+group_utils_position_sorting.batch_name = UTILITY_PERSONNEL_DETAILS_SORTING
+group_utils_position_sorting.docs_list = []
+
 group_diary = RunInfo()
-group_diary.group_number = 7
+group_diary.group_number = 8
 group_diary.group_text = "Дневник психолого-педагогических наблюдений"
 group_diary.batch_name = DIARY
 group_diary.docs_list = []
 
 group_quest_arrival = RunInfo()
-group_quest_arrival.group_number = 8
+group_quest_arrival.group_number = 9
 group_quest_arrival.group_text = "Анкета прибывшего в зону СВО"
 group_quest_arrival.batch_name = QUEST_ARRIVAL
 group_quest_arrival.docs_list = []
 
 batch_groups = [group_official_proceeding, group_desert_unit, group_mass_hr_info_unit, group_mass_perf_char_unit,
-                group_utils_birthdays, group_utils_pers_det_check, group_utils_pers_det_sorting, group_diary,
+                group_utils_birthdays, group_utils_pers_det_check, group_utils_pers_det_sorting, group_utils_position_sorting, group_diary,
                 group_quest_arrival]
 
 layout = [

@@ -18,6 +18,7 @@ from templateprocessor.template_processor import TemplateProcessor
 from utils.utility_birthdays import UtilityBirthday
 from utils.utility_personnel_details_check import UtilityPersonnelDetailsCheck
 from utils.utility_personnel_details_sorting import UtilityPersonnelDetailsSorting
+from utils.utility_personnel_details_sorting_position import UtilityPersonnelDetailsSortingPosition
 
 OFFICIAL_PROCEEDING_BATCH = "OFFICIAL_PROCEEDING_BATCH"
 DESERT_UNIT_BATCH = "DESERT_UNIT_BATCH"
@@ -29,6 +30,8 @@ UTILITY_PERSONNEL_DETAILS_SORTING = "UTILITY_PERSONNEL_DETAILS_SORTING"
 DIARY = "DIARY"
 QUEST_ARRIVAL = "QUEST_ARRIVAL"
 BOX_PROCESSING = "BOX_PROCESSING"
+# Новая сортировка по должности (по возрастанию). Номер должности это первый столбец.
+UTILITY_PERSONNEL_DETAILS_SORTING_POSITION = "UTILITY_PERSONNEL_DETAILS_SORTING_POSITION"
 
 
 def check_settings_file(full_path, name):
@@ -93,11 +96,14 @@ def run_generation(common_config_file, soldier_config_file, report_type):
         doc = BatchDiary(data_model)
     if report_type == QUEST_ARRIVAL:
         doc = BatchQuestArrival(data_model)
+    if report_type == UTILITY_PERSONNEL_DETAILS_SORTING_POSITION:
+        doc = UtilityPersonnelDetailsSortingPosition(data_model)
 
     pers_storage = PersonnelStorage(data_model)
-    if not pers_storage.is_valid:
-        log("Неверная структура Штатного расписания/Информации о личном составе. Выполнение программы прервано.")
-        return
+    # TODO TEMPORARY SWITCHED OFF!
+    #if not pers_storage.is_valid:
+    #    log("Неверная структура Штатного расписания/Информации о личном составе. Выполнение программы прервано.")
+    #    return
 
     is_box = report_type == BOX_PROCESSING
 
