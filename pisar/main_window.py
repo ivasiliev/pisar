@@ -28,7 +28,7 @@ sys.path.append(helpers_path)
 
 from runner import run_generation, OFFICIAL_PROCEEDING_BATCH, DESERT_UNIT_BATCH, MASS_HR_INFO_BATCH, \
     MASS_PERFORMANCE_CHARACTERISTICS_BATCH, UTILITY_BIRTHDAYS, UTILITY_PERSONNEL_DETAILS_CHECK, \
-    UTILITY_PERSONNEL_DETAILS_SORTING, DIARY, QUEST_ARRIVAL, BOX_PROCESSING
+    UTILITY_PERSONNEL_DETAILS_SORTING, DIARY, QUEST_ARRIVAL, BOX_PROCESSING, UTILITY_PERSONNEL_DETAILS_SORTING_POSITION
 
 
 # 0 -- pointer, 1 -- clock
@@ -131,7 +131,7 @@ group_utils_pers_det_sorting.docs_list = []
 group_utils_position_sorting = RunInfo()
 group_utils_position_sorting.group_number = 7
 group_utils_position_sorting.group_text = "Утилита 'Сортировка ЛС по должностям'"
-group_utils_position_sorting.batch_name = UTILITY_PERSONNEL_DETAILS_SORTING
+group_utils_position_sorting.batch_name = UTILITY_PERSONNEL_DETAILS_SORTING_POSITION
 group_utils_position_sorting.docs_list = []
 
 group_diary = RunInfo()
