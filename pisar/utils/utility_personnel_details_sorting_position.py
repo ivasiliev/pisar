@@ -46,7 +46,7 @@ class UtilityPersonnelDetailsSortingPosition(UtilityPrototype):
 			for cell in row_in_ls:
 				if cell.col_idx == 1:
 					id_pos = int(cell.value)
-					if 0 < id_pos < len(persons_ls):
+					if 0 < id_pos < len(pers_storage.positions_list):
 						position_info = pers_storage.positions_list[id_pos]
 				if position_info is not None:
 					# TODO dynamically define columns indexes
