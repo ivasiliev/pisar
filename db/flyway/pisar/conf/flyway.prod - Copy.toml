@@ -1,0 +1,4 @@
+[flyway]
+url = "jdbc:sqlserver://localhost:1433;databaseName=pisar"
+user = "sa"
+password = "nY46b&4k2"
