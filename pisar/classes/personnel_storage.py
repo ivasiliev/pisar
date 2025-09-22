@@ -148,8 +148,10 @@ class PersonnelStorage:
 				# validation
 				for col_info in md.cols:
 					if not col_info.is_found():
-						log(f"Столбец '{col_info.get_name()}' не найден!")
-						self.is_valid = False
+						pass
+						# TODO temporary switched off!
+						# log(f"Столбец '{col_info.get_name()}' не найден!")
+						# self.is_valid = False
 
 	def find_person_by_id(self, id_person):
 		id_person_str = str(id_person)
@@ -317,10 +319,15 @@ class PersonnelStorage:
 
 	def create_metadata_for_pers_list(self, full_path):
 		cols = [
-			ColumnInfo("COLUMN_COMPANY", "рота")
+			# ColumnInfo("COLUMN_COMPANY", "рота")
+			ColumnInfo(COLUMN_FULL_POSITION_NAME, "полная должность")
+			, ColumnInfo(COLUMN_SHORT_POSITION_NAME, "сокр. должн.")
+			, ColumnInfo(COLUMN_POSITION_NAME, "должность")
+			, ColumnInfo(COLUMN_UNIT, "подразделение")
+			, ColumnInfo(COLUMN_UNIT2, "подразделение 2")
 			, ColumnInfo(COLUMN_PLATOON, "взвод")
 			, ColumnInfo(COLUMN_SQUAD, "отделение")
-			, ColumnInfo(COLUMN_POSITION, "воинская должность")
+			, ColumnInfo(COLUMN_MILITARY_POSITION, "воинская должность")
 			, ColumnInfo(COLUMN_RANK, "воинское звание фактическое")
 			, ColumnInfo(COLUMN_FULL_NAME, "фио")
 			, ColumnInfo(COLUMN_DOB, "дата рождения")
@@ -417,9 +424,15 @@ class PersonnelStorage:
 		return all_persons
 
 	def create_person_from_row(self, excel_doc, person_row):
-		col_company = excel_doc.get_column_index("COLUMN_COMPANY")
+		# col_company = excel_doc.get_column_index("COLUMN_COMPANY")
+		col_full_position_name = excel_doc.get_column_index(COLUMN_FULL_POSITION_NAME)
+		col_short_position_name = excel_doc.get_column_index(COLUMN_SHORT_POSITION_NAME)
+		col_position_name = excel_doc.get_column_index(COLUMN_POSITION_NAME)
+		col_unit = excel_doc.get_column_index(COLUMN_UNIT)
+		col_unit2 = excel_doc.get_column_index(COLUMN_UNIT2)
 		col_platoon = excel_doc.get_column_index(COLUMN_PLATOON)
 		col_squad = excel_doc.get_column_index(COLUMN_SQUAD)
+		col_military_position = excel_doc.get_column_index(COLUMN_MILITARY_POSITION)
 		col_position = excel_doc.get_column_index(COLUMN_POSITION)
 		col_rank = excel_doc.get_column_index(COLUMN_RANK)
 		col_full_name = excel_doc.get_column_index(COLUMN_FULL_NAME)
@@ -430,9 +443,18 @@ class PersonnelStorage:
 		person = Person()
 		# TODO this is incorrect because ID_SR and ID_LS are different values
 		person.id_sr = self.find_value_in_row_by_index(person_row, 1)
-		person.company = self.find_value_in_row_by_index(person_row, col_company)
+		# TODO there is no such column anymore
+		# person.company = self.find_value_in_row_by_index(person_row, col_company)
+
+		person.full_position_name = self.find_value_in_row_by_index(person_row, col_full_position_name)
+		person.short_position_name = self.find_value_in_row_by_index(person_row, col_short_position_name)
+		person.position_name = self.find_value_in_row_by_index(person_row, col_position_name)
+		person.unit = self.find_value_in_row_by_index(person_row, col_unit)
+		person.unit2 = self.find_value_in_row_by_index(person_row, col_unit2)
 		person.platoon = self.find_value_in_row_by_index(person_row, col_platoon)
 		person.squad = self.find_value_in_row_by_index(person_row, col_squad)
+		person.military_position = self.find_value_in_row_by_index(person_row, col_military_position)
+
 		person.position = self.find_value_in_row_by_index(person_row, col_position)
 		person.rank = self.find_value_in_row_by_index(person_row, col_rank)
 		person.full_name = self.find_value_in_row_by_index(person_row, col_full_name)

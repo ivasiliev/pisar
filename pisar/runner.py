@@ -19,6 +19,7 @@ from utils.utility_birthdays import UtilityBirthday
 from utils.utility_personnel_details_check import UtilityPersonnelDetailsCheck
 from utils.utility_personnel_details_sorting import UtilityPersonnelDetailsSorting
 from utils.utility_personnel_details_sorting_position import UtilityPersonnelDetailsSortingPosition
+from utils.utility_sql_generation_sr import UtilitySrSqlGeneration
 
 OFFICIAL_PROCEEDING_BATCH = "OFFICIAL_PROCEEDING_BATCH"
 DESERT_UNIT_BATCH = "DESERT_UNIT_BATCH"
@@ -32,6 +33,9 @@ QUEST_ARRIVAL = "QUEST_ARRIVAL"
 BOX_PROCESSING = "BOX_PROCESSING"
 # Новая сортировка по должности (по возрастанию). Номер должности это первый столбец.
 UTILITY_PERSONNEL_DETAILS_SORTING_POSITION = "UTILITY_PERSONNEL_DETAILS_SORTING_POSITION"
+
+# генерация SQL для БД
+SQL_GENERATION_SR = "SQL_GENERATION_SR"
 
 
 def check_settings_file(full_path, name):
@@ -98,6 +102,8 @@ def run_generation(common_config_file, soldier_config_file, report_type):
         doc = BatchQuestArrival(data_model)
     if report_type == UTILITY_PERSONNEL_DETAILS_SORTING_POSITION:
         doc = UtilityPersonnelDetailsSortingPosition(data_model)
+    if report_type == SQL_GENERATION_SR:
+        doc = UtilitySrSqlGeneration(data_model)
 
     pers_storage = PersonnelStorage(data_model)
     # TODO TEMPORARY SWITCHED OFF!
