@@ -109,8 +109,8 @@ class PersonnelStorage:
 
 		self.excel_docs = [
 			self.create_metadata_for_pers_list(self.personnel_list_full_path),
-			self.create_metadata_for_pers_details(self.personnel_details_full_path),
-			self.create_metadata_for_positions(self.positions_full_path)]
+			self.create_metadata_for_pers_details(self.personnel_details_full_path)]
+			# self.create_metadata_for_positions(self.positions_full_path)
 
 		for md in self.excel_docs:
 			workbook = openpyxl.load_workbook(md.full_path)
