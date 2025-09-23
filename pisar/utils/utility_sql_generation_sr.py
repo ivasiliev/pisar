@@ -42,6 +42,9 @@ class UtilitySrSqlGeneration(UtilityPrototype):
 
         id_entity = 1
         for pers in persons_sr:
+
+            id_entity_str = str(id_entity)
+
             if pers.full_name is  None:
                 log(f"ШР. Строка {id_entity} содержит пустое ФИО. Выполнение программы прервано.")
                 return
@@ -69,22 +72,27 @@ class UtilitySrSqlGeneration(UtilityPrototype):
             # PEOPLE
 
             # TODO define gender
-            insert_people = f"INSERT INTO PEOPLE (ID, [SURNAME], [NAME], FATHER_NAME, [DOB], GENDER) VALUES ({str(id_entity)}, '{surname}', '{name}', '{father_name}', {dob}, 0);"
+            insert_people = f"INSERT INTO dbo.PEOPLE (ID, [SURNAME], [NAME], FATHER_NAME, [DOB], GENDER) VALUES ({id_entity_str}, '{surname}', '{name}', '{father_name}', '{dob}', 0);"
             inserts.append(insert_people)
 
             # POSITION_LIST
-            insert_position = f"INSERT INTO PEOPLE (ID, [POSITION_FULL], [POSITION_SHORT], [POSITION], [UNIT1],	[UNIT2], [PLATOON],	[SQUAD], [MILITARY_POSITION]) VALUES ({str(id_entity)}, '{surname}', '{name}', '{father_name}', {dob}, 0);"
+            insert_position = f"INSERT INTO [dbo].[POSITION_DICT] (ID, [POSITION_FULL], [POSITION_SHORT], [POSITION], [UNIT1],	[UNIT2], [PLATOON],	[SQUAD], [MILITARY_POSITION]) VALUES ({id_entity_str}, '{pers.full_position_name}', '{pers.short_position_name}', '{pers.position_name}', '{pers.unit}', '{pers.unit2}', '{pers.platoon}', '{pers.squad}', '{pers.military_position}');"
             inserts.append(insert_position)
 
             # SR
+            insert_sr = f"INSERT INTO dbo.SR (ID, [PEOPLE_ID], [POSITION_ID]) VALUES ({id_entity_str}, {id_entity_str}, {id_entity_str});"
+            inserts.append(insert_sr)
 
+            # LS
+            insert_ls = f"INSERT INTO dbo.LS ([PEOPLE_ID], [PERSONAL_NUMBER]) VALUES ({id_entity_str}, '{pers.unique}');"
+            inserts.append(insert_ls)
 
             id_entity = id_entity + 1
 
 
         # finalize script
         inserts.append("COMMIT TRANSACTION;")
-        inserts.append("END TRY;")
+        inserts.append("END TRY")
         inserts.append("BEGIN CATCH")
         inserts.append("IF @@TRANCOUNT > 0")
         inserts.append("ROLLBACK TRANSACTION;")
