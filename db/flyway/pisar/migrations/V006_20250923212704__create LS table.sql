@@ -1,0 +1,19 @@
+CREATE TABLE [dbo].[LS](
+	[PEOPLE_ID] [int] NOT NULL,
+	[PERSONAL_NUMBER] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_LS] PRIMARY KEY CLUSTERED 
+(
+	[PEOPLE_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[LS]  WITH CHECK ADD  CONSTRAINT [FK_LS_PEOPLE] FOREIGN KEY([PEOPLE_ID])
+REFERENCES [dbo].[PEOPLE] ([ID])
+GO
+
+ALTER TABLE [dbo].[LS] CHECK CONSTRAINT [FK_LS_PEOPLE]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Личный номер (государственный уникальный код военнослужащего)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'LS', @level2type=N'COLUMN',@level2name=N'PERSONAL_NUMBER'
+GO

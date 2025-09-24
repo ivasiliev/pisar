@@ -7,9 +7,15 @@ from helpers.log_helper import log
 class Person:
 	def __init__(self):
 		self.id_sr = ""  # id в ШР (первый столбец)
-		self.company = ""  # рота
+		self.company = ""  # рота # TODO deprecated
+		self.full_position_name = "" # Полная должность
+		self.short_position_name = "" # Сокр. Должн.
+		self.position_name = "" # Должность
+		self.unit = "" # Подразделение
+		self.unit2 = "" # Подразделение 2
 		self.platoon = ""  # взвод
 		self.squad = ""  # отделение
+		self.military_position = "" # Воинская должность
 		self.position = ""  # должность, например, пулеметчик
 		self.rank = ""  # звание, например, рядовой
 		self.full_name = ""
