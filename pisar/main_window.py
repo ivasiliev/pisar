@@ -28,7 +28,8 @@ sys.path.append(helpers_path)
 
 from runner import run_generation, OFFICIAL_PROCEEDING_BATCH, DESERT_UNIT_BATCH, MASS_HR_INFO_BATCH, \
     MASS_PERFORMANCE_CHARACTERISTICS_BATCH, UTILITY_BIRTHDAYS, UTILITY_PERSONNEL_DETAILS_CHECK, \
-    UTILITY_PERSONNEL_DETAILS_SORTING, DIARY, QUEST_ARRIVAL, BOX_PROCESSING, UTILITY_PERSONNEL_DETAILS_SORTING_POSITION
+    UTILITY_PERSONNEL_DETAILS_SORTING, DIARY, QUEST_ARRIVAL, BOX_PROCESSING, UTILITY_PERSONNEL_DETAILS_SORTING_POSITION, \
+    SQL_GENERATION_SR
 
 
 # 0 -- pointer, 1 -- clock
@@ -86,69 +87,77 @@ if not os.path.exists(box_folder_input):
 if not os.path.exists(box_folder_output):
     os.makedirs(box_folder_output)
 
-group_official_proceeding = RunInfo()
-group_official_proceeding.group_number = 0
-group_official_proceeding.group_text = "Служебное разбирательство по факту грубого дисциплинарного проступка"
-group_official_proceeding.batch_name = OFFICIAL_PROCEEDING_BATCH
-group_official_proceeding.docs_list = []
+# group_official_proceeding = RunInfo()
+# group_official_proceeding.group_number = 0
+# group_official_proceeding.group_text = "Служебное разбирательство по факту грубого дисциплинарного проступка"
+# group_official_proceeding.batch_name = OFFICIAL_PROCEEDING_BATCH
+# group_official_proceeding.docs_list = []
 
-group_desert_unit = RunInfo()
-group_desert_unit.group_number = 1
-group_desert_unit.group_text = "Служебное разбирательство по факту cамовольного оставления части"
-group_desert_unit.batch_name = DESERT_UNIT_BATCH
-group_desert_unit.docs_list = []
+# group_desert_unit = RunInfo()
+# group_desert_unit.group_number = 1
+# group_desert_unit.group_text = "Служебное разбирательство по факту cамовольного оставления части"
+# group_desert_unit.batch_name = DESERT_UNIT_BATCH
+# group_desert_unit.docs_list = []
 
 group_mass_hr_info_unit = RunInfo()
-group_mass_hr_info_unit.group_number = 2
+group_mass_hr_info_unit.group_number = 0
 group_mass_hr_info_unit.group_text = "Массовая генерация документа 'Справка'"
 group_mass_hr_info_unit.batch_name = MASS_HR_INFO_BATCH
 group_mass_hr_info_unit.docs_list = []
 
 group_mass_perf_char_unit = RunInfo()
-group_mass_perf_char_unit.group_number = 3
+group_mass_perf_char_unit.group_number = 1
 group_mass_perf_char_unit.group_text = "Массовая генерация документа 'Служебная характеристика'"
 group_mass_perf_char_unit.batch_name = MASS_PERFORMANCE_CHARACTERISTICS_BATCH
 group_mass_perf_char_unit.docs_list = []
 
 group_utils_birthdays = RunInfo()
-group_utils_birthdays.group_number = 4
+group_utils_birthdays.group_number = 2
 group_utils_birthdays.group_text = "Утилита 'Дни рождения'"
 group_utils_birthdays.batch_name = UTILITY_BIRTHDAYS
 group_utils_birthdays.docs_list = []
 
 group_utils_pers_det_check = RunInfo()
-group_utils_pers_det_check.group_number = 5
+group_utils_pers_det_check.group_number = 3
 group_utils_pers_det_check.group_text = "Утилита 'Сверка ШР и ЛС'"
 group_utils_pers_det_check.batch_name = UTILITY_PERSONNEL_DETAILS_CHECK
 group_utils_pers_det_check.docs_list = []
 
 group_utils_pers_det_sorting = RunInfo()
-group_utils_pers_det_sorting.group_number = 6
+group_utils_pers_det_sorting.group_number = 4
 group_utils_pers_det_sorting.group_text = "Утилита 'Сортировка ЛС согласно порядку в ШР'"
 group_utils_pers_det_sorting.batch_name = UTILITY_PERSONNEL_DETAILS_SORTING
 group_utils_pers_det_sorting.docs_list = []
 
 group_utils_position_sorting = RunInfo()
-group_utils_position_sorting.group_number = 7
+group_utils_position_sorting.group_number = 5
 group_utils_position_sorting.group_text = "Утилита 'Сортировка ЛС по должностям'"
 group_utils_position_sorting.batch_name = UTILITY_PERSONNEL_DETAILS_SORTING_POSITION
 group_utils_position_sorting.docs_list = []
 
 group_diary = RunInfo()
-group_diary.group_number = 8
+group_diary.group_number = 6
 group_diary.group_text = "Дневник психолого-педагогических наблюдений"
 group_diary.batch_name = DIARY
 group_diary.docs_list = []
 
 group_quest_arrival = RunInfo()
-group_quest_arrival.group_number = 9
+group_quest_arrival.group_number = 7
 group_quest_arrival.group_text = "Анкета прибывшего в зону СВО"
 group_quest_arrival.batch_name = QUEST_ARRIVAL
 group_quest_arrival.docs_list = []
 
-batch_groups = [group_official_proceeding, group_desert_unit, group_mass_hr_info_unit, group_mass_perf_char_unit,
+group_sql_generation = RunInfo()
+group_sql_generation.group_number = 8
+group_sql_generation.group_text = "Генерация SQL скрипта для миграции"
+group_sql_generation.batch_name = SQL_GENERATION_SR
+group_sql_generation.docs_list = []
+
+# group_official_proceeding, group_desert_unit,
+
+batch_groups = [group_mass_hr_info_unit, group_mass_perf_char_unit,
                 group_utils_birthdays, group_utils_pers_det_check, group_utils_pers_det_sorting, group_utils_position_sorting, group_diary,
-                group_quest_arrival]
+                group_quest_arrival, group_sql_generation]
 
 layout = [
     [sg.Button(key=update_button_key, button_text="Обновить программу"),
