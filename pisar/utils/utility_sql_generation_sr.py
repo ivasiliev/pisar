@@ -30,7 +30,7 @@ class UtilitySrSqlGeneration(UtilityPrototype):
         # каждого человека записывает в SR
         # набор полей с должностями для каждого человека записывает в POSITION_DICT (может быть несколько строчек с одинаковыми должностями)
 
-        inserts = ["BEGIN TRY", "BEGIN TRANSACTION;"]
+        inserts = ["use pisar", "BEGIN TRY", "BEGIN TRANSACTION;"]
 
         null= "NULL"
         output_file = "c:\\pisar_output\\sr.sql"
