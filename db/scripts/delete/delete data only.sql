@@ -4,10 +4,14 @@
 -- ЗАПУСКАЙТЕ ЕГО ТОЛЬКО ЕСЛИ СДЕЛАЛИ РЕЗЕРВНУЮ КОПИЮ!
 
 BEGIN TRY
-   delete from dbo.LS;
-   delete from dbo.SR;
-   delete from dbo.POSITION_DICT;
-   delete from dbo.PEOPLE;
+   delete from [dbo].[ADDRESS];
+   delete from [dbo].[DOCUMENT];
+   delete from [dbo].[RELATIVE_PERSON];
+   delete from [dbo].[LS];
+   delete from [dbo].[SR];
+   delete from [dbo].[POSITION_DICT];
+   delete from [dbo].[PEOPLE];
+   delete from [dbo].[GENERIC_DICT];
 END TRY
 BEGIN CATCH
     SELECT

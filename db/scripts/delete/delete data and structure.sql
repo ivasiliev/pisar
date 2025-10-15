@@ -5,10 +5,15 @@
 
 BEGIN TRY
     DROP VIEW [dbo].[SR_ACTIVE];
+    -----
+    DROP TABLE [dbo].[ADDRESS];
+    DROP TABLE [dbo].[DOCUMENT];
+    DROP TABLE [dbo].[RELATIVE_PERSON];
     DROP TABLE [dbo].[LS];
     DROP TABLE [dbo].[SR];
     DROP TABLE [dbo].[POSITION_DICT];
-    DROP TABLE [dbo].[PEOPLE];  
+    DROP TABLE [dbo].[PEOPLE];
+    DROP TABLE [dbo].[GENERIC_DICT];
 END TRY
 BEGIN CATCH
     SELECT
