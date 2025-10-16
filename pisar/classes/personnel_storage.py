@@ -12,6 +12,7 @@ from helpers.file_helper import get_file_size_info
 from helpers.log_helper import log
 from helpers.performance_helper import PerformanceHelper
 from helpers.text_helper import not_empty
+import copy
 
 openpyxl.reader.excel.warnings.simplefilter(action='ignore')
 
@@ -105,6 +106,11 @@ IS_DEPUTY = "IS_DEPUTY"
 FAMILY_MEMBERS_COUNT = "FAMILY_MEMBERS_COUNT"
 CHILDREN_COUNT = "CHILDREN_COUNT"
 
+LS_COLUMNS = [ColumnInfo(COLUMN_RANK, "воинское звание"), ColumnInfo(COLUMN_FULL_NAME, "ФИО"), ColumnInfo(COLUMN_DOB, "дата рождения"), ColumnInfo(COLUMN_UNIQUE_KEY, "личный номер"), ColumnInfo(COLUMN_PHONE, "номер телефона")]
+# TODO proper field names
+# this collection also has COLUMN_UNIQUE_KEY
+SR_COLUMNS = [ColumnInfo(COLUMN_UNIQUE_KEY, "личный номер"),ColumnInfo(COLUMN_FULL_POSITION_NAME, "воинское звание"), ColumnInfo(COLUMN_SHORT_POSITION_NAME, "воинское звание"),ColumnInfo(COLUMN_POSITION_NAME, "воинское звание"),ColumnInfo(COLUMN_UNIT, "воинское звание"),ColumnInfo(COLUMN_UNIT2, "воинское звание"),ColumnInfo(COLUMN_PLATOON, "воинское звание"),ColumnInfo(COLUMN_SQUAD, "воинское звание"),ColumnInfo(COLUMN_MILITARY_POSITION, "воинское звание"),ColumnInfo(COLUMN_POSITION, "воинское звание")]
+
 class PersonnelStorage:
     def __init__(self, data_model):
         # TODO to app_settings?
@@ -169,6 +175,7 @@ class PersonnelStorage:
                         # log(f"Столбец '{col_info.get_name()}' не найден!")
                         # self.is_valid = False
 
+    # Загрузка данных военнослужащего с упором на ШР. Если там находится человек, то догружаются данные из ЛС
     def find_person_by_id(self, id_person):
         id_person_str = str(id_person)
         # ШР
@@ -355,6 +362,7 @@ class PersonnelStorage:
             result = ""
         return result
 
+    # ШР
     def create_metadata_for_pers_list(self, full_path):
         cols = [
             # ColumnInfo("COLUMN_COMPANY", "рота")
@@ -374,6 +382,7 @@ class PersonnelStorage:
 
         return ExcelDocMetadata(full_path, self.personnel_excel_sheet_name, cols, 200)
 
+    # ЛС
     def create_metadata_for_pers_details(self, full_path):
         cols = [
             ColumnInfo(COLUMN_UNIQUE_KEY, "личный номер")
@@ -477,6 +486,7 @@ class PersonnelStorage:
 
         return all_persons
 
+    # создает военнослужащего по ШР (только эти свойства)
     def create_person_from_row(self, excel_doc, person_row):
         # col_company = excel_doc.get_column_index("COLUMN_COMPANY")
         col_full_position_name = excel_doc.get_column_index(COLUMN_FULL_POSITION_NAME)
@@ -628,3 +638,267 @@ class PersonnelStorage:
                 break
             self.positions_list.append(pos)
         log(f"Чтение должностей окончено. Количество = {len(self.positions_list)}")
+
+    # нужно создавать модель данных для каждого солдата по отдельности
+    def get_data_model_by_ls_row(self, person_row, ls_excel_doc):
+        dm = copy.deepcopy(self.data_model[MODEL_JSON_OBJECT])
+        # TODO make it automatically and easier
+        mapping = [
+            ["nationality", "COLUMN_NATIONALITY"]
+            , ["gender", "COLUMN_GENDER"]
+            , ["education", "COLUMN_EDUCATION"]
+            , ["graduation_place", "COLUMN_GRADUATION_PLACE"]
+            , ["specialization", "COLUMN_SPECIALIZATION"]
+            , ["occupation", "COLUMN_OCCUPATION"]
+            , ["foreign_languages", "COLUMN_FOREIGN_LANGUAGES"]
+            , ["awards", "COLUMN_AWARDS"]
+            , ["government_authority", "COLUMN_GOVERNMENT_AUTHORITY"]
+            , ["foreign_countries_visited", "COLUMN_FOREIGN_COUNTRIES_VISITED"]
+            , ["service_started", "COLUMN_SERVICE_STARTED"]
+            , ["place_of_birth", COLUMN_PLACE_OF_BIRTH]
+            , ["home_address", COLUMN_HOME_ADDRESS]
+            , ["home_address_real", COLUMN_HOME_ADDRESS_REAL]
+            , ["marital_status", "COLUMN_MARITAL_STATUS"]
+            , ["criminal_status", "COLUMN_CRIMINAL_STATUS"]
+            , ["phone", COLUMN_PHONE]
+            , ["height", COLUMN_HEIGHT]
+            , ["weight", COLUMN_WEIGHT]
+            , ["signs", COLUMN_SIGNS]
+            , ["tatoo", COLUMN_TATOO]
+            , ["habits", COLUMN_HABITS]
+            , ["rank", COLUMN_RANK]
+            , ["position", COLUMN_POSITION]
+            , ["additional_attributes", COLUMN_ADDITIONAL_ATTRIBUTES]
+            , ["personal_perks", COLUMN_PERSONAL_PERKS]
+            # passports
+            , ["pass_dnr", COLUMN_PASS_DNR]
+            , ["pass_dnr_issued", COLUMN_PASS_DNR_ISSUED]
+
+            , ["pass_rf_number", COLUMN_PASS_RF_NUMBER]
+            , ["pass_rf_issue_date", COLUMN_PASS_RF_ISSUE_DATE]
+            , ["pass_rf_issue_org", COLUMN_PASS_RF_ISSUE_ORG]
+            , ["pass_rf_issue_unit", COLUMN_PASS_RF_ISSUE_UNIT]
+
+            , ["pass_foreign", COLUMN_PASS_FOREIGN]
+            , ["pass_ukr", COLUMN_PASS_UKR]
+            # relatives
+            , ["father_name", COLUMN_FATHER_NAME]
+            , ["mother_name", COLUMN_MOTHER_NAME]
+            , ["siblings_name", COLUMN_SIBLINGS_NAME]
+            , ["spouse_name", COLUMN_SPOUSE_NAME]
+            , ["father_address", COLUMN_FATHER_ADDRESS]
+            , ["mother_address", COLUMN_MOTHER_ADDRESS]
+            , ["siblings_address", COLUMN_SIBLINGS_ADDRESS]
+            , ["spouse_address", COLUMN_SPOUSE_ADDRESS]
+            , ["father_phone", COLUMN_FATHER_PHONE]
+            , ["mother_phone", COLUMN_MOTHER_PHONE]
+            , ["siblings_phone", COLUMN_SIBLINGS_PHONE]
+            , ["spouse_phone", COLUMN_SPOUSE_PHONE]
+            , ["registration_office", COLUMN_REGISTRATION_OFFICE]
+            , ["citizenship", COLUMN_CITIZENSHIP]
+            #
+            , ["status_kia_mia_des", STATUS_KIA_MIA_DES]
+            , ["rank_assignment_date", RANK_ASSIGNMENT_DATE]
+            , ["oath_date", OATH_DATE]
+            , ["oath_type", OATH_TYPE]
+            , ["blood_type", BLOOD_TYPE]
+            , ["enrollment_date", ENROLLMENT_DATE]
+            , ["serve_vsu_2014", SERVE_VSU_2014]
+            , ["incentives", INCENTIVES]
+            , ["penalties", PENALTIES]
+            , ["plans_for_future", PLANS_FOR_FUTURE]
+            , ["contract_date_finish", CONTRACT_DATE_FINISH]
+            , ["bank_account", BANK_ACCOUNT]
+            , ["address_memo", ADDRESS_MEMO]
+            , ["social_networks", SOCIAL_NETWORKS]
+            , ["is_deputy", IS_DEPUTY]
+            , ["family_members_count", FAMILY_MEMBERS_COUNT]
+            , ["children_count", CHILDREN_COUNT]
+        ]
+
+        for m in mapping:
+            dm[m[0]] = self.find_value_in_row_by_index(person_row,
+                                                       ls_excel_doc.get_column_index(m[1]))
+
+        parents_mapping = ["father_name", "mother_name"]
+        parents_delimiter = ","
+        for p in parents_mapping:
+            n = str(dm[p])
+            if parents_delimiter in n:
+                tokens = n.split(parents_delimiter)
+                if len(tokens) >= 2:
+                    dm[p] = tokens[0]
+
+        # select passport by priority
+        # паспорт ДНР, паспорт РФ, паспорт Украины
+        dm["passport"] = ""
+        if not_empty(dm["pass_rf_number"]):
+            dm[
+                "passport"] = f"паспорт РФ {dm['pass_rf_number']} {dm['pass_rf_issue_date']} {dm['pass_rf_issue_org']} {dm['pass_rf_issue_unit']}"
+        else:
+            if not_empty(dm["pass_dnr"]):
+                dm["passport"] = f"паспорт ДНР {dm['pass_dnr']} {dm['pass_dnr_issued']}"
+            else:
+                if not_empty(dm["pass_dnr"]):
+                    dm["passport"] = f"паспорт Украины {dm['pass_ukr']}"
+
+        return dm
+
+    # Загрузка данных всех военнослужащих из ЛС + ШР. ЛС имеет первостепенное значение. Для каждого попытка загрузить ШР
+    def load_all_persons_data(self):
+        log("Загрузка всех военнослужащих ЛС + ШР. Операция может занять существенное время. Пожалуйста, подождите...")
+        # result
+        all_persons = []
+
+        # ШР
+        sr_excel_doc = self.excel_docs[0]
+        sr_excel_doc.add_columns_in_dict(SR_COLUMNS)
+        # ЛС
+        ls_excel_doc = self.excel_docs[1]
+        ls_excel_doc.add_columns_in_dict(LS_COLUMNS)
+
+        col_unique_ls = ls_excel_doc.get_column_index(COLUMN_UNIQUE_KEY)
+        col_unique_sr = sr_excel_doc.get_column_index(COLUMN_UNIQUE_KEY)
+        if col_unique_ls is None:
+            log("Не удалось найти столбец 'Личный номер' в ЛС. Выполнение программы прервано.")
+            return None
+        if col_unique_sr is None:
+            log("Не удалось найти столбец 'Личный номер' в ШР. Выполнение программы прервано.")
+            return None
+
+        performance = PerformanceHelper()
+        performance.start()
+
+        row_num = 1
+
+        log("Чтение ШР и ЛС. Это может занять существенное время...")
+
+        all_sr_rows = self.read_excel_file(EXCEL_DOCUMENT_SR)
+        all_ls_rows = self.read_excel_file(EXCEL_DOCUMENT_LS)
+
+        log(f"Количество военнослужащих. ЛС: {len(all_ls_rows)}. ШР: {len(all_sr_rows)}.")
+
+        for ls_row in all_ls_rows:
+            # just check the first cell. If it is empty, we found the end of the table.
+            for cell in ls_row:
+                if cell.value is None:
+                    log(f"Конец таблицы на строке: {row_num}")
+                    break
+                id_ls = self.find_value_in_row_by_index(ls_row, 1)
+                if not isinstance(id_ls, int):
+                    log(f"Первый столбец должен содержать только номера. Строка {row_num} содержит '{id_ls}' в первом столбце.")
+                    break
+
+                person = self.create_person_from_ls_row(ls_excel_doc, ls_row)
+                if person is None:
+                    log(f"Не удалось обработать военнослужащего на строке {id_ls} в ЛС. Продолжение работы невозможно.")
+                    return None
+
+                if not person.get_unique_is_not_empty():
+                    log(f"Не задан личный номер для строки в ЛС номер {id_ls}! Продолжение работы невозможно.")
+                    return None
+
+                # here are all columns from LS
+                person.data_model = self.get_data_model_by_ls_row(ls_row, ls_excel_doc)
+
+                # check if the person exists in SR
+                for sr_row in all_sr_rows:
+                    # just check the first cell. If it is empty, we found the end of the table.
+                    for cell_sr in sr_row:
+                        if cell_sr.value is None:
+                            break
+                        unique_sr = self.find_value_in_row_by_index(sr_row, col_unique_sr)
+                        if unique_sr is None:
+                            id_sr = self.find_value_in_row_by_index(sr_row, 1)
+                            log(f"Пустое значение для Личный номер в ШР. Строка {id_sr}. Продолжение работы невозможно.")
+                            return None
+                        if person.get_unique() == str(unique_sr):
+                            # found!
+                            person = self.add_values_from_sr_to_person(person, sr_row, sr_excel_doc)
+                            person.exists_sr = True
+                            break
+
+                all_persons.append(person)
+                # we don't need to read the row cell by cell
+                break
+
+            row_num = row_num + 1
+        return all_persons
+
+    # создает военнослужащего по ЛС (только эти свойства)
+    def create_person_from_ls_row(self, ls_excel_doc, ls_row):
+        col_rank = ls_excel_doc.get_column_index(COLUMN_RANK)
+        col_full_name = ls_excel_doc.get_column_index(COLUMN_FULL_NAME)
+        col_dob = ls_excel_doc.get_column_index(COLUMN_DOB)
+        col_unique = ls_excel_doc.get_column_index(COLUMN_UNIQUE_KEY)
+        col_phone = ls_excel_doc.get_column_index(COLUMN_PHONE)
+
+        # TODO should be moved on Excel doc level
+        if col_rank is None:
+            log("ЛС. Не обнаружен столбец 'воинское звание'")
+            return None
+
+        if col_full_name is None:
+            log("ЛС. Не обнаружен столбец 'ФИО'")
+            return None
+
+        if col_dob is None:
+            log("ЛС. Не обнаружен столбец 'дата рождения'")
+            return None
+
+        if col_unique is None:
+            log("ЛС. Не обнаружен столбец 'личный номер'")
+            return None
+
+        if col_phone is None:
+            log("ЛС. Не обнаружен столбец 'номер телефона'")
+            return None
+
+        person = Person()
+        person.id_sr = self.find_value_in_row_by_index(ls_row, 1)
+
+        person.rank = self.find_value_in_row_by_index(ls_row, col_rank)
+        person.full_name = self.find_value_in_row_by_index(ls_row, col_full_name)
+        person.set_dob(self.find_value_in_row_by_index(ls_row, col_dob))
+        person.unique = str(self.find_value_in_row_by_index(ls_row, col_unique))
+        person.phone = self.find_value_in_row_by_index(ls_row, col_phone)
+
+        # normalization of a soldier name
+        if person.full_name is not None:
+            person.full_name = person.full_name.title()
+
+        if person.rank is not None:
+            person.rank = person.rank.lower()
+        else:
+            person.rank = ""
+
+        return person
+
+    # добавляет военнослужащему свойства из ШР, если про него там есть запись (сводит по личному номеру)
+    def add_values_from_sr_to_person(self, person, person_row, sr_excel_doc):
+        col_full_position_name = sr_excel_doc.get_column_index(COLUMN_FULL_POSITION_NAME)
+        col_short_position_name = sr_excel_doc.get_column_index(COLUMN_SHORT_POSITION_NAME)
+        col_position_name = sr_excel_doc.get_column_index(COLUMN_POSITION_NAME)
+        col_unit = sr_excel_doc.get_column_index(COLUMN_UNIT)
+        col_unit2 = sr_excel_doc.get_column_index(COLUMN_UNIT2)
+        col_platoon = sr_excel_doc.get_column_index(COLUMN_PLATOON)
+        col_squad = sr_excel_doc.get_column_index(COLUMN_SQUAD)
+        col_military_position = sr_excel_doc.get_column_index(COLUMN_MILITARY_POSITION)
+        col_position = sr_excel_doc.get_column_index(COLUMN_POSITION)
+
+        person.full_position_name = self.find_value_in_row_by_index(person_row, col_full_position_name)
+        person.short_position_name = self.find_value_in_row_by_index(person_row, col_short_position_name)
+        person.position_name = self.find_value_in_row_by_index(person_row, col_position_name)
+        person.unit = self.find_value_in_row_by_index(person_row, col_unit)
+        person.unit2 = self.find_value_in_row_by_index(person_row, col_unit2)
+        person.platoon = self.find_value_in_row_by_index(person_row, col_platoon)
+        person.squad = self.find_value_in_row_by_index(person_row, col_squad)
+        person.military_position = self.find_value_in_row_by_index(person_row, col_military_position)
+        person.position = self.find_value_in_row_by_index(person_row, col_position)
+
+        if person.position is not None:
+            person.position = person.position.lower()
+        else:
+            person.position = ""
+
+        return person

@@ -2,7 +2,7 @@ import datetime
 from pathlib import Path
 
 from classes.document_in_report import MODEL_JSON_OBJECT
-from classes.personnel_storage import EXCEL_DOCUMENT_SR
+from classes.personnel_storage import EXCEL_DOCUMENT_SR, EXCEL_DOCUMENT_LS
 from helpers.log_helper import log
 from utils.utility_prototype import UtilityPrototype
 
@@ -56,11 +56,16 @@ class UtilitySrSqlGeneration(UtilityPrototype):
         output_file_sql = "c:\\pisar_output\\sr.sql"
         output_file_log = "c:\\pisar_output\\sr-generation.txt"
 
-        log("Чтение списка людей из ШР. Это может занять время...")
+        # read all the people
         pers_storage = self.get_pers_storage()
+        # TODO process None
+        all_persons = pers_storage.load_all_persons_data()
+
         persons_sr = pers_storage.get_all_persons(EXCEL_DOCUMENT_SR)
+        persons_ls = pers_storage.get_all_persons(EXCEL_DOCUMENT_LS)
 
         self.log_ex(f"Количество людей в ШР (ограничение строк не применяется): {len(persons_sr)}")
+        self.log_ex(f"Количество людей в ЛС (ограничение строк не применяется): {len(persons_ls)}")
 
         id_entity = 1
         for pers in persons_sr:
