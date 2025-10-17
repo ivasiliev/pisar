@@ -6,6 +6,7 @@ from helpers.log_helper import log
 
 class Person:
     def __init__(self):
+        # TODO id_sr can be id_ls. Rename the property
         self.id_sr = ""  # id в ШР (первый столбец)
         # персональная модель данных (нужно для некоторых задач)
         self.data_model = []

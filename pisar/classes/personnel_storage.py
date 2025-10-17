@@ -778,11 +778,13 @@ class PersonnelStorage:
 
         log(f"Количество военнослужащих. ЛС: {len(all_ls_rows)}. ШР: {len(all_sr_rows)}.")
 
+        end_of_ls = False
         for ls_row in all_ls_rows:
             # just check the first cell. If it is empty, we found the end of the table.
             for cell in ls_row:
                 if cell.value is None:
-                    log(f"Конец таблицы на строке: {row_num}")
+                    log(f"Конец таблицы ЛС на строке: {row_num}")
+                    end_of_ls = True
                     break
                 id_ls = self.find_value_in_row_by_index(ls_row, 1)
                 if not isinstance(id_ls, int):
@@ -817,12 +819,17 @@ class PersonnelStorage:
                             person = self.add_values_from_sr_to_person(person, sr_row, sr_excel_doc)
                             person.exists_sr = True
                             break
+                    if person.exists_sr:
+                        break
 
                 all_persons.append(person)
                 # we don't need to read the row cell by cell
                 break
-
+            if end_of_ls:
+                break
             row_num = row_num + 1
+            # end of LS table reading
+
         return all_persons
 
     # создает военнослужащего по ЛС (только эти свойства)
