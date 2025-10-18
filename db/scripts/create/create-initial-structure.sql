@@ -234,5 +234,61 @@ GO
 ALTER TABLE [dbo].[RELATIVE_PERSON] CHECK CONSTRAINT [FK_RELATIVE_PERSON_ADDRESS]
 GO
 
+CREATE VIEW [dbo].[LS_FULL_INFO]
+AS
+SELECT 
+P.ID,
+P.SURNAME as "Фамилия",
+P.[NAME] as "Имя",
+P.FATHER_NAME as "Отчество",
+P.DOB as "Дата рождения",
+LS.PERSONAL_NUMBER as "Личный номер",
+LS.[RANK] as "Воинское звание",
+LS.STATUS_KIA_MIA_DES_TEXT as "Статус (200/БП/СОЧ)",
+LS.RANK_ASSIGNMENT_DATE as "Дата присвоения звания",
+LS.OATH_DATE as "Принятие присяги",
+LS.NATIONALITY as "Национальность",
+LS.CITIZENSHIP as "Гражданство",
+LS.HEIGHT as "Рост",
+LS.WEIGHT as "Вес",
+LS.BLOOD_GROUP as "Группа крови",
+LS.OATH_TYPE as "Контр/Мобилиз",
+LS.ENROLLMENT_DATE as "Дата зачисления",
+LS.SERVE_VSU_2014 as "Служба в ВСУ до 2014",
+LS.INCENTIVES as "Поощрения",
+LS.PENALTIES as "Взыскания",
+LS.EDUCATION_TYPE as "Тип образования",
+LS.EDUCATION_DETAILS as "Учреждение(год окончания)",
+LS.PROFESSION as "Профессия",
+LS.PLACE_OF_WORK as "Места работы",
+LS.FOREIGN_LANGUAGES as "Знание иностранных языков",
+LS.FOREIGN_COUNTRIES as "Какие страны посещал/посещала",
+LS.AWARDS as "Награды",
+LS.PLANS_FOR_FUTURE as "Планируемый род занятий после войны",
+LS.CONTRACT_DATE_START as "Дата подписания контракта",
+LS.CONTRACT_DATE_FINISH as "Дата окончания контракта",
+LS.BANK_ACCOUNT as "Банковский счет (номер банковской карты)",
+LS.POB as "Место рождения",
+LS.ADDRESS_MEMO as "Адресная справка",
+LS.SOCIAL_NETWORKS as "Социальные сети",
+LS.IS_DEPUTY as "Является ли депутатом",
+LS.FAMILY_MEMBERS_COUNT as "Кол-во членов семьи",
+LS.CHILDREN_COUNT as "Количество детей",
+PD.POSITION_FULL as "Полная должность",
+PD.POSITION_SHORT as "Сокр. должность",
+PD.POSITION as "Должность",
+PD.UNIT1 as "Подразделение",
+PD.UNIT2 as "Подразделение 2",
+PD.PLATOON as "Взвод",
+PD.SQUAD as "Отделение",
+PD.MILITARY_POSITION as "Воинская должность"
+FROM
+dbo.PEOPLE P
+INNER JOIN dbo.LS LS ON P.ID = LS.PEOPLE_ID
+LEFT JOIN dbo.SR SR ON P.ID = SR.PEOPLE_ID 
+LEFT JOIN dbo.POSITION_DICT PD ON SR.POSITION_ID = PD.ID
+GO
+
+
 
 

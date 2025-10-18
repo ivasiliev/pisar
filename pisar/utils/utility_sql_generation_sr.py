@@ -30,6 +30,8 @@ class UtilitySrSqlGeneration(UtilityPrototype):
         self.generation_log_messages.append(message)
 
     def is_none_or_blank(self,s):
+        if not isinstance(s, str):
+            return False
         return s is None or s.strip() == ""
 
     def get_date(self, ds, id_entity):
@@ -66,7 +68,7 @@ class UtilitySrSqlGeneration(UtilityPrototype):
         # this is a Person object
         for pers in all_persons:
 
-            self.log_ex(f"Читаем информацию на позиции {pers.id_sr}...")
+            self.log_ex(f"ЛС строка {pers.id_sr}...")
             if pers.full_name is None:
                 self.log_ex(f"Строка содержит пустое ФИО. Выполнение программы прервано.")
                 return
@@ -106,7 +108,7 @@ class UtilitySrSqlGeneration(UtilityPrototype):
                 if gender.casefold() == "м".casefold():
                     gender_num = 0
                 else:
-                    if gender.casefold() == "м".casefold():
+                    if gender.casefold() == "ж".casefold():
                         gender_num = 1
             if gender_num == -1:
                 self.log_ex(f"Неверное значение для столбца 'Пол' (нужно 'м' или 'ж'). Выполнение программы прервано.")
@@ -132,6 +134,7 @@ class UtilitySrSqlGeneration(UtilityPrototype):
             foreign_countries_visited = dm["foreign_countries_visited"]
             awards = dm["awards"]
             # TODO wrong key
+            # TODO Позывной
             is_deputy = dm["government_authority"]
             service_started_date = self.get_date(dm["service_started"], pers.id_sr)
             signs = dm["signs"]
@@ -152,7 +155,11 @@ class UtilitySrSqlGeneration(UtilityPrototype):
             address_memo = dm["address_memo"]
             social_networks = dm["social_networks"]
             family_members_count = dm["family_members_count"]
+            if self.is_none_or_blank(family_members_count):
+                family_members_count = 0
             children_count = dm["children_count"]
+            if self.is_none_or_blank(children_count):
+                children_count = 0
             place_of_birth = dm["place_of_birth"]
 
             insert_ls = f"INSERT INTO dbo.LS ([PEOPLE_ID],[PERSONAL_NUMBER],[RANK],[STATUS_KIA_MIA_DES_TEXT],[RANK_ASSIGNMENT_DATE],\
@@ -171,6 +178,8 @@ class UtilitySrSqlGeneration(UtilityPrototype):
 
             if pers.exists_sr:
 
+                log("для него есть информация в ШР. Обрабатываем...")
+
                 # POSITION_LIST
                 insert_position = f"INSERT INTO [dbo].[POSITION_DICT] (ID, [POSITION_FULL], [POSITION_SHORT], [POSITION], [UNIT1],	[UNIT2], [PLATOON],	[SQUAD], [MILITARY_POSITION]) VALUES ({pers.id_sr}, '{pers.full_position_name}', '{pers.short_position_name}', '{pers.position_name}', '{pers.unit}', '{pers.unit2}', '{pers.platoon}', '{pers.squad}', '{pers.military_position}');"
                 inserts.append(insert_position)
@@ -178,7 +187,6 @@ class UtilitySrSqlGeneration(UtilityPrototype):
                 # SR
                 insert_sr = f"INSERT INTO dbo.SR (ID, [PEOPLE_ID], [POSITION_ID]) VALUES ({pers.id_sr}, {pers.id_sr}, {pers.id_sr});"
                 inserts.append(insert_sr)
-
 
 
         # finalize script
