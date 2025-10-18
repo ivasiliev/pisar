@@ -5,8 +5,7 @@ import pymorphy2
 from pytrovich.maker import PetrovichDeclinationMaker
 
 from classes.document_in_report import MODEL_PERSONNEL_PATH, MODEL_OUTPUT_FOLDER, MODEL_MORPHOLOGY, \
-	MODEL_JSON_OBJECT, MODEL_MORPHOLOGY_FOR_NAMES, MODEL_IS_VALID, MODEL_PERSONNEL_DETAILS_PATH
-from helpers.log_helper import log
+    MODEL_JSON_OBJECT, MODEL_MORPHOLOGY_FOR_NAMES, MODEL_IS_VALID, MODEL_PERSONNEL_DETAILS_PATH
 from templateprocessor.template_processor import MODEL_BOX_FOLDER
 
 

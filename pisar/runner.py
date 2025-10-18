@@ -158,7 +158,7 @@ def run_generation(common_config_file, soldier_config_file, report_type):
 
 def add_fields_json(js):
     fields = ["nationality", "gender", "education", "graduation_place", "specialization", "occupation",
-              "foreign_languages", "awards", "government_authority", "foreign_countries_visited", "service_started",
+              "foreign_languages", "awards", "is_deputy", "foreign_countries_visited", "service_started",
               "place_of_birth", "home_address", "passport", "marital_status", "criminal_status", "father_name",
               "mother_name"]
     for f in fields:

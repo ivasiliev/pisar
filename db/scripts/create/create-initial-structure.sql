@@ -1,0 +1,294 @@
+﻿use pisar
+GO
+
+CREATE TABLE [dbo].[PEOPLE](
+	[ID] [int] NOT NULL,
+	[SURNAME] [varchar](100) NOT NULL,
+	[NAME] [varchar](50) NOT NULL,
+	[FATHER_NAME] [varchar](100) NULL,
+	[DOB] [date] NULL,
+	[GENDER] [int] NULL,
+ CONSTRAINT [PK_PEOPLE] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'0 male, 1 female' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'PEOPLE', @level2type=N'COLUMN',@level2name=N'GENDER'
+GO
+
+CREATE TABLE [dbo].[POSITION_DICT](
+	[ID] [int] NOT NULL,
+	[POSITION_FULL] [varchar](500) NOT NULL,
+	[POSITION_SHORT] [varchar](200) NOT NULL,
+	[POSITION] [varchar](200) NOT NULL,
+	[UNIT1] [varchar](200) NOT NULL,
+	[UNIT2] [varchar](200) NOT NULL,
+	[PLATOON] [varchar](200) NOT NULL,
+	[SQUAD] [varchar](200) NOT NULL,
+	[MILITARY_POSITION] [varchar](300) NOT NULL,
+ CONSTRAINT [PK_POSITION_DICT] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+) ON [PRIMARY]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Полная должность' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'POSITION_DICT', @level2type=N'COLUMN',@level2name=N'POSITION_FULL'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Сокр. Должн.' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'POSITION_DICT', @level2type=N'COLUMN',@level2name=N'POSITION_SHORT'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Должность' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'POSITION_DICT', @level2type=N'COLUMN',@level2name=N'POSITION'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Подразделение' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'POSITION_DICT', @level2type=N'COLUMN',@level2name=N'UNIT1'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Подразделение 2' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'POSITION_DICT', @level2type=N'COLUMN',@level2name=N'UNIT2'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Взвод' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'POSITION_DICT', @level2type=N'COLUMN',@level2name=N'PLATOON'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Отделение' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'POSITION_DICT', @level2type=N'COLUMN',@level2name=N'SQUAD'
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Воинская должность' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'POSITION_DICT', @level2type=N'COLUMN',@level2name=N'MILITARY_POSITION'
+GO
+
+CREATE TABLE [dbo].[SR](
+	[ID] [int] NOT NULL,
+	[PEOPLE_ID] [int] NOT NULL,
+	[POSITION_ID] [int] NOT NULL,
+ CONSTRAINT [PK_SR] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[SR]  WITH CHECK ADD  CONSTRAINT [FK_SR_PEOPLE] FOREIGN KEY([PEOPLE_ID])
+REFERENCES [dbo].[PEOPLE] ([ID])
+GO
+
+ALTER TABLE [dbo].[SR] CHECK CONSTRAINT [FK_SR_PEOPLE]
+GO
+
+CREATE TABLE [dbo].[LS](
+	[PEOPLE_ID] [int] NOT NULL,
+	[PERSONAL_NUMBER] [varchar](50) NOT NULL,
+	[RANK]	varchar(100) NOT NULL,
+	[STATUS_KIA_MIA_DES_TEXT]	varchar(50) NULL,
+	[RANK_ASSIGNMENT_DATE]	date NOT NULL,
+	[OATH_DATE]	date NOT NULL,
+	[NATIONALITY]	varchar(50) NOT NULL,
+	[CITIZENSHIP]	varchar(50) NOT NULL,
+	[HEIGHT]	int NULL,
+	[WEIGHT]	int NULL,
+	[BLOOD_GROUP]	varchar(10) NULL,
+	[OATH_TYPE]	varchar(50) NOT NULL,
+	[ENROLLMENT_DATE]	date NOT NULL,
+	[SERVE_VSU_2014]	varchar(200) NULL,
+	[INCENTIVES]	varchar(1000) NULL,
+	[PENALTIES]	varchar(1000) NULL,
+	[EDUCATION_TYPE]	varchar(50) NULL,
+	[EDUCATION_DETAILS]	varchar(1000) NULL,
+	[PROFESSION]	varchar(200) NULL,
+	[PLACE_OF_WORK]	varchar(1000) NULL,
+	[FOREIGN_LANGUAGES]	varchar(1000) NULL,
+	[FOREIGN_COUNTRIES]	varchar(1000) NULL,
+	[AWARDS]	varchar(1000) NULL,
+	[PLANS_FOR_FUTURE]	varchar(1000) NULL,
+	[CONTRACT_DATE_START]	date NULL,
+	[CONTRACT_DATE_FINISH]	date NULL,
+	[BANK_ACCOUNT]	varchar(30) NULL,
+	[POB]	varchar(1000) NULL,
+	[ADDRESS_MEMO]	varchar(2000) NULL,
+	[SOCIAL_NETWORKS]	varchar(100) NULL,
+	[IS_DEPUTY]	varchar(50) NULL,
+	[FAMILY_MEMBERS_COUNT]	int NULL,
+	[CHILDREN_COUNT]	int NULL
+
+ CONSTRAINT [PK_LS] PRIMARY KEY CLUSTERED 
+(
+	[PEOPLE_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[LS]  WITH CHECK ADD  CONSTRAINT [FK_LS_PEOPLE] FOREIGN KEY([PEOPLE_ID])
+REFERENCES [dbo].[PEOPLE] ([ID])
+GO
+
+ALTER TABLE [dbo].[LS] CHECK CONSTRAINT [FK_LS_PEOPLE]
+GO
+
+CREATE VIEW dbo.SR_ACTIVE AS
+SELECT 
+P.SURNAME as "Фамилия"
+, P.NAME as "Имя"
+, P.FATHER_NAME as "Отчество"
+, LS.PERSONAL_NUMBER as "Личный номер"
+, PD.POSITION_FULL as "Полная должность"
+, PD.POSITION_SHORT as "Сокр. должность"
+, PD.POSITION as "Должность"
+, PD.UNIT1 as "Подразделение"
+, PD.UNIT2 as "Подразделение 2"
+, PD.PLATOON as "Взвод"
+, PD.SQUAD as "Отделение"
+FROM dbo.PEOPLE P 
+inner join dbo.SR SR on SR.PEOPLE_ID = P.ID
+inner join dbo.POSITION_DICT PD on SR.POSITION_ID = PD.ID
+inner join dbo.LS LS on LS.PEOPLE_ID = P.ID
+
+GO
+
+CREATE TABLE [dbo].[GENERIC_DICT](
+	[ID] [int] NOT NULL,
+	[PARENT_ID] [int] NULL,
+	[NAME] [varchar](255) NOT NULL,
+ CONSTRAINT [PK_GENERIC_DICT] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[DOCUMENT](
+	[ID] [int] NOT NULL,
+	[PEOPLE_ID] [int] NOT NULL,
+	[DOCUMENT_TYPE_ID] [int] NOT NULL,
+	[SERIAL_NUMBER] [varchar](100) NULL,
+	[ISSUER] [varchar](200) NULL,
+	[ISSUE_DATE] [date] NULL,
+	[CUSTOM_FIELD1] [varchar](200) NULL,
+	[CUSTOM_FIELD2] [varchar](200) NULL,
+	[CUSTOM_FIELD3] [varchar](200) NULL,
+ CONSTRAINT [PK_DOCUMENT] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[DOCUMENT]  WITH CHECK ADD  CONSTRAINT [FK_DOCUMENT_GENERIC_DICT] FOREIGN KEY([DOCUMENT_TYPE_ID])
+REFERENCES [dbo].[GENERIC_DICT] ([ID])
+GO
+
+ALTER TABLE [dbo].[DOCUMENT] CHECK CONSTRAINT [FK_DOCUMENT_GENERIC_DICT]
+GO
+
+ALTER TABLE [dbo].[DOCUMENT]  WITH CHECK ADD  CONSTRAINT [FK_DOCUMENT_PEOPLE] FOREIGN KEY([PEOPLE_ID])
+REFERENCES [dbo].[PEOPLE] ([ID])
+GO
+
+ALTER TABLE [dbo].[DOCUMENT] CHECK CONSTRAINT [FK_DOCUMENT_PEOPLE]
+GO
+
+CREATE TABLE [dbo].[ADDRESS](
+	[ID] [int] NOT NULL,
+	[ADDRESS_TYPE_ID] [int] NOT NULL,
+	[ADDRESS_TEXT] [varchar](1000) NOT NULL,
+ CONSTRAINT [PK_ADDRESS] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ADDRESS]  WITH CHECK ADD  CONSTRAINT [FK_ADDRESS_GENERIC_DICT] FOREIGN KEY([ADDRESS_TYPE_ID])
+REFERENCES [dbo].[GENERIC_DICT] ([ID])
+GO
+
+ALTER TABLE [dbo].[ADDRESS] CHECK CONSTRAINT [FK_ADDRESS_GENERIC_DICT]
+GO
+
+CREATE TABLE [dbo].[RELATIVE_PERSON](
+	[ID] [int] NOT NULL,
+	[RELATION_TYPE_ID] [int] NOT NULL,
+	[FULL_NAME_DOB] [varchar] (150) NOT NULL,
+	[ID_ADDRESS_HOME] [int] NULL,
+	[WORKPLACE] [varchar] (1000) NULL,
+	[PHONE] [varchar](50) NULL,
+ CONSTRAINT [PK_RELATIVE_PERSON] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[RELATIVE_PERSON]  WITH CHECK ADD  CONSTRAINT [FK_RELATIVE_PERSON_RELATION_TYPE] FOREIGN KEY([RELATION_TYPE_ID])
+REFERENCES [dbo].[GENERIC_DICT] ([ID])
+GO
+
+ALTER TABLE [dbo].[RELATIVE_PERSON]  WITH CHECK ADD  CONSTRAINT [FK_RELATIVE_PERSON_ADDRESS] FOREIGN KEY([ID_ADDRESS_HOME])
+REFERENCES [dbo].[ADDRESS] ([ID])
+GO
+
+ALTER TABLE [dbo].[RELATIVE_PERSON] CHECK CONSTRAINT [FK_RELATIVE_PERSON_RELATION_TYPE]
+GO
+
+ALTER TABLE [dbo].[RELATIVE_PERSON] CHECK CONSTRAINT [FK_RELATIVE_PERSON_ADDRESS]
+GO
+
+CREATE VIEW [dbo].[LS_FULL_INFO]
+AS
+SELECT 
+P.ID,
+P.SURNAME as "Фамилия",
+P.[NAME] as "Имя",
+P.FATHER_NAME as "Отчество",
+P.DOB as "Дата рождения",
+LS.PERSONAL_NUMBER as "Личный номер",
+LS.[RANK] as "Воинское звание",
+LS.STATUS_KIA_MIA_DES_TEXT as "Статус (200/БП/СОЧ)",
+LS.RANK_ASSIGNMENT_DATE as "Дата присвоения звания",
+LS.OATH_DATE as "Принятие присяги",
+LS.NATIONALITY as "Национальность",
+LS.CITIZENSHIP as "Гражданство",
+LS.HEIGHT as "Рост",
+LS.WEIGHT as "Вес",
+LS.BLOOD_GROUP as "Группа крови",
+LS.OATH_TYPE as "Контр/Мобилиз",
+LS.ENROLLMENT_DATE as "Дата зачисления",
+LS.SERVE_VSU_2014 as "Служба в ВСУ до 2014",
+LS.INCENTIVES as "Поощрения",
+LS.PENALTIES as "Взыскания",
+LS.EDUCATION_TYPE as "Тип образования",
+LS.EDUCATION_DETAILS as "Учреждение(год окончания)",
+LS.PROFESSION as "Профессия",
+LS.PLACE_OF_WORK as "Места работы",
+LS.FOREIGN_LANGUAGES as "Знание иностранных языков",
+LS.FOREIGN_COUNTRIES as "Какие страны посещал/посещала",
+LS.AWARDS as "Награды",
+LS.PLANS_FOR_FUTURE as "Планируемый род занятий после войны",
+LS.CONTRACT_DATE_START as "Дата подписания контракта",
+LS.CONTRACT_DATE_FINISH as "Дата окончания контракта",
+LS.BANK_ACCOUNT as "Банковский счет (номер банковской карты)",
+LS.POB as "Место рождения",
+LS.ADDRESS_MEMO as "Адресная справка",
+LS.SOCIAL_NETWORKS as "Социальные сети",
+LS.IS_DEPUTY as "Является ли депутатом",
+LS.FAMILY_MEMBERS_COUNT as "Кол-во членов семьи",
+LS.CHILDREN_COUNT as "Количество детей",
+PD.POSITION_FULL as "Полная должность",
+PD.POSITION_SHORT as "Сокр. должность",
+PD.POSITION as "Должность",
+PD.UNIT1 as "Подразделение",
+PD.UNIT2 as "Подразделение 2",
+PD.PLATOON as "Взвод",
+PD.SQUAD as "Отделение",
+PD.MILITARY_POSITION as "Воинская должность"
+FROM
+dbo.PEOPLE P
+INNER JOIN dbo.LS LS ON P.ID = LS.PEOPLE_ID
+LEFT JOIN dbo.SR SR ON P.ID = SR.PEOPLE_ID 
+LEFT JOIN dbo.POSITION_DICT PD ON SR.POSITION_ID = PD.ID
+GO
+
+
+
+

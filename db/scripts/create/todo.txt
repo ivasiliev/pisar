@@ -1,0 +1,24 @@
+LS
+* мигрировать rank в отдельную таблицу, вычислить звания и переделать на rank_id 
+* calculate AGE somehow (in VIEW?)
+DATEDIFF(year, PeopleDOB, GETDATE()) - (CASE WHEN DATEADD(year, DATEDIFF(year, PeopleDOB, GETDATE()), PeopleDOB) > GETDATE() THEN 1 ELSE 0 END)
+
+* NATIONALITY, CITIZENSHIP -- to dictionaries
+
+* FAMILY_MEMBERS_COUNT, CHILDREN_COUNT -- calculate in views?
+
+* LS -- validate which fields are mandatory
+
+
+
+
+
+
+
+
+
+
+
+
+
+
