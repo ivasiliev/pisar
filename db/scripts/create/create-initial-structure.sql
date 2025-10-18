@@ -3,9 +3,7 @@ GO
 
 CREATE TABLE [dbo].[PEOPLE](
 	[ID] [int] NOT NULL,
-	[SURNAME] [varchar](100) NOT NULL,
-	[NAME] [varchar](50) NOT NULL,
-	[FATHER_NAME] [varchar](100) NULL,
+	[FULL_NAME] [varchar](300) NOT NULL,
 	[DOB] [date] NULL,
 	[GENDER] [int] NULL,
  CONSTRAINT [PK_PEOPLE] PRIMARY KEY CLUSTERED 
@@ -80,17 +78,17 @@ GO
 CREATE TABLE [dbo].[LS](
 	[PEOPLE_ID] [int] NOT NULL,
 	[PERSONAL_NUMBER] [varchar](50) NOT NULL,
-	[RANK]	varchar(100) NOT NULL,
+	[RANK]	varchar(100) NULL,
 	[STATUS_KIA_MIA_DES_TEXT]	varchar(50) NULL,
-	[RANK_ASSIGNMENT_DATE]	date NOT NULL,
-	[OATH_DATE]	date NOT NULL,
-	[NATIONALITY]	varchar(50) NOT NULL,
-	[CITIZENSHIP]	varchar(50) NOT NULL,
+	[RANK_ASSIGNMENT_DATE]	date NULL,
+	[OATH_DATE]	date NULL,
+	[NATIONALITY]	varchar(50) NULL,
+	[CITIZENSHIP]	varchar(50) NULL,
 	[HEIGHT]	int NULL,
 	[WEIGHT]	int NULL,
 	[BLOOD_GROUP]	varchar(10) NULL,
-	[OATH_TYPE]	varchar(50) NOT NULL,
-	[ENROLLMENT_DATE]	date NOT NULL,
+	[OATH_TYPE]	varchar(50) NULL,
+	[ENROLLMENT_DATE]	varchar(200) NULL,
 	[SERVE_VSU_2014]	varchar(200) NULL,
 	[INCENTIVES]	varchar(1000) NULL,
 	[PENALTIES]	varchar(1000) NULL,
@@ -128,9 +126,7 @@ GO
 
 CREATE VIEW dbo.SR_ACTIVE AS
 SELECT 
-P.SURNAME as "Фамилия"
-, P.NAME as "Имя"
-, P.FATHER_NAME as "Отчество"
+P.FULL_NAME as "ФИО"
 , LS.PERSONAL_NUMBER as "Личный номер"
 , PD.POSITION_FULL as "Полная должность"
 , PD.POSITION_SHORT as "Сокр. должность"
@@ -238,9 +234,7 @@ CREATE VIEW [dbo].[LS_FULL_INFO]
 AS
 SELECT 
 P.ID,
-P.SURNAME as "Фамилия",
-P.[NAME] as "Имя",
-P.FATHER_NAME as "Отчество",
+P.FULL_NAME as "ФИО",
 P.DOB as "Дата рождения",
 LS.PERSONAL_NUMBER as "Личный номер",
 LS.[RANK] as "Воинское звание",
