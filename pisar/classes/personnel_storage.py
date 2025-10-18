@@ -13,6 +13,7 @@ from helpers.log_helper import log
 from helpers.performance_helper import PerformanceHelper
 from helpers.text_helper import not_empty
 import copy
+import uuid
 
 openpyxl.reader.excel.warnings.simplefilter(action='ignore')
 
@@ -526,6 +527,10 @@ class PersonnelStorage:
         person.unique = str(self.find_value_in_row_by_index(person_row, col_unique))
         person.phone = self.find_value_in_row_by_index(person_row, col_phone)
 
+        # if unique is not set (sometimes it happens), let's generate the fake one
+        #if person.unique is None or person.unique.strip() == "":
+        #    person.unique = f"rnd-{uuid.uuid4().hex}"
+
         # normalization of a soldier name
         if person.full_name is not None:
             person.full_name = person.full_name.title()
@@ -869,6 +874,9 @@ class PersonnelStorage:
         person.set_dob(self.find_value_in_row_by_index(ls_row, col_dob))
         person.unique = str(self.find_value_in_row_by_index(ls_row, col_unique))
         person.phone = self.find_value_in_row_by_index(ls_row, col_phone)
+
+        if person.unique is None or person.unique.strip() == "":
+            person.unique = f"rnd-{uuid.uuid4().hex}"
 
         # normalization of a soldier name
         if person.full_name is not None:

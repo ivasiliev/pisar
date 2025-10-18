@@ -73,12 +73,6 @@ class UtilitySrSqlGeneration(UtilityPrototype):
                 self.log_ex(f"Строка содержит пустое ФИО. Выполнение программы прервано.")
                 return
 
-            surname, name, father_name = self.parse_full_simple(pers.full_name)
-
-            if surname is None or name is None:
-                self.log_ex(f"Пустые фамилия и имя. Это обязательные поля. Выполнение программы прервано.")
-                return
-
             if pers.dob is None:
                 dob = self.null
             else:
@@ -116,7 +110,7 @@ class UtilitySrSqlGeneration(UtilityPrototype):
 
             # PEOPLE
 
-            insert_people = f"INSERT INTO dbo.PEOPLE (ID, [SURNAME], [NAME], FATHER_NAME, [DOB], GENDER) VALUES ({pers.id_sr}, '{surname}', '{name}', '{father_name}', '{dob}', {gender_num});"
+            insert_people = f"INSERT INTO dbo.PEOPLE ([ID], [FULL_NAME], [DOB], [GENDER]) VALUES ({pers.id_sr}, '{pers.full_name}', '{dob}', {gender_num});"
             inserts.append(insert_people)
 
             # LS
@@ -145,7 +139,8 @@ class UtilitySrSqlGeneration(UtilityPrototype):
             oath_date = self.get_date(dm["oath_date"], pers.id_sr)
             oath_type = dm["oath_type"]
             blood_type = dm["blood_type"]
-            enrollment_date = self.get_date(dm["enrollment_date"], pers.id_sr)
+            enrollment_date = dm["enrollment_date"]
+            # enrollment_date = self.get_date(dm["enrollment_date"], pers.id_sr)
             serve_vsu_2014 = dm["serve_vsu_2014"]
             incentives = dm["incentives"]
             penalties = dm["penalties"]
